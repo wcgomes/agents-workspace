@@ -4,6 +4,8 @@ This file defines how you operate in this project. Read it fully before acting. 
 
 The `wiki/` directory is your only persistent memory. When in doubt, read it first. When you learn something, write it back.
 
+Before planning any task, identify whether it touches a specialist domain — if so, delegate. See Specialist Agents.
+
 ---
 
 ## Core Behavior
@@ -31,9 +33,31 @@ The `wiki/` directory is your only persistent memory. When in doubt, read it fir
 
 ---
 
+## Non-Negotiables
+
+| Rule | Reason |
+|---|---|
+| Before creating a file, search for existing functionality to extend | Prevents sprawl and duplication |
+| Only create new files when extension is genuinely impossible — say why | Forces reuse analysis |
+| No mock or fake data in production code (test fixtures are fine) | Data integrity |
+| Fix root causes, not symptoms | Code quality |
+| Always cite `file:line` when referencing code in plans, diffs, or explanations | Traceability |
+
+---
+
+## Specialist Agents
+
+**Delegation to a specialist agent is the default.** Before handling any task directly, check your available agents. If there is a specialist for this type of work, delegate — even if you could do it yourself. Handling directly is only justified when no relevant specialist exists. When delegating, briefly tell the user which specialist(s) you chose and why.
+
+- **Single domain**: delegate to the appropriate specialist.
+- **Multiple domains**: assemble a team. Define what needs to be done, assign to specialists, synthesize their outputs. You are the default orchestrator.
+- **Multi-stage execution**: you may hand orchestration to a specialist orchestrator. Give clear objectives and deliverables. Review the final result before presenting to the user.
+
+---
+
 ## Wiki
 
-Project knowledge base. Lives in `wiki/`. Shared between humans and agents — both read and rely on it.
+Project knowledge base. Lives in `wiki/`. Shared between humans and agents — both read and rely on it. The wiki is a self-learning loop — every task is an opportunity to leave the project better documented than you found it.
 
 ### Structure
 
@@ -67,7 +91,7 @@ Always link new pages from `index.md` and from any related pages.
 
 ### Three operations
 
-- **Ingest** — when something worth preserving is learned, write it into the appropriate wiki page immediately. Don't defer. Update `index.md` and link from related pages.
+- **Ingest** — at the end of every task, write what you learned about this project that wasn't in the wiki before. Don't wait to be asked. Update `index.md` and link from related pages.
 - **Query** — always start by reading `wiki/index.md`. Use the descriptions to identify relevant pages — load only those. Never answer from memory alone if a wiki page exists.
 - **Lint** — after completing a task, scan for contradictions between pages, orphan pages not linked from `index.md`, and claims that are no longer true. Fix what you find.
 
@@ -75,7 +99,6 @@ When to ingest and when not to:
 - ✅ Architectural decision made
 - ✅ New pattern or convention identified
 - ✅ Domain rule clarified or corrected
-- ✅ Something discovered mid-task that would otherwise be lost
 - ✅ User explicitly requests an update
 - ❌ Routine bug fixes or minor changes with no lasting insight
 
@@ -105,32 +128,10 @@ For non-trivial tasks, follow this sequence:
 | **QA** | Run tests, linter, build. Report results. Fix failures before proceeding. | All checks pass |
 | **APPROVAL** | Present diff and QA results for human review. Wait for explicit approval. | User approves |
 | **APPLY** | Apply changes. Verify. Rollback and report if anything fails. | Success or rollback |
-| **DOCS** | Update wiki if the task produced something worth preserving. | Done |
+| **DOCS** | Update wiki with what this task taught about the project. | Done |
 
 - **Simple tasks** (one-line fixes, config changes, clear and isolated changes): skip PLAN and DOCS. Still wait for approval before applying.
 - **Approval keywords**: "approved", "looks good", "ship it", "apply it", "document it", "ok", "yes", "go ahead", "do it"
 - Never apply changes without explicit approval.
 - Always work on a safe copy — never directly on the final destination.
 - **Stall**: if the same approach yields no progress after two cycles, stop. Report what's blocking and ask for direction. Maximum 3 BUILD→QA cycles before escalating.
-
----
-
-## Specialist Agents
-
-**Delegation to a specialist agent is the default.** For any task that touches a specialist domain, delegate — do not answer yourself. Only handle tasks directly when no relevant specialist is available. When delegating, briefly tell the user which specialist(s) you chose and why.
-
-- **Single domain** (security, SEO, databases, DevOps, SRE, infrastructure, design, legal, data science, ML): delegate to the appropriate specialist.
-- **Multiple domains**: assemble a team. Define what needs to be done, assign to specialists, synthesize their outputs. You are the default orchestrator.
-- **Multi-stage execution**: you may hand orchestration to a specialist orchestrator. Give clear objectives and deliverables. Review the final result before presenting to the user.
-
----
-
-## Non-Negotiables
-
-| Rule | Reason |
-|---|---|
-| Before creating a file, search for existing functionality to extend | Prevents sprawl and duplication |
-| Only create new files when extension is genuinely impossible — say why | Forces reuse analysis |
-| No mock or fake data in production code (test fixtures are fine) | Data integrity |
-| Fix root causes, not symptoms | Code quality |
-| Always cite `file:line` when referencing code in plans, diffs, or explanations | Traceability |
