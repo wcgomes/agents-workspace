@@ -4,17 +4,17 @@ This repository uses `AGENTS.md` as the source of truth for AI coding agents.
 
 ## Purpose
 
-`AGENTS.md` defines the operating rules, expectations, and constraints that guide an agent while working in this repository. It helps keep agent behavior consistent, predictable, and aligned with project intent.
+`AGENTS.md` defines the operating rules, expectations, and constraints that guide an agent while working in this repository. It keeps agent behavior consistent, predictable, and aligned with the project’s workflow.
 
-## What it is for
+## Topics it covers
 
-- Explain how the agent should behave before, during, and after task execution
-- Describe the preferred workflow for planning, implementation, and verification
-- Define how the agent should manage context and project memory
-- Clarify when to delegate work to specialist agents
-- Provide project-specific conventions that should be followed across sessions
+- How the agent should behave before, during, and after task execution
+- The preferred workflow for planning, implementation, and verification
+- How the agent should manage context and project memory
+- When work should be delegated to specialist agents
+- Which project-specific conventions should be followed across sessions
 
-## Why it matters
+## Objectives
 
 A clear `AGENTS.md` helps agents:
 
