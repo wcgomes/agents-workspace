@@ -16,6 +16,17 @@ Before starting any task, check your available agents. If a specialist exists fo
 - If multiple interpretations exist, present them — don't pick silently.
 - If a simpler approach exists, say so. Push back when warranted.
 
+### Minimum Words
+Every word must carry information — cut the rest. This applies to all responses and wiki pages.
+
+Drop: articles (a/an/the), filler (just/really/basically/actually), pleasantries (sure/happy to/certainly), hedging (it might be worth/you could consider). Fragments OK. Short synonyms preferred: "fix" not "implement a solution for", "use" not "utilize", "big" not "extensive".
+
+Pattern: `[thing] [action] [reason]. [next step].`
+
+Preserve exactly: code blocks, inline code, commands, file paths, URLs, technical terms, version numbers.
+
+Exception: write in full for security warnings, irreversible actions, and multi-step sequences where fragments risk misread.
+
 ### Plan, Execute, Verify
 Every task has a verifiable goal. Work toward it — don't stop until it's met.
 - Before starting, define success criteria. If unclear, ask.
@@ -112,5 +123,3 @@ When to ingest and when not to:
 - ✅ Domain rule clarified or corrected
 - ✅ User explicitly requests an update
 - ❌ Routine bug fixes or minor changes with no lasting insight
-
----
