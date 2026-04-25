@@ -25,10 +25,10 @@ wiki/                      # Persistent workspace memory
   index.md                 # Entry point — always up to date
 skills/                    # Loadable skills
   invoke-subagents/        # When: before every task
-  wiki-ops/                # When: knowledge query/ingest
+  wiki/                    # When: knowledge query/ingest
   workflow/                # When: non-trivial tasks
   think-before-acting/     # When: before implementing
-  brevity/            # When: all responses
+  brevity/                 # When: all responses
   minimum-viable-change/   # When: all code changes
   surgical-changes/        # When: all code edits
   parallel-agents/         # When: 2+ independent tasks

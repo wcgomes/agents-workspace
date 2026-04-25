@@ -17,7 +17,7 @@ AI agent-driven development workspace template.
         ├── invoke-subagents/
         ├── workflow/
         ├── think-before-acting/
-        ├── wiki-ops/
+        ├── wiki/
         ├── minimum-viable-change/
         ├── brevity/
         └── parallel-work/
@@ -59,6 +59,6 @@ Source-only behavioral rules (not loaded by tools). Each skill:
 
 - `AGENTS.md` references `wiki/index.md`
 - Skills depend on `AGENTS.md` for initial context
-- Wiki updates after tasks complete (wiki-ops skill)
+- Wiki updates after tasks complete (wiki skill)
 
 See also: [conventions.md](conventions.md)

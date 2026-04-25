@@ -9,7 +9,7 @@ Every task has a verifiable goal — don't stop until met.
 
 ## Plan
 
-1. Load `wiki-ops` skill — read relevant pages before touching any code.
+1. Load `wiki` skill — read relevant pages before touching any code.
 2. Load `think-before-acting` skill — validate understanding.
 3. Define what "done" looks like. Unclear → ask.
 4. Multi-step tasks: share plan, get agreement before starting.
@@ -35,7 +35,7 @@ Every task has a verifiable goal — don't stop until met.
 
 ## After Task
 
-1. Load `wiki-ops` skill — ingest what this task taught about the workspace.
+1. Load `wiki` skill — ingest what this task taught about the workspace.
 2. Lint wiki for contradictions or stale claims.
 
 ## If Stuck

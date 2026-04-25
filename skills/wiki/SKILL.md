@@ -1,9 +1,9 @@
 ---
-name: wiki-ops
+name: wiki
 description: Manages workspace knowledge in wiki/. Activates when querying workspace architecture, conventions, or decisions — and at the end of every task to ingest learnings. Self-learning loop: every task leaves the workspace better documented.
 ---
 
-# Wiki Ops
+# Wiki
 
 Workspace knowledge base. Lives in `wiki/`. Self-learning loop — every task leaves the workspace better documented than it found it.
 
