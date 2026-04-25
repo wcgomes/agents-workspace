@@ -43,11 +43,11 @@ Self-learning loop. Agent:
 - Queries before each task
 - Updates after each task
 
-### .agents/skills/
-Loadable behavioral rules. Each skill:
-- Activates in specific context
-- Keeps context window lean
-- Is mandatory when activated
+### skills/
+Source-only behavioral rules (not loaded by tools). Each skill:
+- Contains the skill definition
+- Is installed globally via install-skills.sh
+- Keeps tools' global space clean
 
 ## Architectural Decisions
 

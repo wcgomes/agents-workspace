@@ -39,3 +39,51 @@ skills/                    # Loadable skills
 Point your AI agent at this repo. It reads `AGENTS.md` on boot, follows the sequence, and loads skills as needed.
 
 Works with any agent that supports `AGENTS.md` and markdown-based skills (Claude Code, OpenCode, Cursor, etc.).
+
+## Installing Skills
+
+Run the install script to deploy skills to your AI tools:
+
+```bash
+curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install-skills.sh | bash
+```
+
+Or clone and run locally:
+
+```bash
+git clone https://github.com/wcgomes/agents-workspace.git
+cd agents-workspace
+./tools/install-skills.sh
+```
+
+### Options
+
+| Flag | Description |
+|------|-------------|
+| `--all` | Install to all detected tools (default) |
+| `--opencode` | Install only for OpenCode |
+| `--claude` | Install only for Claude Code |
+| `--copilot` | Install only for Copilot |
+| `--with-agency` | Also install agency-agents (recommended) |
+| `--list` | List available skills |
+| `--help` | Show help |
+
+### Supported Tools
+
+| Tool | Our Skills | Agency-Agents (with --with-agency) |
+|------|-----------|-------------------------------------|
+| OpenCode | `~/.config/opencode/skills/` | `.opencode/agents/` (project-scoped) |
+| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
+| Copilot | `~/.copilot/agents/` | `~/.copilot/agents/` + `~/.github/agents/` |
+| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` |
+
+The script auto-detects which tools are installed and creates directories as needed. Skills are always overwritten with the latest version.
+
+### What Gets Installed
+
+- **Our skills** (agents-workspace): 7 workflow/orchestration skills
+- **Agency-agents** (with `--with-agency`): 144+ specialized agents across multiple domains (engineering, design, marketing, sales, etc.)
+
+### Credits
+
+This installer can also integrate [agency-agents](https://github.com/msitarzewski/agency-agents) by [@msitarzewski](https://github.com/msitarzewski), a collection of specialized AI agents with personality and proven workflows. Use `--with-agency` to install it. Check it out!
