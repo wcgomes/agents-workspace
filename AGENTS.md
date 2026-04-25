@@ -18,7 +18,7 @@ Skills load on demand — full instructions activate only when relevant. All are
 | `wiki-ops` | Query or ingest workspace knowledge |
 | `workflow` | Non-trivial tasks |
 | `think-before-acting` | Before implementing |
-| `minimum-words` | All responses and wiki pages |
+| `few-words` | All responses and wiki pages |
 | `minimum-viable-change` | All code changes |
 | `parallel-work` | 2+ independent tasks |
 
