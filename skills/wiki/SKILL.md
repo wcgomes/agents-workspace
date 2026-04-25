@@ -1,11 +1,11 @@
 ---
 name: wiki
-description: Manages workspace knowledge in wiki/. Use when querying anything about the workspace (architecture, conventions, domain, decisions) or at the end of any task to ingest what was learned. Activates for knowledge lookup, documentation updates, and post-task learning.
+description: Manages workspace knowledge in wiki/. Use when querying anything about the workspace or at the end of any task to ingest what was learned. Self-learning loop — every task leaves the workspace better documented.
 ---
 
 # Wiki
 
-Workspace knowledge base. Lives in `wiki/`. Self-learning loop — every task should leave the workspace better documented.
+Workspace knowledge base. Lives in `wiki/`. Self-learning loop — every task leaves the workspace better documented than it found it.
 
 ## Structure
 
@@ -37,15 +37,15 @@ Mandatory. Update when pages added or removed. Each entry needs brief descriptio
 
 Link new pages from `index.md` and from related pages.
 
-## Three operations
+## Three Operations
 
-**Ingest** — end of every task, write what you learned that wasn't in wiki. Don't wait to be asked. Update `index.md`, link from related pages.
+**Ingest** — end of every task, write what you learned that wasn't in wiki. Mandatory — don't wait to be asked. Update `index.md`, link from related pages.
 
 **Query** — start by reading `wiki/index.md`. Use descriptions to identify relevant pages — load only those. Never answer from memory if wiki page exists.
 
 **Lint** — after task, scan for contradictions, orphan pages not in `index.md`, stale claims. Fix what you find.
 
-## When to ingest and when not to
+## When to Ingest
 
 - ✅ Architectural decision made
 - ✅ New pattern or convention identified
@@ -54,6 +54,8 @@ Link new pages from `index.md` and from related pages.
 - ❌ Routine bug fixes or minor changes with no lasting insight
 
 ## Gotchas
+
 - Always read `wiki/index.md` first — never load all pages at once.
 - If index doesn't exist yet, create it before creating any other wiki page.
-- Wiki pages follow Minimum Words — dense, direct, no fluff.
+- Wiki pages follow `minimum-words` skill — dense, direct, no fluff.
+- Ingest is not optional — do it before closing any task.
