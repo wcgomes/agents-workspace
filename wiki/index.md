@@ -1,2 +1,2 @@
-- [architecture.md](architecture.md) — how the system is structured
+- [architecture.md](architecture.md) — system structure
 - [conventions.md](conventions.md) — code patterns, naming, style
