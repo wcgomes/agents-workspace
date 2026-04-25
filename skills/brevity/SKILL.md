@@ -1,5 +1,5 @@
 ---
-name: few-words
+name: brevity
 description: Use for all responses and wiki pages. Activates on every output. Removes filler words, uses short synonyms, keeps responses dense so context window stays lean.
 ---
 

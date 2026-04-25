@@ -19,7 +19,7 @@ AI agent-driven development workspace template.
         ├── think-before-acting/
         ├── wiki-ops/
         ├── minimum-viable-change/
-        ├── few-words/
+        ├── brevity/
         └── parallel-work/
 ```
 
