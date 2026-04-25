@@ -5,7 +5,7 @@ AI agent-driven development workspace template.
 ## Directory Structure
 
 ```
-/Users/wyller/repos/agents/
+/repos/agents/
 ├── AGENTS.md              # Boot instructions + skill index (required)
 ├── README.md              # Workspace overview
 ├── wiki/                  # Persistent workspace memory
