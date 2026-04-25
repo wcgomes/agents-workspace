@@ -24,13 +24,15 @@ Workspace patterns, naming, and style.
 ### workflow
 - Non-trivial tasks: define "done" first
 - Multiple steps: shared plan before starting
-- Parallel-agents for independent tasks
+- Parallel-work for independent tasks
 - QA runs before approval
 - Wiki ingest after task is required
 
-### surgical-changes
-- Change only what's needed
-- Maintain existing style
+### minimum-viable-change
+- Least code that solves the problem
+- No speculative features, unused abstractions
+- Change only what's needed — no adjacent improvements
+- Match existing style
 - Unrelated issues: mention, don't fix
 - Cite `file:line` in explanations
 

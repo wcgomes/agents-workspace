@@ -13,15 +13,14 @@ AI agent-driven development workspace template.
 │   ├── architecture.md    # This file
 │   └── conventions.md    # Patterns and conventions
 └── .agents/
-    └── skills/           # Loadable skills (8 skills)
+    └── skills/           # Loadable skills (7 skills)
         ├── invoke-subagents/
         ├── workflow/
         ├── think-before-acting/
         ├── wiki-ops/
         ├── minimum-viable-change/
         ├── minimum-words/
-        ├── surgical-changes/
-        └── parallel-agents/
+        └── parallel-work/
 ```
 
 ## Boot Sequence
