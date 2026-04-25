@@ -1,10 +1,9 @@
 ---
 name: brevity
 description: >
-  Default communication mode. Active on every output — responses, wiki pages, code reviews, 
+  Default communication mode. Active on every output — responses, wiki pages, code reviews,
   commit messages, and file edits. Maximizes signal per token by stripping non-information.
-  Use when user says "be brief", "keep it short", or any efficiency request. Always on unless 
-  user explicitly asks for verbose or explanatory mode.
+  Always on unless user explicitly asks for verbose or explanatory mode.
 ---
 
 # Brevity
