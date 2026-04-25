@@ -44,7 +44,7 @@ Options:
   --claude        Install only for Claude Code
   --copilot       Install only for Copilot
   --all           Install to all detected tools (default)
-  --with-agency   Also install agency-agents (recommended)
+  --no-agency     Skip agency-agents installation
   --list          List available skills without installing
   --help          Show this help
 
@@ -52,7 +52,7 @@ Examples:
   install-skills.sh              # Interactive mode
   install-skills.sh --all         # Install to all detected tools
   install-skills.sh --claude      # Install only for Claude Code
-  install-skills.sh --all --with-agency   # Install all + agency-agents
+  install-skills.sh --all --no-agency  # Install all without agency-agents
   install-skills.sh --list         # List available skills
 
 Install directly:
@@ -232,7 +232,8 @@ interactive_select() {
     echo "  |  ${C_BOLD}Skills Installer${C_RESET}                                   |"
     echo "  +--------------------------------------------------+"
     echo "  |  System scan: [*] = detected on this machine    |"
-    echo "  |  Use --with-agency to also install agency-agents |"
+    echo "  |  Agency-agents installed by default            |"
+    echo "  |  Use --no-agency to skip                     |"
     echo "  |                                                  |"
     i=0
     for t in "${ALL_TOOLS[@]}"; do
@@ -313,7 +314,7 @@ main() {
   local list_only=false
   local selected_tools=()
   local explicit_all=false
-  local install_agency=false
+  local skip_agency=false
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -321,7 +322,7 @@ main() {
       --claude)      selected_tools+=("claude");       shift ;;
       --copilot)     selected_tools+=("copilot");     shift ;;
       --all)         selected_tool="all";             explicit_all=true; shift ;;
-      --with-agency) install_agency=true;             shift ;;
+      --no-agency)   skip_agency=true;                shift ;;
       --list)        list_only=true;                  shift ;;
       --help|-h)    usage ;;
       *)             err "Unknown option: $1"; usage ;;
@@ -403,7 +404,9 @@ main() {
 
   local agency_tmp_zip="${tmp_dir}/agency.zip"
 
-  if $install_agency; then
+  if $skip_agency; then
+    info "Skipping agency-agents installation (--no-agency)"
+  else
     info "Downloading agency-agents..."
     if ! curl -sL "$AGENCY_REPO_URL" -o "$agency_tmp_zip" 2>/dev/null; then
       warn "Failed to download agency-agents archive."
@@ -466,7 +469,9 @@ main() {
     ok "$count skills -> $dest"
   done
 
-  if $install_agency; then
+  if $skip_agency; then
+    :
+  else
     echo ""
     echo "  agency-agents (via install.sh):"
     echo "    (check tool output above for counts)"

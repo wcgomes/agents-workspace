@@ -64,17 +64,17 @@ cd agents-workspace
 | `--opencode` | Install only for OpenCode |
 | `--claude` | Install only for Claude Code |
 | `--copilot` | Install only for Copilot |
-| `--with-agency` | Also install agency-agents (recommended) |
+| `--no-agency` | Skip agency-agents installation |
 | `--list` | List available skills |
 | `--help` | Show help |
 
 ### Supported Tools
 
-| Tool | Our Skills | Agency-Agents (with --with-agency) |
+| Tool | Our Skills | Agency-Agents (default) |
 |------|-----------|-------------------------------------|
-| OpenCode | `~/.config/opencode/skills/` | `.opencode/agents/` (project-scoped) |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
 | Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
-| Copilot | `~/.copilot/agents/` | `~/.copilot/agents/` + `~/.github/agents/` |
+| Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` |
 
 The script auto-detects which tools are installed and creates directories as needed. Skills are always overwritten with the latest version.
@@ -82,8 +82,8 @@ The script auto-detects which tools are installed and creates directories as nee
 ### What Gets Installed
 
 - **Our skills** (agents-workspace): 7 workflow/orchestration skills
-- **Agency-agents** (with `--with-agency`): 144+ specialized agents across multiple domains (engineering, design, marketing, sales, etc.)
+- **Agency-agents** (default, skip with `--no-agency`): 144+ specialized agents across multiple domains
 
 ### Credits
 
-This installer can also integrate [agency-agents](https://github.com/msitarzewski/agency-agents) by [@msitarzewski](https://github.com/msitarzewski), a collection of specialized AI agents with personality and proven workflows. Use `--with-agency` to install it. Check it out!
+This installer integrates [agency-agents](https://github.com/msitarzewski/agency-agents) by [@msitarzewski](https://github.com/msitarzewski), a collection of specialized AI agents with personality and proven workflows. Use `--no-agency` to skip. Check it out!
