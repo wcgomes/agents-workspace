@@ -1,9 +1,9 @@
 ---
-name: parallel-agents
+name: parallel-work
 description: Use when 2+ independent tasks can run simultaneously. Activates when multiple tasks have no shared state, no file overlap, and no sequential dependencies. Dispatches one subagent per domain concurrently.
 ---
 
-# Parallel Agents
+# Parallel Work
 
 Run independent tasks concurrently. One subagent per domain — no overlap, no shared state. Parallel = N tasks in the time of 1.
 

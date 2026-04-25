@@ -20,8 +20,7 @@ Skills load on demand — full instructions activate only when relevant. All are
 | `think-before-acting` | Before implementing |
 | `minimum-words` | All responses and wiki pages |
 | `minimum-viable-change` | All code changes |
-| `surgical-changes` | All code edits |
-| `parallel-agents` | 2+ independent tasks |
+| `parallel-work` | 2+ independent tasks |
 
 ## Non-Negotiables
 

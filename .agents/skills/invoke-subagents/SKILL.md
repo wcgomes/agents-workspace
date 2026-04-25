@@ -22,7 +22,7 @@ Tell user which specialist(s) chosen and why.
 
 ## Multiple Specialists
 
-Task spans domains → invoke one per domain. Parallel if independent (load `parallel-agents`). You orchestrate, synthesize outputs.
+Task spans domains → invoke one per domain. Parallel if independent (load `parallel-work`). You orchestrate, synthesize outputs.
 
 ## Large Tasks
 
