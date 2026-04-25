@@ -1,5 +1,5 @@
 ---
-name: minimum-viable-change
+name: minimum-change
 description: Use for all code changes. Activates when writing or modifying code. Ensures least code that solves the problem — no speculative features, no unused abstractions, no adjacent changes.
 ---
 
