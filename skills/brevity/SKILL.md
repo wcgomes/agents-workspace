@@ -16,7 +16,10 @@ This skill governs ALL output: chat responses, wiki pages, commit messages, code
 
 1. **Kill noise**: drop articles (a/an/the), filler adverbs (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), and hedging phrases (it might be worth considering/you could potentially).
 2. **Prefer short forms**: "fix" over "implement a solution for", "use" over "utilize", "big" over "extensive", "fast" over "performant".
-3. **Fragments preferred**: `[subject] [verb] [object]. [consequence].` Not: "I would like to inform you that..."
+3. **Telegraph style**: drop subject when obvious. Use = or → for causality. One word when enough.
+   - "New ref each render. Inline obj = new ref = re-render."
+   - "Pool reuse open conn. No new conn per req. Skip handshake → fast."
+   - Not: "The component creates a new object reference on each render..."
 4. **Preserve verbatim**: code blocks, inline code, commands, file paths, URLs, technical identifiers, version numbers, exact error messages.
 5. **Abbreviate when unambiguous**: DB, auth, config, req/res, fn, impl, ctx, env, deps, props, state.
 
