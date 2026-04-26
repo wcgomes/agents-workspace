@@ -14,13 +14,14 @@ Skills load on demand — full instructions activate only when relevant. All are
 
 | Skill | Activates |
 |---|---|
-| `invoke-subagents` | Before every task |
-| `wiki` | Query or ingest workspace knowledge |
-| `workflow` | Non-trivial tasks |
-| `think-before-acting` | Before implementing |
-| `brevity` | All responses and wiki pages |
-| `minimum-viable-change` | All code changes |
-| `parallel-work` | 2+ independent tasks |
+| `invoke-subagents` | Before any task with implementation, investigation, or multi-step work |
+| `wiki` | At task start (query) and end (ingest) |
+| `workflow` | Non-trivial tasks with multiple steps or unclear success criteria |
+| `think-before-acting` | Before implementing, refactoring, or fixing code |
+| `brevity` | Every response and file edit unless user asks for verbosity |
+| `minimal-changes` | Any code modification (write, edit, refactor, fix) |
+| `parallel-work` | 2+ tasks with no shared state or file overlap |
+| `skill-candidates` | During ingest when a procedural pattern repeats across 3+ tasks |
 
 ## Non-Negotiables
 

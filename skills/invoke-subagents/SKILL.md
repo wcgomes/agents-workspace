@@ -1,6 +1,6 @@
 ---
 name: invoke-subagents
-description: Use before every task — always invokes a subagent specialist. Activates when receiving any work. Identifies the best available specialist, builds a focused prompt, and delegates. No task is done directly.
+description: Use this skill before every task that involves implementation, investigation, or multi-step work. Activates when receiving any work that could be delegated to a specialist. Do NOT use for one-line answers or purely conversational responses — handle those directly.
 ---
 
 # Invoke Subagents

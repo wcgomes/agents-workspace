@@ -1,6 +1,6 @@
 ---
 name: parallel-work
-description: Use when 2+ independent tasks can run simultaneously. Activates when multiple tasks have no shared state, no file overlap, and no sequential dependencies. Dispatches one subagent per domain concurrently.
+description: Use this skill when 2 or more tasks touch different files or subsystems with no shared state and no sequential dependencies. Activates when work can be parallelized. Do NOT use when tasks share files, one affects another's outcome, or the task requires full system context.
 ---
 
 # Parallel Work

@@ -1,6 +1,6 @@
 ---
 name: workflow
-description: Use when starting any non-trivial task. Activates when planning, implementing, or verifying work that has multiple steps. Defines success criteria, coordinates subagents, runs QA, and manages approval.
+description: Use this skill when starting any non-trivial task with multiple steps or unclear success criteria. Activates when planning, implementing, or verifying work. Skip for one-line fixes or config changes, but always run QA and wait for approval.
 ---
 
 # Workflow
@@ -17,7 +17,7 @@ Every task has a verifiable goal — don't stop until met.
 
 ## Execute
 
-1. For multi-task plans: load `parallel-agents` skill — dispatch independent tasks to subagents in parallel.
+1. For multi-task plans: load `parallel-work` skill — dispatch independent tasks to subagents in parallel.
 2. For sequential tasks: invoke specialist subagent per task with fresh context.
 3. Each subagent gets focused, self-contained prompt. Never inherits your session.
 
@@ -27,11 +27,6 @@ Every task has a verifiable goal — don't stop until met.
 2. Two-stage review per task: spec compliance → code quality.
 3. Show diff of what changed.
 4. Wait for explicit approval — any clear affirmative counts.
-
-## Apply
-
-1. Never apply without explicit approval.
-2. Never apply directly to final destination — always a safe copy.
 
 ## After Task
 

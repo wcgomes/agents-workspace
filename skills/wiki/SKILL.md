@@ -1,26 +1,31 @@
 ---
 name: wiki
-description: Manages workspace knowledge in wiki/. Activates when querying workspace architecture, conventions, or decisions — and at the end of every task to ingest learnings. Self-learning loop: every task leaves the workspace better documented.
+description: Use this skill at the start of any task to query workspace knowledge (architecture, conventions, decisions) and at the end of every task to ingest what was learned. Activates on query or ingest. Self-learning loop — never skip ingest after completing work.
 ---
 
 # Wiki
 
-Workspace knowledge base. Lives in `wiki/`. Self-learning loop — every task leaves the workspace better documented than it found it.
+Workspace knowledge base. Lives in `wiki/` in the **current working directory** (the workspace where `AGENTS.md` was copied). Self-learning loop — every task leaves the workspace better documented than it found it.
+
+> **Scope:** This skill operates on the workspace being worked on, not on the global skills directory.
 
 ## Structure
 
 One concept per page. Focused, specific pages over broad ones. Subdirectories when topic grows beyond single page. Concepts that depend on others → link them.
 
-If `wiki/` doesn't exist, create when first learning something worth preserving.
+If `wiki/` doesn't exist, create it immediately with `wiki/index.md`.
 
 ```
 wiki/
-├── index.md          # Index of all pages — always up to date
-├── architecture.md   # How the system is structured
-├── conventions.md    # Code patterns, naming, style
-├── domain.md         # Business rules and domain logic
-├── decisions.md      # ADRs — why X over Y
-└── ...               # Add pages and subdirectories as needed
+├── index.md              # Index of all pages — always up to date
+├── architecture.md       # How the system is structured
+├── conventions.md        # Code patterns, naming, style
+├── domain.md             # Business rules and domain logic
+├── decisions.md          # ADRs — why X over Y
+├── skill-candidates/     # Recurring patterns tracked for skill promotion
+│   ├── prisma-migrate.md
+│   └── api-versioning.md
+└── ...                   # Add pages and subdirectories as needed
 ```
 
 ## index.md
@@ -28,8 +33,15 @@ wiki/
 Mandatory. Update when pages added or removed. Each entry needs brief description — pages identified without opening:
 
 ```markdown
+## Pages
+
 - [architecture.md](architecture.md) — how the system is structured
 - [auth/overview.md](auth/overview.md) — authentication flow and token lifecycle
+
+## Skill Candidates
+
+- [skill-candidates/prisma-migrate.md](skill-candidates/prisma-migrate.md) — run migrate + generate after schema changes (encounters: 1)
+- [skill-candidates/api-versioning.md](skill-candidates/api-versioning.md) — version bump process for API releases (encounters: 3, status: propose)
 ```
 
 Link new pages from `index.md` and from related pages.
@@ -41,6 +53,10 @@ Link new pages from `index.md` and from related pages.
 **Query** — start by reading `wiki/index.md`. Use descriptions to identify relevant pages — load only those. Never answer from memory if wiki page exists.
 
 **Lint** — after task, scan for contradictions, orphan pages not in `index.md`, stale claims. Fix what you find.
+
+## Skill Candidates
+
+When you detect a recurring procedural pattern during ingest, load the `skill-candidates` skill. Do not handle promotion logic inline — delegate to that skill.
 
 ## When to Ingest
 

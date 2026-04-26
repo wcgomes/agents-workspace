@@ -1,9 +1,6 @@
 ---
 name: brevity
-description: >
-  Default communication mode. Active on every output — responses, wiki pages, and file edits.
-  Maximizes signal per token by stripping non-information. Always on unless user explicitly
-  asks for verbose or explanatory mode.
+description: Use this skill for every response, wiki edit, and file change unless the user explicitly asks for verbose or explanatory mode. Activates on all output. Maximizes signal per token by stripping filler and non-information.
 ---
 
 # Brevity

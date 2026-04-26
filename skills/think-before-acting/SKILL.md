@@ -1,6 +1,6 @@
 ---
 name: think-before-acting
-description: Use before writing any code or making changes. Activates when about to implement, refactor, or fix something. Ensures understanding is validated before action.
+description: Use this skill before implementing, refactoring, or fixing code. Activates when about to make changes. Ensures understanding is validated before action. Stop and ask if requirements are unclear, ambiguous, or if a simpler approach exists.
 ---
 
 # Think Before Acting

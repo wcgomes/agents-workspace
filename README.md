@@ -1,89 +1,117 @@
 # Agents Workspace
 
-Workspace template for AI-agent-driven development. Defines behaviors, patterns, and persistent memory so agents work with quality and consistency.
+Template for AI-agent-driven development. Not a project — a behavioral contract. Install skills and specialized agents globally once, then drop `AGENTS.md` into any workspace. The agent gains consistency, quality, and self-learning.
 
-## Why
+## Problem
 
-AI agents without guidance repeat mistakes, bloat context, make careless changes, and don't learn from prior work. This workspace solves that with three ideas:
+Agents without guidance:
+- Repeat mistakes across sessions
+- Bloat context with noise
+- Make careless adjacent changes
+- Don't learn from prior work
 
-1. **Subagent-driven development** — every task is delegated to a specialist subagent. Isolated context per task = more focus, less noise. Independent tasks run in parallel.
-2. **Self-learning wiki** — `wiki/` is the workspace's persistent memory. Consulted before each task, updated after each task. The agent learns on its own.
-3. **On-demand skills** — behavioral rules live in loadable skills. The agent only loads what it needs, keeping the context window lean.
+## Solution: 6 mechanisms
 
-## How It Works
+1. **Isolated context per subagent** — `invoke-subagents` delegates every task to a specialist. Each subagent receives only the context it needs. No session inheritance, no bloat. The coordinator orchestrates; specialists execute.
+2. **Orchestrated workflow** — `workflow` + `parallel-work` coordinate planning, delegation, and execution. No task starts without a goal; no task ends without QA.
+3. **Dense communication** — `brevity` strips filler from every response and file edit. Finite context windows are preserved for actual reasoning, not pleasantries.
+4. **Self-learning wiki** — `wiki` instructs the agent to read `wiki/index.md` before touching code and ingest learnings after. Knowledge persists across sessions.
+5. **Behavioral guardrails** — `think-before-acting` and `minimal-changes` constrain how the agent plans and edits. Ask before assuming; change only what is needed.
+6. **Evolving skills** — `skill-candidates` detects recurring procedural patterns during ingest. After 3 encounters, proposes a new skill to the user. The workspace grows its own behavioral rules over time.
 
-1. Agent reads `AGENTS.md` on boot — mandatory boot sequence.
-2. Consults `wiki/index.md` — workspace source of truth.
-3. Invokes specialist subagent for the task — always, no exceptions.
-4. Skills load on demand — each activates in a specific context.
+## How skills work together
 
-## Structure
+| Moment | Skills active | What happens |
+|---|---|---|
+| Task received | `invoke-subagents` | Assess → pick specialist → delegate. No direct work. |
+| Before coding | `wiki`, `think-before-acting` | Read wiki, validate understanding, define "done". |
+| During coding | `minimal-changes`, `brevity` | Least code, dense communication, no drive-by fixes. |
+| Parallel work | `parallel-work` | Independent tasks dispatched concurrently. |
+| After task | `wiki`, `skill-candidates` | Ingest learnings. If a pattern repeats 3×, propose a skill. |
 
+Skills are **on-demand** — the agent loads only what the current context requires. Each is a focused behavioral rule, not a library.
+
+## Using this template
+
+**Step 1 — Copy `AGENTS.md` into your workspace**
+
+```bash
+cp AGENTS.md /path/to/your-project/
 ```
-AGENTS.md                  # Boot instructions + skill index
-wiki/                      # Persistent workspace memory
-  index.md                 # Entry point — always up to date
-skills/                    # Loadable skills
-  invoke-subagents/        # When: before every task
-  wiki/                    # When: knowledge query/ingest
-  workflow/                # When: non-trivial tasks
-  think-before-acting/     # When: before implementing
-  brevity/                 # When: all responses
-  minimum-viable-change/   # When: all code changes
-  surgical-changes/        # When: all code edits
-  parallel-agents/         # When: 2+ independent tasks
-```
 
-## Usage
+`AGENTS.md` is the boot contract. It is **not** installed globally and **not** copied by the skills installer. The agent reads it on every session start.
 
-Point your AI agent at this repo. It reads `AGENTS.md` on boot, follows the sequence, and loads skills as needed.
+**Step 2 — Let the agent create `wiki/`**
 
-Works with any agent that supports `AGENTS.md` and markdown-based skills (Claude Code, OpenCode, Cursor, etc.).
+The `wiki/` directory is workspace-specific knowledge. The agent creates it on first ingest. Do not copy from this repo — it is intentionally empty here.
 
-## Installing Skills
+**Step 3 — Skills evolve locally (automatic)**
 
-Run the install script to deploy skills to your AI tools:
+As the agent works, the `skill-candidates` skill detects recurring procedural patterns. After 3 encounters in distinct tasks, it proposes a new skill to you. If approved, the skill is created in `.agents/skills/` within your workspace — local to that project, not installed globally.
 
+**Step 4 (optional) — Install base skills globally**
+
+If your agent supports loadable skills (Claude Code, OpenCode, etc.), install them once:
+
+**Via curl:**
 ```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install-skills.sh | bash
 ```
 
-Or clone and run locally:
-
+**Or clone and run locally:**
 ```bash
 git clone https://github.com/wcgomes/agents-workspace.git
 cd agents-workspace
 ./tools/install-skills.sh
 ```
 
-### Options
+This deploys the 8 skills to your agent's skill directory. `AGENTS.md` still must be copied per workspace.
+
+### Installer options
 
 | Flag | Description |
-|------|-------------|
-| `--all` | Install to all detected tools (default) |
-| `--opencode` | Install only for OpenCode |
-| `--claude` | Install only for Claude Code |
-| `--copilot` | Install only for Copilot |
-| `--no-agency` | Skip agency-agents installation |
-| `--list` | List available skills |
+|---|---|
+| `--all` | All detected tools (default) |
+| `--opencode` | OpenCode only |
+| `--claude` | Claude Code only |
+| `--copilot` | Copilot only |
+| `--no-agency` | Skip agency-agents |
+| `--list` | Show available skills |
 | `--help` | Show help |
 
-### Supported Tools
+### Supported tools
 
-| Tool | Our Skills | Agency-Agents (default) |
-|------|-----------|-------------------------------------|
-| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
+| Tool | Skills path | Agents path |
+|---|---|---|
+| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` |
 | Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
 | Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
-| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
 
-The script auto-detects which tools are installed and creates directories as needed. Skills are always overwritten with the latest version.
+Skills are overwritten on each install. Agency-agents (optional) adds 144+ domain specialists.
 
-### What Gets Installed
+## Structure
 
-- **Our skills** (agents-workspace): 7 workflow/orchestration skills
-- **Agency-agents** (default, skip with `--no-agency`): 144+ specialized agents across multiple domains
+```
+AGENTS.md              # Boot instructions — copy to each workspace
+skills/                # Loadable behavioral rules — install globally
+  invoke-subagents/
+  wiki/
+  workflow/
+  think-before-acting/
+  brevity/
+  minimal-changes/
+  parallel-work/
+  skill-candidates/
 
-### Credits
+# In your workspace (created by the agent)
+wiki/                  # Workspace knowledge — created on first ingest
+  index.md
+  skill-candidates/    # Recurring patterns tracked for promotion
+.agents/skills/        # Skills created from candidates — workspace-local
+  <your-custom-skill>/
+```
 
-This installer integrates [agency-agents](https://github.com/msitarzewski/agency-agents) by [@msitarzewski](https://github.com/msitarzewski), a collection of specialized AI agents with personality and proven workflows. Use `--no-agency` to skip. Check it out!
+## Credits
+
+All credits for the specialized agents (agency-agents) go to the [agency-agents community](https://github.com/msitarzewski/agency-agents). The installer optionally integrates them. Use `--no-agency` to skip.

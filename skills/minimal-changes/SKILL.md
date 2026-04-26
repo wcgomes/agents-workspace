@@ -1,9 +1,9 @@
 ---
-name: minimum-change
-description: Use for all code changes. Activates when writing or modifying code. Ensures least code that solves the problem — no speculative features, no unused abstractions, no adjacent changes.
+name: minimal-changes
+description: Use this skill when writing, editing, refactoring, or fixing code. Activates on any code modification. Ensures the least code that solves the problem — no speculative features, no unused abstractions, no drive-by changes.
 ---
 
-# Minimum Viable Change
+# Minimal Changes
 
 Least code that solves the problem. Nothing more. Nothing adjacent. Smaller diffs = fewer bugs = faster review.
 
