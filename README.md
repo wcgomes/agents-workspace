@@ -1,43 +1,81 @@
 # Agents Workspace
 
-Template for AI-agent-driven development. Not a project — a behavioral contract. Install 8 workflow skills + **144+ specialized agents** globally once, then drop `AGENTS.md` into any workspace. The agent gains consistency, quality, and self-learning.
+**Behavioral contract for AI coding agents.** Install once, works with Claude Code, OpenCode, Cursor, Copilot, and more.
 
-## Problem
+> Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — a collection of 144+ specialized agents trusted by **86k+ developers**. Our installer adds 8 workflow orchestration skills on top.
 
-Agents without guidance:
-- Repeat mistakes across sessions
-- Bloat context with noise
-- Make careless adjacent changes
-- Don't learn from prior work
+## The problem
 
-## Solution: 6 mechanisms
+You ask your AI agent to fix authentication. It:
+- Refactors 3 unrelated files
+- Adds a dependency you didn't ask for
+- Doesn't update the docs
+- Next session, repeats the same mistakes
 
-1. **Isolated context per subagent** — `invoke-subagents` delegates every task to a specialist. Each subagent receives only the context it needs. No session inheritance, no bloat. The coordinator orchestrates; specialists execute.
-2. **Orchestrated workflow** — `workflow` + `parallel-work` coordinate planning, delegation, and execution. No task starts without a goal; no task ends without QA.
-3. **Dense communication** — `brevity` strips filler from every response and file edit. Finite context windows are preserved for actual reasoning, not pleasantries.
-4. **Self-learning wiki** — `wiki` instructs the agent to read `wiki/index.md` before touching code and ingest learnings after. Knowledge persists across sessions.
-5. **Behavioral guardrails** — `think-before-acting` and `minimal-changes` constrain how the agent plans and edits. Ask before assuming; change only what is needed.
-6. **Evolving skills** — `skill-candidates` detects recurring procedural patterns during ingest. After 3 encounters, proposes a new skill to the user. The workspace grows its own behavioral rules over time.
+**Agents without guidance are expensive interns.** They work hard, learn nothing, and leave messes.
 
-## How skills work together
+## What this solves
 
-| Moment | Skills active | What happens |
+**Before:** Vague prompts → wandering agents → broken code → repeated mistakes.
+
+**After:** Focused context → specialist delegation → minimal changes → self-learning wiki → evolving skills.
+
+## How it works: 6 mechanisms
+
+| Mechanism | Skill | What it does |
 |---|---|---|
-| Task received | `invoke-subagents` | Assess → pick specialist → delegate. No direct work. |
-| Before coding | `wiki`, `think-before-acting` | Read wiki, validate understanding, define "done". |
-| During coding | `minimal-changes`, `brevity` | Least code, dense communication, no drive-by fixes. |
-| Parallel work | `parallel-work` | Independent tasks dispatched concurrently. |
-| After task | `wiki`, `skill-candidates` | Ingest learnings. If a pattern repeats 3×, propose a skill. |
+| **Isolated context** | `invoke-subagents` | Delegates every task to a specialist with focused context. No session bloat. |
+| **Orchestrated workflow** | `workflow` + `parallel-work` | Plans tasks, coordinates execution, runs QA. No task ends without validation. |
+| **Dense communication** | `brevity` | Strips filler from responses and edits. Preserves context window for reasoning. |
+| **Self-learning wiki** | `wiki` | Reads workspace knowledge before coding, ingests learnings after. Memory persists. |
+| **Behavioral guardrails** | `think-before-acting` + `minimal-changes` | Validates understanding before acting. Changes only what's needed. |
+| **Evolving skills** | `skill-candidates` | Detects recurring patterns. After 3 encounters, proposes a new skill. Workspace grows its own rules. |
 
-Skills are **on-demand** — the agent loads only what the current context requires. Each is a focused behavioral rule, not a library.
+Skills load **on-demand** — the agent only activates what the current context requires.
 
-## Using this template
+## Who is this for
+
+- **Solo developers** tired of cleaning up after AI agents
+- **Teams** needing consistent agent behavior across multiple projects
+- **Anyone using Claude Code, OpenCode, Cursor, Copilot, or similar tools**
+- **Projects where context window is finite** and every token counts
+
+## What you get
+
+**8 workflow skills** for orchestration, quality, and memory:
+
+- `invoke-subagents` — specialist delegation
+- `workflow` — task planning and QA
+- `parallel-work` — concurrent independent tasks
+- `wiki` — workspace knowledge and self-learning
+- `think-before-acting` — validate before coding
+- `minimal-changes` — least code that solves the problem
+- `brevity` — dense, filler-free communication
+- `skill-candidates` — pattern detection and skill evolution
+
+**144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents) across 15 divisions:
+
+- **Engineering** — Frontend, Backend, Mobile, AI Engineer, DevOps, Security, SRE, and more
+- **Design** — UI Designer, UX Researcher, Brand Guardian, Visual Storyteller
+- **Marketing** — Growth Hacker, Content Creator, SEO, Social Media, Podcast Strategist
+- **Sales** — Outbound Strategist, Deal Strategist, Sales Engineer, Pipeline Analyst
+- **Product** — Product Manager, Sprint Prioritizer, Trend Researcher
+- **Project Management** — Studio Producer, Project Shepherd, Jira Workflow Steward
+- **Testing** — Reality Checker, Performance Benchmarker, Accessibility Auditor
+- **Support** — Support Responder, Analytics Reporter, Infrastructure Maintainer
+- **Paid Media** — PPC Strategist, Ad Creative Strategist, Tracking Specialist
+- **Finance** — Finance Tracker, Accounts Payable Agent
+- **Strategy** — Strategic Advisor, Competitive Analyst
+- **Game Development** — Game Designer, Level Architect
+- **Spatial Computing** — XR Developer, VisionOS Engineer
+- **Academic** — Research Assistant, Citation Manager
+- **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
+
+## Setup in 4 steps
 
 **Step 1 — Install skills and agents globally**
 
-The installer deploys 8 workflow skills plus **144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents). This is a one-time setup — the agent loads only what each task needs.
-
-The agency covers **15 divisions**: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic, and Specialized domains (legal, healthcare, compliance, recruitment, and more).
+One-time setup. The agent loads only what each task needs.
 
 **Via curl:**
 ```bash
@@ -51,7 +89,7 @@ cd agents-workspace
 ./tools/install-skills.sh
 ```
 
-> Agency-agents is installed by default. Use `--no-agency` to skip the 144+ agents and install only the 8 base skills.
+> Agency-agents (144+ specialized agents) is installed by default. Use `--no-agency` to skip and install only the 8 base skills.
 
 **Step 2 — Copy `AGENTS.md` into your workspace**
 
@@ -59,17 +97,17 @@ cd agents-workspace
 cp AGENTS.md /path/to/your-project/
 ```
 
-`AGENTS.md` is the boot contract. It is **not** installed globally and **not** copied by the skills installer. The agent reads it on every session start.
+`AGENTS.md` is the boot contract. The agent reads it on every session start. It is **not** installed globally.
 
 **Step 3 — Let the agent create `wiki/`**
 
-The `wiki/` directory is workspace-specific knowledge. The agent creates it on first ingest.
+The agent creates `wiki/` on first ingest. This is workspace-specific knowledge — do not copy from this repo.
 
-> **Tip:** If working in an existing workspace, ask the agent to "set up the wiki" before starting tasks. This triggers the initial `index.md` creation and primes the self-learning loop.
+> **Tip:** In an existing workspace, ask the agent to "set up the wiki" before starting. This primes the self-learning loop.
 
 **Step 4 — Skills evolve locally (automatic)**
 
-As the agent works, the `skill-candidates` skill detects recurring procedural patterns. After 3 encounters in distinct tasks, it proposes a new skill to you. If approved, the skill is created in `.agents/skills/` within your workspace — local to that project, not installed globally.
+As the agent works, it detects recurring procedural patterns. After 3 encounters, it proposes a new skill. If approved, the skill is created in `.agents/skills/` within your workspace — local to that project.
 
 ### Installer options
 
@@ -114,6 +152,14 @@ wiki/                  # Workspace knowledge — created on first ingest
   <your-custom-skill>/
 ```
 
+## Start using it
+
+1. [Install skills and agents](#setup-in-4-steps)
+2. Copy `AGENTS.md` to your project
+3. Tell your agent: "Set up the wiki and start working"
+
+The agent handles the rest.
+
 ## Credits
 
-All credits for the specialized agents (agency-agents) go to the [agency-agents community](https://github.com/msitarzewski/agency-agents). The installer optionally integrates them. Use `--no-agency` to skip.
+Specialized agents from the [agency-agents community](https://github.com/msitarzewski/agency-agents). Workflow skills and installer from agents-workspace. Use `--no-agency` to skip agency-agents.
