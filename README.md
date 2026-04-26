@@ -1,6 +1,6 @@
 # Agents Workspace
 
-Template for AI-agent-driven development. Not a project — a behavioral contract. Install skills and specialized agents globally once, then drop `AGENTS.md` into any workspace. The agent gains consistency, quality, and self-learning.
+Template for AI-agent-driven development. Not a project — a behavioral contract. Install 8 workflow skills + **144+ specialized agents** globally once, then drop `AGENTS.md` into any workspace. The agent gains consistency, quality, and self-learning.
 
 ## Problem
 
@@ -35,7 +35,7 @@ Skills are **on-demand** — the agent loads only what the current context requi
 
 **Step 1 — Install skills and agents globally**
 
-The behavioral rules and specialized agents must be installed once on your machine so the agent can load them on demand.
+The installer deploys 8 workflow skills plus **144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents) across multiple domains. This is a one-time setup — the agent loads only what each task needs.
 
 **Via curl:**
 ```bash
@@ -48,6 +48,8 @@ git clone https://github.com/wcgomes/agents-workspace.git
 cd agents-workspace
 ./tools/install-skills.sh
 ```
+
+> Use `--no-agency` to skip the 144+ agents and install only the 8 base skills.
 
 **Step 2 — Copy `AGENTS.md` into your workspace**
 
@@ -87,8 +89,6 @@ As the agent works, the `skill-candidates` skill detects recurring procedural pa
 | Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
 | Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
 | OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
-
-Skills are overwritten on each install. Agency-agents (optional) adds 144+ domain specialists.
 
 ## Structure
 
