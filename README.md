@@ -162,4 +162,6 @@ The agent handles the rest.
 
 ## Credits
 
-Specialized agents from the [agency-agents community](https://github.com/msitarzewski/agency-agents). Workflow skills and installer from agents-workspace. Use `--no-agency` to skip agency-agents.
+**Thank you to the [agency-agents community](https://github.com/msitarzewski/agency-agents)** for building and maintaining an incredible collection of 144+ specialized agents across 15 divisions. Their work makes multi-domain AI delegation practical and accessible.
+
+Workflow skills, orchestration logic, and installer from agents-workspace. Use `--no-agency` to skip agency-agents.
