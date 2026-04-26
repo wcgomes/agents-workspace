@@ -35,7 +35,9 @@ Skills are **on-demand** — the agent loads only what the current context requi
 
 **Step 1 — Install skills and agents globally**
 
-The installer deploys 8 workflow skills plus **144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents) across multiple domains. This is a one-time setup — the agent loads only what each task needs.
+The installer deploys 8 workflow skills plus **144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents). This is a one-time setup — the agent loads only what each task needs.
+
+The agency covers **15 divisions**: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic, and Specialized domains (legal, healthcare, compliance, recruitment, and more).
 
 **Via curl:**
 ```bash
@@ -49,7 +51,7 @@ cd agents-workspace
 ./tools/install-skills.sh
 ```
 
-> Use `--no-agency` to skip the 144+ agents and install only the 8 base skills.
+> Agency-agents is installed by default. Use `--no-agency` to skip the 144+ agents and install only the 8 base skills.
 
 **Step 2 — Copy `AGENTS.md` into your workspace**
 
