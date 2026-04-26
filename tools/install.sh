@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
-# install-skills.sh -- Install agents-workspace + agency-agents skills into your AI tools
+# install.sh -- Install agents-workspace + agency-agents skills into your AI tools
 #
 # Downloads the latest versions and installs skills to OpenCode, Claude Code,
 # Antigravity, and Copilot.
 #
 # Usage:
-#   ./install-skills.sh [--opencode|--claude|--copilot|--all] [--list] [--help]
+#   ./install.sh [--opencode|--claude|--copilot|--all] [--list] [--help]
 #
 # Install directly:
-#   curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install-skills.sh | bash
+#   curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 
 set -euo pipefail
 
@@ -37,7 +37,7 @@ info() { printf "${C_CYAN}[--]${C_RESET}  %s\n" "$*"; }
 
 usage() {
   cat <<EOF
-Usage: install-skills.sh [options]
+Usage: install.sh [options]
 
 Options:
   --opencode      Install only for OpenCode
@@ -49,14 +49,14 @@ Options:
   --help          Show this help
 
 Examples:
-  install-skills.sh              # Interactive mode
-  install-skills.sh --all         # Install to all detected tools
-  install-skills.sh --claude      # Install only for Claude Code
-  install-skills.sh --all --no-agency  # Install all without agency-agents
-  install-skills.sh --list         # List available skills
+  install.sh              # Interactive mode
+  install.sh --all         # Install to all detected tools
+  install.sh --claude      # Install only for Claude Code
+  install.sh --all --no-agency  # Install all without agency-agents
+  install.sh --list         # List available skills
 
 Install directly:
-  curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install-skills.sh | bash
+  curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 EOF
   exit 0
 }
@@ -444,7 +444,7 @@ main() {
   echo "=============================================="
   echo ""
 
-  echo "  install-skills.sh:"
+  echo "  install.sh:"
   for t in "${selected_tools[@]}"; do
     local count=0
     local dest=""

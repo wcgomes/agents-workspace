@@ -81,14 +81,14 @@ One-time setup. The agent loads only what each task needs.
 
 **Via curl:**
 ```bash
-curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install-skills.sh | bash
+curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 ```
 
 **Or clone and run locally:**
 ```bash
 git clone https://github.com/wcgomes/agents-workspace.git
 cd agents-workspace
-./tools/install-skills.sh
+./tools/install.sh
 ```
 
 > Agency-agents (144+ specialized agents) is installed by default. Use `--no-agency` to skip and install only the 8 base skills.
