@@ -1,6 +1,6 @@
 ---
 name: minimal-changes
-description: Use this skill when writing, editing, refactoring, or fixing code. Activates on any code modification. Ensures the least code that solves the problem — no speculative features, no unused abstractions, no drive-by changes.
+description: Use this skill when writing, editing, refactoring, or fixing code. Write the least code that solves the problem — no speculative features, no unused abstractions, no drive-by changes. Before creating a file, search for existing functionality to extend. Match existing style. This is not optional.
 ---
 
 # Minimal Changes

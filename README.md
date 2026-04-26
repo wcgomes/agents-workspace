@@ -2,7 +2,7 @@
 
 **Behavioral contract for AI coding agents.** Install once, works with Claude Code, OpenCode, Cursor, Copilot, and more.
 
-> Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — a collection of 144+ specialized agents trusted by **86k+ developers**. Our installer adds 8 workflow orchestration skills on top.
+> Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — a collection of 144+ specialized agents trusted by **86k+ developers**. Our installer adds 9 workflow orchestration skills on top.
 
 ## The problem
 
@@ -16,7 +16,7 @@ You ask your AI agent to fix authentication. It:
 
 ## What this solves
 
-**Before:** Vague prompts → wandering agents → broken code → repeated mistakes.
+**Before:** No behavioral contract → wandering agents → broader changes than needed → repeated mistakes.
 
 **After:** Focused context → specialist delegation → minimal changes → self-learning wiki → evolving skills.
 
@@ -42,7 +42,7 @@ Skills load **on-demand** — the agent only activates what the current context 
 
 ## What you get
 
-**8 workflow skills** for orchestration, quality, and memory:
+**9 workflow skills** for orchestration, quality, and memory:
 
 - `invoke-subagents` — specialist delegation
 - `workflow` — task planning and QA
@@ -52,6 +52,7 @@ Skills load **on-demand** — the agent only activates what the current context 
 - `minimal-changes` — least code that solves the problem
 - `brevity` — dense, filler-free communication
 - `skill-candidates` — pattern detection and skill evolution
+- `agents-skills` — create, refine, and validate Agent Skills
 
 **144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents) across 15 divisions:
 
@@ -71,7 +72,7 @@ Skills load **on-demand** — the agent only activates what the current context 
 - **Academic** — Research Assistant, Citation Manager
 - **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
 
-> Already have your own agents? Use `--no-agency` to skip the 144+ agents and install only the 8 base skills.
+> Already have your own agents? Use `--no-agency` to skip the 144+ agents and install only the 9 base skills.
 
 ## Setup in 4 steps
 
@@ -91,7 +92,7 @@ cd agents-workspace
 ./tools/install.sh
 ```
 
-> Agency-agents (144+ specialized agents) is installed by default. Use `--no-agency` to skip and install only the 8 base skills.
+> Agency-agents (144+ specialized agents) is installed by default. Use `--no-agency` to skip and install only the 9 base skills.
 
 **Step 2 — Copy `AGENTS.md` into your workspace**
 
@@ -145,6 +146,7 @@ skills/                # Loadable behavioral rules — install globally
   minimal-changes/
   parallel-work/
   skill-candidates/
+  agents-skills/
 
 # In your workspace (created by the agent)
 wiki/                  # Workspace knowledge — created on first ingest

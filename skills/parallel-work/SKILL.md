@@ -1,11 +1,13 @@
 ---
 name: parallel-work
-description: Use this skill when 2 or more tasks touch different files or subsystems with no shared state and no sequential dependencies. Activates when work can be parallelized. Do NOT use when tasks share files, one affects another's outcome, or the task requires full system context.
+description: Use this skill when 2 or more tasks touch different files or subsystems with no shared state and no sequential dependencies. Always split independent work across parallel specialist agents — one per domain. Parallel execution reduces context per agent, optimizing token consumption and output quality. Do NOT use when tasks share files or one affects another's outcome.
 ---
+
+> **CRITICAL:** When tasks are independent, parallelization is mandatory — not a suggestion. Sequential execution of independent tasks wastes time and increases context per agent. This is not optional.
 
 # Parallel Work
 
-Run independent tasks concurrently. One subagent per domain — no overlap, no shared state. Parallel = N tasks in the time of 1.
+Run independent tasks concurrently. One subagent per domain — no overlap, no shared state. Parallel = N tasks in the time of 1. Each agent gets smaller context → better results with fewer tokens.
 
 ## When to Use
 

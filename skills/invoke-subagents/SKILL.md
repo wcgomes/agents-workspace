@@ -1,7 +1,9 @@
 ---
 name: invoke-subagents
-description: Use this skill before every task that involves implementation, investigation, or multi-step work. Activates when receiving any work that could be delegated to a specialist. Do NOT use for one-line answers or purely conversational responses — handle those directly.
+description: Use this skill before every task that involves implementation, investigation, or multi-step work. Always delegate to a specialist agent instead of working directly. Split complex tasks across multiple specialists to reduce context per agent and improve quality. When multiple specialists are needed, find an orchestrator agent to coordinate them. Activates on any delegable task.
 ---
+
+> **CRITICAL:** Never do work directly when a specialist agent can do it better. Splitting tasks across agents reduces context per agent, optimizing token consumption and output quality. This is not optional.
 
 # Invoke Subagents
 
@@ -22,7 +24,7 @@ Tell user which specialist(s) chosen and why.
 
 ## Multiple Specialists
 
-Task spans domains → invoke one per domain. Parallel if independent (load `parallel-work`). You orchestrate, synthesize outputs.
+Task spans domains → invoke one per domain. Parallel if independent (load `parallel-work`). Find an orchestrator agent to coordinate specialists when available — keeps your context focused on vision and final validation. If no orchestrator available, you orchestrate.
 
 ## Large Tasks
 
@@ -40,6 +42,7 @@ Spec must pass before quality. Issues found → subagent fixes → re-review.
 - Subagents never inherit your session. You provide exactly what they need.
 - Keeps their context small. Preserves yours for coordination.
 - If a subagent asks questions → answer before they proceed.
+- Delegating orchestration keeps your context compact — you focus on objectives and verification, not coordination details.
 
 ## Gotchas
 

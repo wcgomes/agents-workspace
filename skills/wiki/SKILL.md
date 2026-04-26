@@ -1,7 +1,9 @@
 ---
 name: wiki
-description: Use this skill at the start of any task to query workspace knowledge (architecture, conventions, decisions) and at the end of every task to ingest what was learned. Activates on query or ingest. Self-learning loop — never skip ingest after completing work.
+description: Use this skill BEFORE any codebase exploration or task execution — query wiki/index.md first to leverage existing knowledge; never explore blindly. Also use at the end of every task to ingest what was learned. Self-learning loop — never skip ingest. Activates on every task.
 ---
+
+> **CRITICAL:** Never explore a codebase without first querying `wiki/index.md`. The wiki contains architecture, conventions, and decisions that prevent wasted effort. This is not optional.
 
 # Wiki
 

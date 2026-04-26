@@ -1,6 +1,6 @@
 ---
 name: think-before-acting
-description: Use this skill before implementing, refactoring, or fixing code. Activates when about to make changes. Ensures understanding is validated before action. Stop and ask if requirements are unclear, ambiguous, or if a simpler approach exists.
+description: Use this skill before implementing, refactoring, or fixing code. Validate your understanding before taking action — state assumptions, ask if unclear, present alternatives if multiple interpretations exist. Stop and ask if requirements are ambiguous or if a simpler approach exists. This is not optional.
 ---
 
 # Think Before Acting
