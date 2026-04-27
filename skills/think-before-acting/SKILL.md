@@ -15,7 +15,16 @@ Before writing code, validate your understanding. Prevents rework from acting on
 4. If a simpler approach exists → say so before proceeding with a complex one.
 5. If stuck two cycles with no progress → stop, explain blocker, ask for direction.
 
+## <HARD-GATE> Delegation Check
+
+Before implementing anything, ask yourself:
+
+> "Am I about to write implementation code directly, or am I delegating to a subagent specialist?"
+
+If you are about to write code directly → STOP. Load `invoke-subagents` skill and delegate. You are the orchestrator, not the implementer.
+
 ## Gotchas
 
 - "I think they mean X" without confirmation = you will implement the wrong thing.
 - Asking first always takes less time than reimplementing later.
+- Implementing directly "just this once" breaks the delegation discipline for the entire session.
