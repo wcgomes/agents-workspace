@@ -1,6 +1,6 @@
 # Agents Workspace
 
-**AI agent workflow toolkit.** Subagent-driven delegation, workspace memory, minimal changes. Works with Claude Code, OpenCode, Copilot, and more.
+**AI agent workflow toolkit.** Specialist-first delegation, workspace memory, minimal changes. Works with Claude Code, OpenCode, Copilot, and more.
 
 > Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — 144+ specialized agents trusted by **86k+ developers**. Our installer adds 5 foundational skills on top.
 
@@ -13,26 +13,27 @@
 
 | Without | With |
 |---|---|
-| Agent implements directly, accumulates context | Delegates to specialists with focused context |
+| Agent implements directly, accumulates context | Discovers and delegates to the best specialists with focused context |
 | Changes broader than needed | Minimal, targeted changes |
 | Skips verification, presents broken work | Two-stage review: spec compliance → code quality |
 | Verbose responses waste context window | Dense, filler-free communication |
 | Forgets what it learned between sessions | Self-learning wiki persists knowledge |
 | Same mistakes repeated across tasks | Skill candidates detect and codify patterns |
-| No workflow enforcement | HARD-GATEs + anti-rationalization |
+| No workflow enforcement | Specialist-first policy + HARD-GATEs + anti-rationalization |
 
 ## How it works
 
-- **Subagent-driven workflow** — agent always delegates to specialists, never implements directly. Orchestrates, reviews, validates.
+- **Specialist-first workflow** — agent discovers specialists, selects the best semantic match, delegates, reviews, and validates. Generalist execution is fallback only.
 - **Automatic wiki ingest** — agent evaluates after every task what it learned. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
 - **HARD-GATEs between phases** — Plan → Execute → Verify → After Task. No skipping. No combining.
 - **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
-- **Parallel specialist teams** — independent tasks dispatched to parallel agents automatically.
+- **Parallel specialist teams** — independent scopes can be dispatched to multiple specialists automatically.
+- **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
-| **Delegation** | `delegate` | Dispatches focused work to subagents for every task. Context isolation built-in. |
+| **Delegation** | `delegate` | Discovers specialists, selects the best fit, dispatches structured handoffs, and reviews delegated work. |
 | **Self-learning wiki** | `wiki` | Reads workspace knowledge before coding, ingests learnings after. Tracks skill candidates. |
 | **Minimal changes** | `implement` | Validates understanding before acting. Writes the least code that solves the problem. |
 | **Systematic debugging** | `debug` | Investigates errors with observe-hypothesize-verify-fix-confirm cycle. |
@@ -62,7 +63,7 @@ A complete AI agency at your fingertips - From frontend wizards to Reddit commun
 - **Academic** — Research Assistant, Citation Manager
 - **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
 
-> Installed by default. Use `--no-agency` to skip and install only the 5 base skills.
+> Installed by default. Use `--no-agency` to skip and install only the 5 base skills. The workflow is designed to discover these specialists automatically and choose the best fit for each task.
 
 ### Credits
 
@@ -92,7 +93,7 @@ cd agents-workspace
 cp AGENTS.md /path/to/your-project/
 ```
 
-`AGENTS.md` is the boot contract. The agent reads it on every session start. It is **not** installed globally.
+`AGENTS.md` is the boot contract. The agent reads it on every session start. It defines the specialist-first policy for discovery, selection, delegation, fallback, and accountability. It is **not** installed globally.
 
 **Step 3 — Let the agent create `wiki/`**
 
@@ -128,9 +129,9 @@ As the agent works, it detects recurring procedural patterns. After 3 encounters
 ## Structure
 
 ```
-AGENTS.md              # Boot instructions — copy to each workspace
+AGENTS.md              # Boot policy — copy to each workspace
 skills/                # Loadable behavioral rules — install globally
-  delegate/            # Agent discovery, dispatch, context isolation
+  delegate/            # Discovery, selection, handoff, review, fallback
   wiki/                # Wiki query and self-learning loop
   implement/           # Validation and minimal changes
   debug/               # Systematic error investigation
