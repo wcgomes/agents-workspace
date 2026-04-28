@@ -130,8 +130,8 @@ As the agent works, it detects recurring procedural patterns. After 3 encounters
 ```
 AGENTS.md              # Boot instructions — copy to each workspace
 skills/                # Loadable behavioral rules — install globally
-  delegate/            # Agent selection and dispatch
-  learn/               # Wiki query and self-learning loop
+  delegate/            # Agent discovery, dispatch, context isolation
+  wiki/                # Wiki query and self-learning loop
   implement/           # Validation and minimal changes
   debug/               # Systematic error investigation
   agents-skills/       # Skill authoring and validation
@@ -139,6 +139,10 @@ skills/                # Loadable behavioral rules — install globally
 # In your workspace (created by the agent)
 wiki/                  # Workspace knowledge — created on first ingest
   index.md
+  architecture.md      # System structure overview
+  conventions/         # One file per convention
+  domain/              # One file per business rule
+  decisions/           # One file per ADR
   skill-candidates/    # Recurring patterns tracked for promotion
 .agents/skills/        # Skills created from candidates — workspace-local
   <your-custom-skill>/
