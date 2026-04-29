@@ -50,6 +50,7 @@ Do not bind this policy to one platform's commands, paths, or installation layou
 Choose specialists by semantic fit, not convenience.
 
 Selection policy:
+- select for the immediate task, not the broadest surrounding program of work
 - match by description, specialization, scope, and constraints
 - prefer decomposing broad tasks into specialist-owned scopes before delegation
 - do not hand a mixed multi-domain task to one agent when it can be cleanly split
@@ -62,6 +63,7 @@ Selection policy:
 - do not bypass a specialist because the current agent could also do the work
 
 Eligibility minimum:
+- immediate task = the next concrete unit of work to assign, not the broader surrounding initiative
 - explicit domain or task match in the description
 - no conflict with stated constraints
 - scope compatible with the immediate task
@@ -71,6 +73,13 @@ Tie-break rules:
 - first: higher semantic specificity
 - second: stable documented precedence in the current environment
 - third: split across specialists when domains or scopes are naturally distinct
+
+Invalid reasons to choose a generalist over an eligible specialist include:
+- broader autonomy
+- owning the whole rollout
+- fewer handoffs
+- convenience
+- the current agent or chosen agent can probably do it
 
 ---
 
@@ -180,6 +189,7 @@ Provide enough explicit context to avoid avoidable clarification loops.
 Hard-gate before execution:
 - [ ] `delegate` activated before substantive work
 - [ ] specialist-first evaluation completed
+- [ ] immediate task identified before agent selection
 - [ ] done criteria defined or clarified
 - [ ] `wiki/index.md` consulted before broad workspace exploration when available
 - [ ] discovery completed

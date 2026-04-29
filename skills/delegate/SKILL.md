@@ -5,11 +5,9 @@ description: Mandatory specialist-first workflow. Load first, before substantive
 
 # Delegate
 
-Use this skill to discover specialists, select the best fit, delegate with a structured handoff, and review delegated results.
+Use this skill to operationalize the specialist-first delegation policy: discover specialists, select the best fit, delegate with a structured handoff, and review delegated results.
 
-This skill is protocol-first. Do not frame it around role identity.
-This skill is mandatory for every task before proceeding.
-If specialist eligibility has not been assessed, stop and run this workflow first.
+This skill is mandatory before substantive work. If specialist eligibility has not been assessed, stop and run this workflow first.
 
 ---
 
@@ -41,7 +39,7 @@ Use it:
 - when specialist fit, task decomposition, or generalist fallback must be assessed
 - when broad work may need splitting into specialist-owned scopes
 
-Do not wait for delegation to be obvious; use this skill to determine whether specialist delegation is required.
+Use this skill to determine whether specialist delegation is required before direct execution or fallback.
 Do not skip activation because the current agent appears capable, because the task seems small, or because fallback looks convenient.
 
 ---
@@ -61,6 +59,10 @@ Discovery rules:
 
 Broad exploration means workspace-wide search, repeated file reads, or open-ended local investigation beyond minimal scoping.
 
+Examples:
+- minimal scoping: read the request, inspect already-cited paths, or read a small number of directly relevant files needed to choose a specialist or prepare a handoff
+- broad exploration: workspace-wide search, reading multiple uncited files, or tracing implementation in depth before specialist selection
+
 Collect at least:
 - agent identifier
 - description
@@ -76,18 +78,21 @@ Do not hard-code one platform's paths, commands, or installation assumptions int
 Select by best semantic match.
 
 Selection rules:
+- select for the immediate task, not the broadest surrounding program of work
 - match the task against description, specialization, scope, and constraints
-- prefer decomposing broad tasks into specialist-owned scopes before dispatch
+- prefer decomposing broad tasks into specialist-owned scopes before dispatch when doing so improves specialist fit, scope clarity, or parallelism
 - do not hand a mixed multi-domain task to one agent when it can be cleanly split
 - if subtasks require materially different specialist expertise and can be assigned without overlapping ownership, splitting is required
 - early decomposition in this phase is structural for selection and handoff, not substantive execution or broad local research
 - minimal local context gathering is allowed when needed to scope selection and handoff, but not to replace delegated work
 - prefer the most semantically specific eligible specialist
+- specialists may own large scopes when their specialization matches the immediate task, including broad but coherent single-domain work
 - prefer specialists over generalists whenever an eligible specialist exists
 - use stable documented tie-break rules when candidates are similarly suitable
 - reject "current agent can also do it" as a selection argument
 
 Eligibility minimum:
+- immediate task = the next concrete unit of work to assign, not the broader surrounding initiative
 - explicit domain or task match in the description
 - no conflict with stated constraints
 - scope compatible with the immediate task
@@ -99,6 +104,13 @@ Tie-break rules:
 - third: split into multiple delegations when domains or scopes are complementary
 
 When many candidates exist, select the best fit, not the most convenient fit.
+
+Invalid reasons to choose a generalist over an eligible specialist include:
+- broader autonomy
+- owning the whole rollout
+- fewer handoffs
+- convenience
+- the current agent or chosen agent can probably do it
 
 ---
 
@@ -163,6 +175,17 @@ Fallback rules:
 - under discovery limits, state why no known eligible specialist fits better under the current constraints
 - never use "good enough" as justification
 - never fall back silently
+
+Examples:
+- valid fallback:
+  no eligible specialist found in observable sources
+  delegation was explicitly constrained by the user
+  valid handoff failed, re-evaluation was completed, and no viable specialist path remained
+- invalid fallback:
+  generalist seems faster
+  one agent can own the whole rollout
+  delegation would add handoffs
+  a specialist was not obvious immediately
 
 Fallback mode:
 - prefer delegating to a generalist agent when the environment supports it
