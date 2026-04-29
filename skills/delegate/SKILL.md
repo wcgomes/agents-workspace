@@ -80,11 +80,14 @@ Select by best semantic match.
 Selection rules:
 - select for the immediate task, not the broadest surrounding program of work
 - match the task against description, specialization, scope, and constraints
+- do not require an exact title or keyword match between the task wording and the specialist name
+- treat a specialist as eligible when it is a direct match or a reasonable adjacent match within the same domain, workflow phase, or work type
 - prefer decomposing broad tasks into specialist-owned scopes before dispatch when doing so improves specialist fit, scope clarity, or parallelism
 - do not hand a mixed multi-domain task to one agent when it can be cleanly split
 - if subtasks require materially different specialist expertise and can be assigned without overlapping ownership, splitting is required
 - early decomposition in this phase is structural for selection and handoff, not substantive execution or broad local research
 - minimal local context gathering is allowed when needed to scope selection and handoff, but not to replace delegated work
+- before considering generalist fallback, check whether any adjacent specialist can make meaningful progress on the immediate task
 - prefer the most semantically specific eligible specialist
 - specialists may own large scopes when their specialization matches the immediate task, including broad but coherent single-domain work
 - prefer specialists over generalists whenever an eligible specialist exists
@@ -93,7 +96,8 @@ Selection rules:
 
 Eligibility minimum:
 - immediate task = the next concrete unit of work to assign, not the broader surrounding initiative
-- explicit domain or task match in the description
+- explicit direct match, or reasonable adjacent match, to the immediate task
+- adjacent match may be based on the same domain, workflow phase, or work type
 - no conflict with stated constraints
 - scope compatible with the immediate task
 - no clearly better eligible specialist
@@ -103,6 +107,11 @@ Tie-break rules:
 - second: stable documented precedence in the current environment
 - third: split into multiple delegations when domains or scopes are complementary
 
+Selection priority:
+1. direct task specialist
+2. adjacent domain or work-type specialist
+3. generalist fallback
+
 When many candidates exist, select the best fit, not the most convenient fit.
 
 Invalid reasons to choose a generalist over an eligible specialist include:
@@ -111,6 +120,9 @@ Invalid reasons to choose a generalist over an eligible specialist include:
 - fewer handoffs
 - convenience
 - the current agent or chosen agent can probably do it
+- the specialist name is not an exact lexical match for the task
+- no specialist title mentions the task verbatim
+- a generalist seems safer when an adjacent specialist exists
 
 ---
 
@@ -166,17 +178,23 @@ Good candidates:
 Generalist fallback is allowed only under the conditions below.
 
 Fallback rules:
-- no eligible specialist exists, or all candidates are unsuitable
+- no eligible specialist exists only when no discovered specialist is a defensible direct or adjacent fit, or all candidates are unsuitable
 - or delegation is explicitly constrained by the user
 - or delegation failed after a valid handoff, re-evaluation, and no viable specialist path remains under the current task constraints
 - explain briefly why fallback applies
 - keep justification factual
 - identify the failed discovery, selection, or constraint condition
 - under discovery limits, state why no known eligible specialist fits better under the current constraints
+- before choosing a generalist, state whether adjacent specialists were considered and why they were unsuitable
 - never use "good enough" as justification
+- never use the absence of an exact title match as fallback justification
 - never fall back silently
 
 Examples:
+- adjacent-specialist preference:
+  if no dedicated test specialist exists, prefer an implementation or domain specialist over a generalist when the task is to add or improve tests
+  if no dedicated review specialist exists, prefer an implementation or debugging specialist depending on whether the task is critique or fault investigation
+  if no dedicated debugging specialist exists, prefer an implementation specialist for code-level fault isolation before using a generalist
 - valid fallback:
   no eligible specialist found in observable sources
   delegation was explicitly constrained by the user

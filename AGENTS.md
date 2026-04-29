@@ -52,6 +52,7 @@ Choose specialists by semantic fit, not convenience.
 Selection policy:
 - select for the immediate task, not the broadest surrounding program of work
 - match by description, specialization, scope, and constraints
+- do not require an exact title or keyword match between the task wording and the specialist name
 - prefer decomposing broad tasks into specialist-owned scopes before delegation
 - do not hand a mixed multi-domain task to one agent when it can be cleanly split
 - if subtasks require materially different specialist expertise and can be assigned without overlapping ownership, splitting is required
@@ -64,7 +65,8 @@ Selection policy:
 
 Eligibility minimum:
 - immediate task = the next concrete unit of work to assign, not the broader surrounding initiative
-- explicit domain or task match in the description
+- explicit direct match, or reasonable adjacent match, to the immediate task
+- adjacent match may be based on the same domain, workflow phase, or work type
 - no conflict with stated constraints
 - scope compatible with the immediate task
 - no clearly better eligible specialist
@@ -74,12 +76,20 @@ Tie-break rules:
 - second: stable documented precedence in the current environment
 - third: split across specialists when domains or scopes are naturally distinct
 
+Selection priority:
+1. direct task specialist
+2. adjacent domain or work-type specialist
+3. generalist fallback
+
 Invalid reasons to choose a generalist over an eligible specialist include:
 - broader autonomy
 - owning the whole rollout
 - fewer handoffs
 - convenience
 - the current agent or chosen agent can probably do it
+- the specialist name is not an exact lexical match for the task
+- no specialist title mentions the task verbatim
+- a generalist seems safer when an adjacent specialist exists
 
 ---
 
@@ -105,7 +115,7 @@ Required behavior:
 Generalist execution is an exception path.
 
 Fallback is allowed only when:
-- no eligible specialist exists
+- no discovered specialist is a defensible direct or adjacent fit for the immediate task
 - all discovered candidates are unsuitable for stated constraints
 - delegation is explicitly constrained by the user
 - delegation failed after a valid handoff, re-evaluation, and no viable specialist path remains under the current task constraints
@@ -115,7 +125,9 @@ Fallback requirements:
 - keep the explanation factual and specific
 - identify the failed discovery, selection, or constraint condition
 - under discovery limits, state why no known eligible specialist fits better under the current constraints
+- state whether adjacent specialists were considered and why they were not suitable
 - do not treat "I can do it" as sufficient justification
+- do not treat absence of an exact title match as evidence that no specialist exists
 - do not silently fall back
 
 Fallback mode:
