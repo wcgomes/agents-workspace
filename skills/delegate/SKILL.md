@@ -156,8 +156,12 @@ Scope: <what is in and out>
 Constraints: <rules, limits, expectations>
 Relevant files or context: <paths, snippets, facts>
 Expected deliverable: <artifact or decision>
-Expected return format: <status + content>
+Expected return format: <status + concise summary>
 ```
+
+**Policy inheritance:** Subagents must operate under the same `AGENTS.md` policies. Include in constraints: "You must follow the specialist-first workflow. Load `delegate` before any substantive work. Do not bypass delegation."
+
+**Return format rule:** Return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
 
 ---
 
@@ -241,6 +245,8 @@ After each delegated result returns:
 ### Stage 1: Conformance
 
 Did it deliver what was requested? Nothing more, nothing less?
+
+Did the subagent follow the specialist-first workflow? (i.e., did it load `delegate` and relevant skills, or provide evidence of delegation rather than direct execution?)
 
 ### Stage 2: Quality
 

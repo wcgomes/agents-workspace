@@ -15,11 +15,10 @@ Default behavior:
 
 ## Core Principles
 
-- `specialist-first` is mandatory
-- generalist is fallback, not peer
-- `delegate` loads before substantive work
 - specialist-first evaluation is mandatory for every task before proceeding
-- discovery and selection happen before execution
+- `delegate` loads before substantive work
+- agent main context stays clean — research, tool execution, logs, and low-level output belong to subagents; the main agent owns planning, delegation, and synthesis only
+- generalist is fallback, not peer
 - capability alone is never sufficient when a better specialist exists
 - delegation distributes work, not accountability
 - fallback must be brief, explicit, and defensible
@@ -198,16 +197,19 @@ Provide enough explicit context to avoid avoidable clarification loops.
 6. Discover eligible specialists.
 7. Select the best specialist or specialists.
 
-Hard-gate before execution:
-- [ ] `delegate` activated before substantive work
-- [ ] specialist-first evaluation completed
-- [ ] immediate task identified before agent selection
-- [ ] done criteria defined or clarified
-- [ ] `wiki/index.md` consulted before broad workspace exploration when available
-- [ ] discovery completed
-- [ ] eligible candidates assessed
-- [ ] delegation decision made under this policy
-- [ ] any fallback explicitly justified
+## <HARD-GATE> Before Any Execution
+
+**STOP. Do not proceed with any substantive work until ALL conditions below are confirmed true.**
+
+1. **`delegate` activated** — `skill('delegate')` has been loaded and evaluated. No exceptions.
+2. **Specialist-first evaluation completed** — you have inspected available agents and selected by semantic fit.
+3. **Immediate task identified** — the concrete next unit of work is named, not the broader initiative.
+4. **Done criteria defined** — success is unambiguous; if unclear, stop and clarify.
+5. **`wiki/index.md` consulted** — read it if it exists before any broad exploration.
+6. **Discovery completed** — eligible candidates were gathered from all observable sources.
+7. **Delegation decision made** — you chose under this policy, with explicit justification if fallback.
+
+If ANY condition is false: **STOP. Go back to Phase 1.**
 
 ### Phase 2: Execute
 
@@ -215,6 +217,8 @@ Hard-gate before execution:
 2. Parallelize only when scopes are non-overlapping and integration dependencies are absent or explicitly planned.
 3. Allow subdelegation when it improves specialization or decomposition.
 4. Review and synthesize before returning results upward.
+
+**Agent Main Rule:** Do not execute tools directly unless task constraints explicitly require main-agent execution. All research, tool invocation, log collection, and low-level work belongs to subagents. The main agent context stays clean for planning, delegation, and synthesis.
 
 ### Phase 3: After Task
 

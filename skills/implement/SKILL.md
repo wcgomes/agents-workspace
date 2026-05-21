@@ -5,6 +5,8 @@ description: Use this skill before writing, editing, refactoring, or fixing code
 
 # Implement
 
+**Prerequisite:** This skill may only be activated after `delegate` has been loaded and evaluated. Do not proceed with implementation until specialist eligibility has been assessed under the policy in `AGENTS.md`.
+
 Validate understanding before acting. Write the least code that solves the problem. Nothing more.
 
 ---

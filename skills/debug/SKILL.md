@@ -5,6 +5,8 @@ description: Use this skill when debugging, investigating errors, fixing bugs, o
 
 # Debug
 
+**Prerequisite:** This skill may only be activated after `delegate` has been loaded and evaluated. Do not proceed with debugging until specialist eligibility has been assessed under the policy in `AGENTS.md`.
+
 Investigate systematically. Verify each hypothesis before moving to the next. Fix → verify → repeat until resolved.
 
 ---
