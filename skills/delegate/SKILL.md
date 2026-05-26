@@ -77,10 +77,16 @@ Do not hard-code one platform's paths, commands, or installation assumptions int
 
 Select by best semantic match.
 
+Semantic specificity means domain and work-type granularity, not technology-stack granularity. A domain specialist (e.g., a generic backend or frontend expert) is the correct match for any task within that domain, regardless of the specific languages or frameworks mentioned. Match by the domain and role the task belongs to, not by the technology names that appear in the task description.
+
+Anti-pattern: looking for an overly specific stack-level expert (e.g., "Language X Specialist") instead of matching a broader domain or role specialist. This over-narrowing by technology stack causes false fallbacks.
+
 Selection rules:
 - select for the immediate task, not the broadest surrounding program of work
-- match the task against description, specialization, scope, and constraints
+- match by domain, role, work type, and scope — never narrow the match by requiring a specific technology stack mentioned in the task
+- a specialist's declared domain (backend, frontend, devops, data, security, etc.) qualifies them for any task within that domain, regardless of specific languages or frameworks the task names
 - do not require an exact title or keyword match between the task wording and the specialist name
+- do not disqualify a specialist because their name or description lacks a specific technology keyword present in the task
 - treat a specialist as eligible when it is a direct match or a reasonable adjacent match within the same domain, workflow phase, or work type
 - prefer decomposing broad tasks into specialist-owned scopes before dispatch when doing so improves specialist fit, scope clarity, or parallelism
 - do not hand a mixed multi-domain task to one agent when it can be cleanly split
@@ -94,16 +100,23 @@ Selection rules:
 - use stable documented tie-break rules when candidates are similarly suitable
 - reject "current agent can also do it" as a selection argument
 
+Technology-stack vs domain matching — when a task names specific technologies:
+- extract the domain from the task
+- match specialists by domain and role, not by the individual technologies listed
+- a technology keyword in the task is context for the handoff, not a filter for specialist discovery
+- only narrow by technology when an agent is explicitly designed and named as a dedicated specialist for that specific technology.
+
 Eligibility minimum:
 - immediate task = the next concrete unit of work to assign, not the broader surrounding initiative
 - explicit direct match, or reasonable adjacent match, to the immediate task
 - adjacent match may be based on the same domain, workflow phase, or work type
+- adjacent match may be based on domain compatibility even when technology keywords differ from the specialist's explicit description
 - no conflict with stated constraints
 - scope compatible with the immediate task
 - no clearly better eligible specialist
 
 Tie-break rules:
-- first: semantic specificity to the immediate task
+- first: semantic specificity (domain and work-type granularity, not technology-stack granularity)
 - second: stable documented precedence in the current environment
 - third: split into multiple delegations when domains or scopes are complementary
 
@@ -111,6 +124,8 @@ Selection priority:
 1. direct task specialist
 2. adjacent domain or work-type specialist
 3. generalist fallback
+
+Fallback to generalist because no specialist mentions a specific technology keyword is always invalid. A domain specialist exists for nearly every domain; the absence of a technology keyword in their description does not make them ineligible.
 
 When many candidates exist, select the best fit, not the most convenient fit.
 
@@ -123,6 +138,8 @@ Invalid reasons to choose a generalist over an eligible specialist include:
 - the specialist name is not an exact lexical match for the task
 - no specialist title mentions the task verbatim
 - a generalist seems safer when an adjacent specialist exists
+- no specialist title or description mentions a specific language, framework, or technology present in the task
+- a domain specialist does not explicitly list the task's technology stack in their description
 
 ---
 
@@ -192,6 +209,7 @@ Fallback rules:
 - before choosing a generalist, state whether adjacent specialists were considered and why they were unsuitable
 - never use "good enough" as justification
 - never use the absence of an exact title match as fallback justification
+- never fall back because no specialist mentions a specific language, framework, or technology keyword present in the task. A domain specialist exists for nearly every domain; the absence of a technology keyword in their description does not make them ineligible.
 - never fall back silently
 
 Examples:

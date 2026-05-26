@@ -50,45 +50,11 @@ Choose specialists by semantic fit, not convenience.
 
 Selection policy:
 - select for the immediate task, not the broadest surrounding program of work
-- match by description, specialization, scope, and constraints
-- do not require an exact title or keyword match between the task wording and the specialist name
-- prefer decomposing broad tasks into specialist-owned scopes before delegation
-- do not hand a mixed multi-domain task to one agent when it can be cleanly split
-- if subtasks require materially different specialist expertise and can be assigned without overlapping ownership, splitting is required
-- early decomposition in this phase is structural for selection and handoff, not substantive execution or broad local research
-- minimal local context gathering is allowed when needed to scope selection and handoff
-- prefer the most semantically specific eligible specialist
-- use stable documented tie-break rules when candidates are similarly suitable
+- match by domain, role, work type, and scope — never narrow the match by requiring a specific technology stack mentioned in the task
 - do not use a generalist if an eligible specialist exists
 - do not bypass a specialist because the current agent could also do the work
 
-Eligibility minimum:
-- immediate task = the next concrete unit of work to assign, not the broader surrounding initiative
-- explicit direct match, or reasonable adjacent match, to the immediate task
-- adjacent match may be based on the same domain, workflow phase, or work type
-- no conflict with stated constraints
-- scope compatible with the immediate task
-- no clearly better eligible specialist
-
-Tie-break rules:
-- first: higher semantic specificity
-- second: stable documented precedence in the current environment
-- third: split across specialists when domains or scopes are naturally distinct
-
-Selection priority:
-1. direct task specialist
-2. adjacent domain or work-type specialist
-3. generalist fallback
-
-Invalid reasons to choose a generalist over an eligible specialist include:
-- broader autonomy
-- owning the whole rollout
-- fewer handoffs
-- convenience
-- the current agent or chosen agent can probably do it
-- the specialist name is not an exact lexical match for the task
-- no specialist title mentions the task verbatim
-- a generalist seems safer when an adjacent specialist exists
+Detailed selection criteria, including how to avoid the "specificity trap" (over-narrowing by technology stack), tie-break rules, and invalid selection reasons, are fully defined in the `delegate` skill. **You must load and follow the `delegate` skill for complete selection rules.**
 
 ---
 
@@ -117,21 +83,9 @@ Fallback is allowed only when:
 - no discovered specialist is a defensible direct or adjacent fit for the immediate task
 - all discovered candidates are unsuitable for stated constraints
 - delegation is explicitly constrained by the user
-- delegation failed after a valid handoff, re-evaluation, and no viable specialist path remains under the current task constraints
+- delegation failed after a valid handoff, re-evaluation, and no viable specialist path remains
 
-Fallback requirements:
-- explain briefly why delegation did not apply
-- keep the explanation factual and specific
-- identify the failed discovery, selection, or constraint condition
-- under discovery limits, state why no known eligible specialist fits better under the current constraints
-- state whether adjacent specialists were considered and why they were not suitable
-- do not treat "I can do it" as sufficient justification
-- do not treat absence of an exact title match as evidence that no specialist exists
-- do not silently fall back
-
-Fallback mode:
-- prefer delegating to a generalist agent when the environment supports it
-- direct execution by the current agent is allowed only when delegation is constrained, unavailable, or already failed under the current task constraints
+Detailed fallback requirements, invalid justifications (such as missing technology keywords), and fallback execution modes are defined in the `delegate` skill. **You must load and follow the `delegate` skill to validate any fallback decision.**
 
 ---
 
