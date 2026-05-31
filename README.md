@@ -1,8 +1,10 @@
 # Agents Workspace
 
-**AI agent workflow toolkit.** Specialist-first delegation, workspace memory, minimal changes. Works with Claude Code, OpenCode, Copilot, and more.
+**AI agent workflow toolkit.** Specialist-first, team-driven workflow with workspace memory. Works with Claude Code, OpenCode, Copilot, and more.
 
-> Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — 144+ specialized agents trusted by **86k+ developers**. Our installer adds 5 foundational skills on top.
+> Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — 144+ specialized agents trusted by **86k+ developers**. Our installer adds 6 foundational skills on top.
+
+**Simple by design.** Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
 ## Who is this for
 
@@ -13,37 +15,39 @@
 
 | Without | With |
 |---|---|
-| Agent implements directly, accumulates context | Discovers and delegates to the best specialists with focused context |
+| Agent implements directly, accumulates context | Assembles specialist teams and delegates with focused context |
 | Changes broader than needed | Minimal, targeted changes |
 | Skips verification, presents broken work | Two-stage review: spec compliance → code quality |
 | Verbose responses waste context window | Dense, filler-free communication |
 | Forgets what it learned between sessions | Self-learning wiki persists knowledge |
 | Same mistakes repeated across tasks | Skill candidates detect and codify patterns |
-| No workflow enforcement | Specialist-first policy + HARD-GATEs + anti-rationalization |
+| No workflow enforcement | Team-driven policy + HARD-GATEs + anti-rationalization |
 
 ## How it works
 
-- **Specialist-first workflow** — agent activates `delegate` first, then loads the `wiki` skill for workspace context, reads `wiki/index.md` when available, and creates or maintains `wiki/` only when setup, ingest, maintenance, or persistence of new knowledge require it. Then it discovers specialists, selects the best semantic match, delegates, reviews, and validates. Generalist execution is fallback only after re-evaluation.
+- **Team-driven workflow** — agent loads `team-assembly` first, reads `wiki/index.md` for workspace context, then assembles the ideal specialist team for the request: analyzes domains, discovers available specialists, selects coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
+- **Structured delegation** — `delegate` handles each handoff with a canonical shape (task, objective, scope, constraints, deliverable, return format). Specialists load `implement` for code work or `debug` for error investigation.
 - **Automatic wiki maintenance** — agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
 - **HARD-GATEs between phases** — Assess → Execute → After Task. Review and synthesis happen inside execution/accountability. No skipping.
 - **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
 - **Parallel specialist teams** — independent scopes can be dispatched to multiple specialists automatically.
-- **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator and subscopes still follow the same discovery, selection, and fallback rules.
+- **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator and subscopes still follow the same rules.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
-| **Delegation** | `delegate` | Discovers specialists, selects the best fit, dispatches structured handoffs, and reviews delegated work. |
+| **Team assembly** | `team-assembly` | Analyzes domains, discovers specialists, selects coordination pattern, plans execution order. |
+| **Delegation** | `delegate` | Hands off work with structured handoffs, reviews results, manages status protocol. |
 | **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then adds, updates, removes, and lints workspace knowledge after tasks. Tracks skill candidates. |
 | **Minimal changes** | `implement` | Validates understanding before acting. Writes the least code that solves the problem. |
 | **Systematic debugging** | `debug` | Investigates errors with observe-hypothesize-verify-fix-confirm cycle. |
 | **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
-Skills load **on-demand** — but the agent activates `delegate` first by default before substantive work or any decision about direct execution or fallback, then loads the `wiki` skill for workspace context, reads `wiki/index.md` when available, and creates or maintains `wiki/` only when setup, ingest, maintenance, or persistence of new knowledge require it, before broad exploration, delegated execution, or fallback decisions.
+Skills load **on-demand** — but the agent loads `team-assembly` first by default before substantive work, then `wiki` for context, then `delegate` for each handoff.
 
 ## 🎭 The Agency: AI Specialists Ready to Transform Your Workflow
 
-A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.
+A complete AI agency at your fingertips — from frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.
 
 **144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents) across 15 divisions:
 
@@ -63,7 +67,7 @@ A complete AI agency at your fingertips - From frontend wizards to Reddit commun
 - **Academic** — Research Assistant, Citation Manager
 - **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
 
-> Installed by default. Use `--no-agency` to skip and install only the 5 base skills. The workflow is designed to discover these specialists automatically and choose the best fit for each task.
+> Installed by default. Use `--no-agency` to skip and install only the 6 base skills. The workflow is designed to discover these specialists automatically and assemble the best team for each task.
 
 ### Credits
 
@@ -93,7 +97,7 @@ cd agents-workspace
 cp AGENTS.md /path/to/your-project/
 ```
 
-`AGENTS.md` is the boot contract. The agent reads it on every session start. It defines the specialist-first policy for discovery, selection, delegation, fallback, accountability, and early decomposition into specialist-owned scopes. Early decomposition is for scope partitioning and handoff, not for replacing specialized execution with broad local work. It is **not** installed globally.
+`AGENTS.md` is the boot contract. The agent reads it on every session start. It defines the team-driven workflow: assemble specialist teams, decompose into specialist-owned scopes, delegate to best semantic match. It is **not** installed globally.
 
 **Step 3 — Let the agent create `wiki/`**
 
@@ -133,7 +137,8 @@ These are the installer target paths currently supported. They are not the norma
 ```
 AGENTS.md              # Boot policy — copy to each workspace
 skills/                # Loadable behavioral rules — install globally
-  delegate/            # Discovery, selection, handoff, review, fallback
+  team-assembly/       # Team composition, domain analysis, coordination patterns
+  delegate/            # Handoff, review, status, subdelegation
   wiki/                # Wiki query and self-learning loop
   implement/           # Validation and minimal changes
   debug/               # Systematic error investigation
