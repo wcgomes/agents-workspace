@@ -109,6 +109,20 @@ The agent may create `wiki/` when setup is explicit, or when the `wiki` skill ne
 
 As the agent works, it detects recurring procedural patterns. After 3 encounters, it proposes a new skill. If approved, the skill is created in `.agents/skills/` within your workspace — local to that project.
 
+**Updating**
+
+To update skills and agents to the latest version, run the install script again. Then update `AGENTS.md` in your workspace if the boot policy changed:
+
+```bash
+# Re-run the installer to update skills and agents globally
+curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
+
+# Update AGENTS.md in your workspace
+cp AGENTS.md /path/to/your-project/
+```
+
+Wiki content and workspace-local skills are preserved — only global skills and agents are overwritten.
+
 ### Installer options
 
 | Flag | Description |
