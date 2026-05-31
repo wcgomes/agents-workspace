@@ -52,6 +52,7 @@ Before reporting completion:
 - [ ] No orthogonal changes?
 - [ ] Unused code/imports removed?
 - [ ] Existing style matched?
+- [ ] No new warnings or errors introduced?
 
 ---
 
