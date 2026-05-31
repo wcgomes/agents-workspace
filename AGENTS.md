@@ -72,9 +72,9 @@ If ANY false → go back to Phase 1.
 
 ---
 
-## Brevity
+## Communication
 
-Every word carries information. Drop filler.
+Be concise when speaking to the user. Say what matters, skip the rest. No preambles, no filler, no obvious explanations. Answer directly.
 
 ---
 
