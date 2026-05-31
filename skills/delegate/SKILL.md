@@ -13,10 +13,17 @@ Structured handoff, review, and status management for delegated specialist work.
 
 - team-assembly must be loaded first
 - Specialist team and execution plan must be ready
+- Each handoff targets a specific specialist from the team roster — never default to the platform's general agent
 
 ---
 
 ## Delegation Workflow
+
+### Who to Delegate To
+
+Use the specialists identified by team-assembly. Each role in the team roster maps to a specific specialist agent. Do not delegate to the platform's default agent, a generalist, or "the current agent" when a specialist was identified for that role.
+
+If the platform's subagent tool requires an agent identifier, use the specialist's identifier from the team roster. If the specialist is not available as a subagent, use the closest available specialist — not the generalist.
 
 ### Canonical Handoff Shape
 

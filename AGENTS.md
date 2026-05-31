@@ -34,8 +34,9 @@ Enforce specialist-first, team-driven workflow.
 ### Phase 2: Execute
 
 1. Load `delegate` for each handoff
-2. Parallelize independent scopes
-3. Review and synthesize results
+2. Delegate to the specific specialists identified by `team-assembly` — do not use the platform's default general agent
+3. Parallelize independent scopes
+4. Review and synthesize results
 
 ### Phase 3: After Task
 
