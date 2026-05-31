@@ -7,11 +7,26 @@ description: Use this skill when querying workspace knowledge before tasks or in
 
 Workspace knowledge base and self-improvement loop. Query wiki before exploring blindly. Ingest learnings after every task.
 
+The wiki exists to eliminate unnecessary codebase exploration. With the right knowledge, the agent goes straight to the relevant code. If exploration is still needed, the wiki narrows the search — focused and directed, not open-ended.
+
+---
+
+## Design Principle
+
+Wiki files are loaded into agent context. Every line costs tokens.
+
+- **Compact** — short paragraphs, bullet points, no filler
+- **Precise** — only information that matters for future tasks
+- **Scannable** — clear headings, one topic per file, easy to locate
+- **Lean** — if it doesn't help the agent decide or act, remove it
+
+Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
+
 ---
 
 ## Three Operations
 
-**Setup** — create `wiki/` when setup is explicit, when ingest or maintenance work requires it, or when new knowledge must be persisted.
+**Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet.
 
 **Query** — read `wiki/index.md` first. Identify relevant pages. Load only those.
 
@@ -33,7 +48,6 @@ Run this checklist at the end of EVERY task. Do NOT skip.
 Any YES → ingest. All NO → skip (but you must have evaluated each).
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
-If the wiki changed, also evaluate whether pages should be updated, removed, re-linked from `wiki/index.md`, or linted for contradictions and stale references.
 
 ---
 
@@ -54,10 +68,7 @@ wiki/
 └── ...
 ```
 
-Create `wiki/` when setup is explicit, when ingest or maintenance work requires it, or when new knowledge must be persisted (see Wiki Structure below).
-If `wiki/index.md` exists, read it before broad workspace exploration. Treat it as the first workspace knowledge source.
-
-Broad exploration means workspace-wide search, repeated file reads, or open-ended local investigation beyond minimal scoping.
+This is a starting point. Create additional folders and subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder. Keep it navigable.
 
 ---
 
@@ -154,6 +165,5 @@ Do not leave the wiki internally inconsistent after editing it.
 
 ## Gotchas
 
-- If `wiki/index.md` exists, read it first — loading all pages wastes context.
 - Pages not linked from `index.md` are invisible.
 - Evaluate automatically — don't wait for the user to ask.
