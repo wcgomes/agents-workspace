@@ -1,15 +1,17 @@
 # Agents Workspace
 
-**AI agent workflow toolkit.** Specialist-first, team-driven workflow with workspace memory. Works with Claude Code, OpenCode, Copilot, and more.
-
-> Integrates [agency-agents](https://github.com/msitarzewski/agency-agents) — 144+ specialized agents trusted by **86k+ developers**. Our installer adds 6 foundational skills on top.
+> **AI agent workflow toolkit.** Specialist-first, team-driven workflow with workspace memory. 
+> **Powered by [The Agency](https://github.com/msitarzewski/agency-agents)** with more than 144+ specialized agents trusted by 86k+ developers.
 
 **Simple by design.** Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
-## Who is this for
+**For anyone** who wants an optimized, consistent, self-learning workflow with AI agents — for coding, design, marketing, research, writing, data analysis, or any other task.
 
-- **Anyone** who wants an optimized, consistent, self-learning workflow with AI agents — for coding, design, marketing, research, writing, data analysis, or any other task
-- **Teams** needing consistent agent behavior across multiple projects
+**Teams** needing consistent agent behavior across multiple projects.
+
+## How it works 
+
+**Describe what you want** — the agent assembles the right team of specialists, delegates the work, and delivers results. Along the way, it builds a knowledge base in the wiki that makes future tasks faster and more accurate. You stay in control: suggest agents, adjust the team, or take over at any point.
 
 ## Why use it
 
@@ -23,7 +25,7 @@
 | Same mistakes repeated across tasks | Skill candidates detect and codify patterns |
 | No workflow enforcement | Team-driven policy + HARD-GATEs + anti-rationalization |
 
-## How it works
+## Workflow details
 
 - **Team-driven workflow** — agent loads `team-assembly` first, reads `wiki/index.md` for workspace context, then assembles the ideal specialist team for the request: analyzes domains, discovers available specialists, selects coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
 - **Structured delegation** — `delegate` handles each handoff with a canonical shape (task, objective, scope, constraints, deliverable, return format). Specialists load `implement` for code work or `debug` for error investigation.
