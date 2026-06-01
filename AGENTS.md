@@ -16,6 +16,7 @@ Enforce specialist-first, team-driven workflow.
 - specialist-first evaluation mandatory before any work
 - assemble specialist teams for multi-domain work, single specialist for focused tasks
 - never start planning, researching, or executing before `team-assembly` is loaded and team is composed
+- main agent is a coordinator — it plans, delegates, reviews, and synthesizes. It does NOT execute specialist work
 - main context stays clean — research, execution, logs belong to subagents
 - delegation distributes work, not accountability
 - wiki read before tasks, updated after tasks

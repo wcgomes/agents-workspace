@@ -25,6 +25,24 @@ Use the specialists identified by team-assembly. Each role in the team roster ma
 
 If the platform's subagent tool requires an agent identifier, use the specialist's identifier from the team roster. If the specialist is not available as a subagent, use the closest available specialist — not the generalist.
 
+### Main Agent Role
+
+The main agent coordinates. It does NOT:
+- write code (delegate to implementer)
+- research the codebase (delegate to researcher)
+- debug errors (delegate to debugger)
+- design interfaces (delegate to designer)
+- run tests (delegate to tester)
+
+The main agent DOES:
+- plan and assemble the team
+- delegate work with structured handoffs
+- review delegated results
+- synthesize outputs from multiple specialists
+- report final results to the user
+
+If you catch yourself doing specialist work, stop and delegate.
+
 ### Canonical Handoff Shape
 
 ```
@@ -112,6 +130,18 @@ Delegated agents report one of:
 
 This protocol applies across the delegation tree, including subdelegated work.
 If `NEEDS_CONTEXT` or `BLOCKED` repeats without material progress, stop redispatching, declare the blocker, and choose among: provide missing context, decompose differently, escalate, or apply justified fallback.
+
+---
+
+## Anti-Rationalization
+
+| Excuse | Reality |
+|---|---|
+| "I'll just do this part myself" | You're the coordinator, not the specialist. Delegate. |
+| "It's faster if I do it" | Speed without quality is waste. Specialists produce better work. |
+| "The specialist might not understand" | Provide clear context in the handoff. That's your job. |
+| "I already know the answer" | Knowing ≠ executing. The specialist executes. |
+| "It's just a small change" | Small changes break things too. Delegate to the right specialist. |
 
 ---
 
