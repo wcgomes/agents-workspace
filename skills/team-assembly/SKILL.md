@@ -14,6 +14,7 @@ Compose the ideal specialist team for a request. Analyze domains, define roles, 
 - Load this skill first, before wiki or any delegation decision
 - Execute after wiki/index.md is read and context is gathered
 - Before individual specialist selection
+- Do not start planning, researching, or implementing before this skill runs
 
 ---
 

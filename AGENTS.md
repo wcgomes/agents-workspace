@@ -15,6 +15,7 @@ Enforce specialist-first, team-driven workflow.
 
 - specialist-first evaluation mandatory before any work
 - assemble specialist teams for multi-domain work, single specialist for focused tasks
+- never start planning, researching, or executing before `team-assembly` is loaded and team is composed
 - main context stays clean — research, execution, logs belong to subagents
 - delegation distributes work, not accountability
 - wiki read before tasks, updated after tasks
@@ -47,7 +48,7 @@ Enforce specialist-first, team-driven workflow.
 
 ## HARD-GATE
 
-**STOP. Do not proceed until ALL confirmed:**
+**STOP. Do not plan, research, or execute anything until ALL confirmed:**
 
 1. `team-assembly` loaded and team composed
 2. `wiki/index.md` consulted
@@ -56,7 +57,7 @@ Enforce specialist-first, team-driven workflow.
 5. `delegate` loaded and handoff structure understood
 6. Delegation decision made with justification
 
-If ANY false → go back to Phase 1.
+If ANY false → go back to Phase 1. Do not start working directly on the task.
 
 ---
 
