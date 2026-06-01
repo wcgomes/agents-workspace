@@ -1,20 +1,31 @@
 ---
 name: team-assembly
-description: Compose the ideal specialist team for a request. Load before delegation to analyze domains, define roles, discover specialists, and plan execution order.
+description: Planning phase — compose the ideal specialist team for a request. Load before any work to analyze domains, define roles, discover specialists, and plan execution order.
 ---
 
 # Team Assembly
 
-Compose the ideal specialist team for a request. Analyze domains, define roles, discover available specialists, and plan execution order.
+This is the planning phase. Before any work begins, analyze the request, determine what specialists are needed, and plan how they work together. Even a task that seems simple goes through this process — it may result in a single specialist, but the evaluation is mandatory.
 
 ---
 
 ## When to Activate
 
-- Load this skill first, before wiki or any delegation decision
+- Load this skill first — this IS the planning phase, not a step before planning
 - Execute after wiki/index.md is read and context is gathered
-- Before individual specialist selection
-- Do not start planning, researching, or implementing before this skill runs
+- Before any research, implementation, or direct execution
+- Do not skip because the task "seems simple" — simple tasks get a single-specialist team
+
+---
+
+## Anti-Rationalization
+
+| Excuse | Reality |
+|---|---|
+| "Task is too simple for a team" | Simple tasks get a single-specialist team. The evaluation is still mandatory. |
+| "I can do this myself" | The current agent is not a specialist by default. Evaluate specialists first. |
+| "Planning takes too long" | Planning prevents rework. Skipping it costs more. |
+| "I already know what to do" | Knowing the answer doesn't mean you're the best specialist to execute it. |
 
 ---
 
