@@ -13,7 +13,6 @@ Structured handoff, review, and status management for delegated specialist work.
 
 - team-assembly must be loaded first
 - Specialist team and execution plan must be ready
-- Each handoff targets a specific specialist from the team roster — never default to the platform's general agent
 
 ---
 

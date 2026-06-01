@@ -23,7 +23,7 @@ This is the planning phase. Before any work begins, analyze the request, determi
 | Excuse | Reality |
 |---|---|
 | "Task is too simple for a team" | Simple tasks get a single-specialist team. The evaluation is still mandatory. |
-| "I can do this myself" | The current agent is not a specialist by default. Evaluate specialists first. |
+| "I can do this myself" | You're not a specialist by default. Evaluate and delegate to one. |
 | "Planning takes too long" | Planning prevents rework. Skipping it costs more. |
 | "I already know what to do" | Knowing the answer doesn't mean you're the best specialist to execute it. |
 
