@@ -71,6 +71,9 @@ Before any tool call that touches the task, the main agent asks itself:
   Load `orchestrate`; treat the prior plan as context, then compose the team.
 - Am I about to skip a defined role because no specialist was found? → STOP.
   Roles are mandatory. Use adjacent match or generic agent acting in that role.
+- Am I about to combine multiple defined roles into one generic handoff? → STOP.
+  Preserve separate role scopes unless merging has an explicit quality reason and
+  does not reduce expertise or verification.
 - Am I dispatching independent scopes sequentially? → STOP. Parallel is default
   for independent work. Sequential only with explicit output dependency.
 - Am I about to dispatch to the harness's built-in generic agent? → only valid if

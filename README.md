@@ -27,7 +27,7 @@
 
 ## Workflow details
 
-- **Team-driven workflow** — the main agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request before planning or execution, including requests to execute, continue, resume, or implement a prior plan, even when that plan was not created through `orchestrate`. It analyzes domains, discovers available specialists, sizes the team, selects a coordination pattern, and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists and must still act in a defined role.
+- **Team-driven workflow** — the main agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request before planning or execution, including requests to execute, continue, resume, or implement a prior plan, even when that plan was not created through `orchestrate`. It analyzes domains, discovers available specialists, sizes the team, selects a coordination pattern, and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists and must still act in a defined role-scoped handoff.
 - **Structured delegation** — `orchestrate` covers assembly, delegation, review, and synthesis. Each handoff uses a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format), and specialists execute the handed scope directly.
 - **Automatic wiki maintenance** — the main agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
@@ -35,7 +35,7 @@
 - **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
 - **Parallel specialist teams** — independent scopes can be dispatched to multiple specialists automatically.
 - **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator and subscopes still follow the same rules.
-- **Role preservation** — roles defined during team composition are mandatory. If no specialist is found, adjacent match or generic agent acts in that role. Roles are never dropped from the plan.
+- **Role preservation** — roles defined during team composition are mandatory. If no specialist is found, adjacent match or generic agent acts in that role. Roles are never dropped or collapsed: multiple roles mean multiple scoped handoffs unless there is an explicit quality reason to merge and verification is not reduced.
 
 | Mechanism | Skill | What it does |
 |---|---|---|

@@ -12,7 +12,7 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 ## <HARD-GATES>
 
 1. **Coordinator context first** — the main agent reads `wiki/index.md` before orchestration. Specialists use handoff context unless wiki lookup is explicitly needed.
-2. **Roles are mandatory** — if specialist not found, use adjacent match or generic agent acting in that role. Never drop a role from the plan.
+2. **Roles are mandatory** — if specialist not found, use adjacent match or generic agent acting in that role. Never drop or collapse a role from the plan.
 3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
 4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
 5. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
@@ -43,6 +43,8 @@ For multi-domain work, ensure each domain has representation. Each phase that re
 
 For coding or refactoring work, define at least an implementation role and a review role unless the user explicitly opts out of review or the task is trivial.
 
+Role preservation means preserving separate role scopes, not just role labels in prose. If multiple roles are defined, plan one handoff per role/scope unless there is an explicit reason to merge and merging does not reduce expertise, independence, or verification.
+
 ---
 
 ## Phase 3: Discover Specialists
@@ -57,9 +59,10 @@ Before selecting, discover what specialists exist in the current environment. Us
 - **Adjacent match** acceptable when exact unavailable. Adjacent means: same broader domain or workflow phase (e.g., no test specialist → use implementation specialist for test work).
 - **Generic agent is last resort**, not a default. Selecting it requires that discovery found no specialist or adjacent fit — state that explicitly.
 - **Generic still has a role**: never dispatch an unscoped generalist. If fallback is required, assign the generic agent to the defined role and scope.
+- **Same generic, separate scopes**: if generic fallback is used for multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the selected agent type is the same.
 - If user specified agents, incorporate them and apply semantic matching for the remaining roles.
 
-**Role preservation:** The roles defined in Phase 2 are mandatory. If the exact specialist is not found, use adjacent match. If no adjacent exists, use the generic agent — but the role (e.g., reviewer, tester, architect) stays in the plan and the handoff must instruct the generic agent to act in that role.
+**Role preservation:** The roles defined in Phase 2 are mandatory. If the exact specialist is not found, use adjacent match. If no adjacent exists, use the generic agent — but the role (e.g., reviewer, tester, architect) stays in the plan and the handoff must instruct the generic agent to act in that role. "No specialist found" is not a valid reason to merge distinct domains or phases into one broad handoff.
 
 ---
 
@@ -164,6 +167,16 @@ Coordination: Full Parallel Discovery.
 | Verification | Review | code-reviewer, reality-checker |
 
 Coordination: Sequential with Quality Gates.
+
+### Wiki Setup / Creation
+
+| Phase | Role | Specialist Match |
+|---|---|---|
+| Discovery | Workspace Research / Architecture Analysis | research-assistant, software-architect, backend-architect |
+| Execution | Technical Writing / Documentation | technical-writer, content-creator |
+| Verification | Review / Consistency | reality-checker, code-reviewer |
+
+Coordination: Sequential with Quality Gates. Review/Consistency is required when broad or persistent docs are created. If no wiki-specific specialist exists, do not collapse research and writing into one generalist; use separate fallback handoffs for each role.
 
 ---
 

@@ -34,7 +34,7 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 ## Three Operations
 
-**Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet.
+**Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
 **Query** — coordinator reads `wiki/index.md` first. Identify relevant pages. Load only those.
 
