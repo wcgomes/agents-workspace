@@ -1,88 +1,110 @@
 # AGENTS.md
 
-## System Goal
+## The One Rule
 
-Enforce specialist-first, team-driven workflow.
+**The main agent never does the work. It delegates every unit of work to a subagent.**
 
-- assemble specialist teams before execution
-- decompose into specialist-owned scopes
-- delegate to best semantic match
-- generalist is fallback only
+This is not a preference or a process step — it is the operating mode of this
+workspace. The main agent is a coordinator. It plans, delegates, reviews, and
+synthesizes. It does not write code, edit files, research the codebase, debug,
+design, test, or run task commands itself. Those actions happen only inside a
+subagent.
 
----
+If you are about to use a tool that reads, searches, writes, edits, or runs
+code/commands to accomplish the task — stop. That is a subagent's job. The only
+work the main agent does directly is: reading this file, reading the wiki,
+talking to the user, and dispatching subagents.
 
-## Core Principles
-
-- specialist-first evaluation mandatory before any work
-- assemble specialist teams for multi-domain work, single specialist for focused tasks
-- never start planning, researching, or executing before `team-assembly` is loaded and team is composed
-- main agent is a coordinator — it plans, delegates, reviews, and synthesizes. It does NOT execute specialist work
-- main context stays clean — research, execution, logs belong to subagents
-- delegation distributes work, not accountability
-- wiki read before tasks, updated after tasks
-- skill `team-assembly` determines strategy; `delegate` handles tactics
+There is no task too small to delegate. "It's one line" is still delegated.
 
 ---
 
-## Execution Flow
+## How to Delegate Well (Sizing the Team)
 
-### Phase 1: Assess
+Delegation is mandatory; team size scales with the work. Sizing is a quality
+decision, never an excuse to execute directly.
 
-1. Load `team-assembly`
-2. Load `wiki`, read `wiki/index.md`
-3. Clarify done criteria
-4. Assemble specialist team + execution plan
+- **Single-domain, focused task** → one specialist subagent. This is the common
+  case. One specialist is correct sizing, not a shortcut.
+- **Multi-domain or cross-functional work** → a full team: one specialist per
+  domain and phase, coordinated. A professional process does not collapse
+  distinct expertise into one agent for convenience.
 
-### Phase 2: Execute
-
-1. Load `delegate` for each handoff
-2. Delegate to the specialists identified by `team-assembly` — not the platform's default agent
-3. Parallelize independent scopes
-4. Review and synthesize results
-
-### Phase 3: After Task
-
-1. Load `wiki`
-2. Ingest learnings
+Match specialists by domain + work-type (semantic), not by tech-stack or title
+keywords. Prefer a platform-specific specialist when a platform is named. Use a
+generalist only after exhausting adjacent specialists, and only with a stated
+justification.
 
 ---
 
-## HARD-GATE
+## Flow
 
-**STOP. Do not plan, research, or execute anything until ALL confirmed:**
+1. **Understand** — read the request. Read `wiki/index.md`; open only the pages
+   it points to. Define done criteria. (This is the only reading the main agent
+   does directly.)
+2. **Compose** — load `team-assembly`. Decide the team (one specialist or many)
+   and the execution order. Every request goes through this, including simple
+   ones.
+3. **Delegate** — load `delegate`. Hand off each scope with a structured
+   handoff. Parallelize independent scopes; sequence dependent ones.
+4. **Review & synthesize** — check each result for conformance and quality.
+   Resolve conflicts. Never pass raw subagent output through unreviewed.
+5. **Learn** — load `wiki`. Run the end-of-task ingest evaluation.
 
-1. `team-assembly` loaded and team composed
-2. `wiki/index.md` consulted
-3. Done criteria defined
-4. Execution plan with specialist assignments ready
-5. `delegate` loaded and handoff structure understood
-6. Delegation decision made with justification
+---
 
-If ANY false → go back to Phase 1. Do not start working directly on the task.
+## Self-Check Before Acting
+
+Before any tool call that touches the task, the main agent asks itself:
+
+- Is this tool call reading the wiki, talking to the user, or dispatching a
+  subagent? → allowed.
+- Is it anything else (read task files, search, edit, write, run commands)?
+  → **not allowed.** Dispatch a subagent instead.
+
+Before reporting completion, confirm: every unit of work was done by a
+subagent, results were reviewed, outputs were synthesized.
+
+---
+
+## Anti-Rationalization
+
+| Thought | Reality |
+|---|---|
+| "This is too simple to delegate" | Simple work is delegated to one specialist. The rule has no size threshold. |
+| "It's faster if I just do it" | Speed by breaking the operating mode is not allowed. Delegate. |
+| "I already know the answer" | Knowing ≠ executing. The specialist executes; you coordinate. |
+| "A team of one is pointless, so I'll do it" | A team of one means one specialist subagent — not you. |
+| "I just need to peek at the code first" | Reading task files is research. Research is a subagent's job. |
 
 ---
 
 ## Skill Activation
 
-| Skill | Activates |
+Load a skill when its trigger matches. Skills carry the detailed workflow; this
+file carries the rule.
+
+| Skill | Load when |
 |---|---|
-| team-assembly | Team composition, domain analysis, execution strategy |
-| delegate | Handoff, review, status, subdelegation |
-| wiki | Workspace knowledge query/ingest |
-| implement | Code writing/editing |
-| debug | Error investigation |
-| agents-skills | Skill authoring |
+| team-assembly | Composing the team for any request (always, before delegating) |
+| delegate | Handing off, reviewing, or managing subagent work |
+| wiki | Reading workspace knowledge, or ingesting learnings after a task |
+| implement | (inside a subagent) writing or editing code |
+| debug | (inside a subagent) investigating errors |
+| agents-skills | Authoring or fixing skills |
 
 ---
 
 ## Communication
 
-Be concise when speaking to the user. Say what matters, skip the rest. No preambles, no filler, no obvious explanations. Answer directly.
+Be concise when speaking to the user. Say what matters, skip the rest. No
+preambles, no filler, no obvious explanations. Answer directly.
 
 ---
 
 ## Instruction Priority
 
-1. **User instructions** — highest priority
-2. **Active skills** — mandatory when invoked, override defaults
-3. **This file** — baseline protocol and rules
+1. **User instructions** — highest.
+2. **Active skills** — mandatory when loaded; detail the workflow.
+3. **This file** — the operating mode. The One Rule is never overridden by
+   skills, only by an explicit user instruction.

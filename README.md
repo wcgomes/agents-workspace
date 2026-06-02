@@ -11,7 +11,7 @@
 
 ## How it works 
 
-**Describe what you want** — the agent assembles the right team of specialists, delegates the work, and delivers results. Along the way, it builds a knowledge base in the wiki that makes future tasks faster and more accurate. You stay in control: suggest agents, adjust the team, or take over at any point.
+**Describe what you want** — the main agent never executes the work itself; it assembles the right team of specialists, delegates every unit of work, reviews the results, and synthesizes them. Along the way, it builds a knowledge base in the wiki that makes future tasks faster and more accurate. You stay in control: suggest agents, adjust the team, or take over at any point.
 
 ## Why use it
 
@@ -23,15 +23,15 @@
 | Verbose responses waste context window | Dense, filler-free communication |
 | Forgets what it learned between sessions | Self-learning wiki persists knowledge |
 | Same mistakes repeated across tasks | Skill candidates detect and codify patterns |
-| No workflow enforcement | Team-driven policy + HARD-GATEs + anti-rationalization |
+| No workflow enforcement | One Rule (main agent always delegates, never executes) + self-check + anti-rationalization |
 
 ## Workflow details
 
-- **Team-driven workflow** — agent loads `team-assembly` first, reads `wiki/index.md` for workspace context, then assembles the ideal specialist team for the request: analyzes domains, discovers available specialists, selects coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
+- **Team-driven workflow** — the agent reads `wiki/index.md` for workspace context, loads `team-assembly`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
 - **Structured delegation** — `delegate` handles each handoff with a canonical shape (task, objective, scope, constraints, deliverable, return format). Specialists load `implement` for code work or `debug` for error investigation.
 - **Automatic wiki maintenance** — agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
-- **HARD-GATEs between phases** — Assess → Execute → After Task. Review and synthesis happen inside execution/accountability. No skipping.
+- **The One Rule** — the main agent never does the work itself; it delegates every unit of work to a subagent. It coordinates: plans, delegates, reviews, synthesizes. Before any task tool call, a self-check confirms the action is allowed (read wiki, talk to user, dispatch subagent) or must be delegated. No size threshold — even a one-line change is delegated.
 - **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
 - **Parallel specialist teams** — independent scopes can be dispatched to multiple specialists automatically.
 - **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator and subscopes still follow the same rules.
@@ -45,7 +45,7 @@
 | **Systematic debugging** | `debug` | Investigates errors with observe-hypothesize-verify-fix-confirm cycle. |
 | **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
-Skills load **on-demand** — but the agent loads `team-assembly` first by default before substantive work, then `wiki` for context, then `delegate` for each handoff.
+Skills load **on-demand**, in flow order: `wiki` for context first, then `team-assembly` to compose the team, then `delegate` for each handoff.
 
 ## 🎭 The Agency: AI Specialists Ready to Transform Your Workflow
 
@@ -99,7 +99,7 @@ cd agents-workspace
 cp AGENTS.md /path/to/your-project/
 ```
 
-`AGENTS.md` is the boot contract. The agent reads it on every session start. It defines the team-driven workflow: assemble specialist teams, decompose into specialist-owned scopes, delegate to best semantic match. It is **not** installed globally.
+`AGENTS.md` is the boot contract. The agent reads it on every session start. It defines the operating mode (The One Rule: the main agent never executes, it delegates every unit of work to a subagent) and the flow: read context, compose the specialist team, delegate to best semantic match, review, and synthesize. It is **not** installed globally.
 
 **Step 3 — Let the agent create `wiki/`**
 

@@ -5,7 +5,10 @@ description: Use this skill before writing, editing, refactoring, or fixing code
 
 # Implement
 
-**Prerequisite:** This skill may only be activated after `delegate` has been loaded and evaluated. Do not proceed with implementation until specialist eligibility has been assessed under the policy in `AGENTS.md`.
+**Runs inside a subagent.** The main agent never writes or edits code (see
+`AGENTS.md` → "The One Rule"); it delegates that work. This skill is for the
+specialist subagent doing the implementation. Load it before writing or editing
+any code.
 
 Validate understanding before acting. Write the least code that solves the problem. Nothing more.
 

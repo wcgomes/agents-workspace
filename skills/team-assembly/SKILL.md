@@ -1,31 +1,24 @@
 ---
 name: team-assembly
-description: Planning phase — compose the ideal specialist team for a request. Load before any work to analyze domains, define roles, discover specialists, and plan execution order.
+description: Use at the start of ANY request that requires work — building, fixing, researching, writing, analyzing, designing. Composes the specialist team (one or many) before delegating. Load before doing or delegating anything.
 ---
 
 # Team Assembly
 
-This is the planning phase. Before any work begins, analyze the request, determine what specialists are needed, and plan how they work together. Even a task that seems simple goes through this process — it may result in a single specialist, but the evaluation is mandatory.
+Compose the specialist team before any work begins. Analyze the request, decide
+how many specialists are needed, map roles, discover matching specialists, and
+plan the execution order.
 
----
+Team size is a sizing decision (see `AGENTS.md` → "How to Delegate Well"):
 
-## When to Activate
+- **Focused, single-domain task** → one specialist. Correct sizing, not a shortcut.
+- **Multi-domain or cross-functional work** → a full team, one specialist per
+  domain and phase.
 
-- Load this skill first — this IS the planning phase, not a step before planning
-- Execute after wiki/index.md is read and context is gathered
-- Before any research, implementation, or direct execution
-- Do not skip because the task "seems simple" — simple tasks get a single-specialist team
+Every request goes through this composition, including simple ones. The output
+is always a team to delegate to — never a decision to execute the work yourself.
 
----
-
-## Anti-Rationalization
-
-| Excuse | Reality |
-|---|---|
-| "Task is too simple for a team" | Simple tasks get a single-specialist team. The evaluation is still mandatory. |
-| "I can do this myself" | You're not a specialist by default. Evaluate and delegate to one. |
-| "Planning takes too long" | Planning prevents rework. Skipping it costs more. |
-| "I already know what to do" | Knowing the answer doesn't mean you're the best specialist to execute it. |
+Run this after `wiki/index.md` is read, before loading `delegate`.
 
 ---
 
