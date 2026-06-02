@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Use when composing the team, handing off work to subagents, or reviewing delegated results. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review and synthesize.
+description: Use when planning or executing delegated work, including "execute the plan" continuations. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review and synthesize.
 ---
 
 # Orchestrate
@@ -13,10 +13,12 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 
 1. **Coordinator context first** — the main agent reads `wiki/index.md` before orchestration. Specialists use handoff context unless wiki lookup is explicitly needed.
 2. **Roles are mandatory** — if specialist not found, use adjacent match or generic agent acting in that role. Never drop a role from the plan.
-3. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
-4. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria.
-5. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan.
-6. **Preserve team on continuation** — when user requests continuation of a task: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
+3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
+4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
+5. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
+6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria.
+7. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan.
+8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
 
 ---
 
@@ -29,7 +31,7 @@ Think about this like assembling a professional team for the job:
 - What phases does the work go through? (planning → implementation → review → testing)
 - Classify complexity: single-domain, multi-domain, or cross-functional.
 
-**For continuation requests:** Check if a team was already composed for this task. If yes, preserve existing roles and specialists by default. Add roles for new domains, or replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction.
+**For continuation requests:** Check if a team was already composed through orchestration. If yes, preserve existing roles and specialists by default. Add roles for new domains, or replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction. If the prior plan was not orchestrated, treat it as context and compose roles from scratch.
 
 ---
 
@@ -38,6 +40,8 @@ Think about this like assembling a professional team for the job:
 Map each domain + phase to a specialist role. Apply templates below for common patterns.
 
 For multi-domain work, ensure each domain has representation. Each phase that requires distinct expertise needs a responsible role.
+
+For coding or refactoring work, define at least an implementation role and a review role unless the user explicitly opts out of review or the task is trivial.
 
 ---
 
@@ -52,6 +56,7 @@ Before selecting, discover what specialists exist in the current environment. Us
 - **Semantic match**: domain + work-type, NOT tech stack. A "Frontend Developer" covers React, Vue, or any stack.
 - **Adjacent match** acceptable when exact unavailable. Adjacent means: same broader domain or workflow phase (e.g., no test specialist → use implementation specialist for test work).
 - **Generic agent is last resort**, not a default. Selecting it requires that discovery found no specialist or adjacent fit — state that explicitly.
+- **Generic still has a role**: never dispatch an unscoped generalist. If fallback is required, assign the generic agent to the defined role and scope.
 - If user specified agents, incorporate them and apply semantic matching for the remaining roles.
 
 **Role preservation:** The roles defined in Phase 2 are mandatory. If the exact specialist is not found, use adjacent match. If no adjacent exists, use the generic agent — but the role (e.g., reviewer, tester, architect) stays in the plan and the handoff must instruct the generic agent to act in that role.
@@ -121,6 +126,7 @@ Coordination: Parallel Kickoff → Merge → Review.
 |---|---|---|
 | Investigation | Debug | incident-response-commander |
 | Fix | Implementation | domain-appropriate developer |
+| Verification | Review | code-reviewer |
 | Verification | Testing | reality-checker |
 
 Coordination: Sequential with Quality Gates.

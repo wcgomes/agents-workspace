@@ -27,7 +27,7 @@
 
 ## Workflow details
 
-- **Team-driven workflow** — the main agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
+- **Team-driven workflow** — the main agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request before planning or execution, including requests to execute, continue, resume, or implement a prior plan, even when that plan was not created through `orchestrate`. It analyzes domains, discovers available specialists, sizes the team, selects a coordination pattern, and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists and must still act in a defined role.
 - **Structured delegation** — `orchestrate` covers assembly, delegation, review, and synthesis. Each handoff uses a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format), and specialists execute the handed scope directly.
 - **Automatic wiki maintenance** — the main agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
@@ -43,7 +43,7 @@
 | **Self-learning wiki** | `wiki` | Main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. Tracks skill candidates. |
 | **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
-Skills load **on-demand**, in flow order: `wiki` for main-agent context first, then `orchestrate` for assembly, delegation, review, and synthesis.
+Skills load **on-demand**, in flow order: `wiki` for main-agent context first, then `orchestrate` for planning or executing delegated work, including execute, continue, resume, or implement prior-plan continuations.
 
 ## 🎭 The Agency: AI Specialists Ready to Transform Your Workflow
 

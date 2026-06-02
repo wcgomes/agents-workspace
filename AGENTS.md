@@ -51,7 +51,7 @@ sizing, and fallback are in the `orchestrate` skill.
 ## Flow
 
 1. **Context** — main agent reads `wiki/index.md` (hard-gate: before any action). Define done criteria.
-2. **Orchestrate** — load `orchestrate`. Analyze request → define roles → discover specialists → plan execution → handoff → review → synthesize.
+2. **Orchestrate** — load `orchestrate` before planning or executing work, including "execute the plan" continuations. Analyze request → define roles → discover specialists → plan execution → handoff → review → synthesize.
 3. **Review** — check conformance, quality, synthesize. Never pass raw subagent output through unreviewed.
 4. **Learn** — load `wiki`. Run the end-of-task ingest evaluation.
 
@@ -67,6 +67,8 @@ Before any tool call that touches the task, the main agent asks itself:
   → **not allowed.** Dispatch a subagent instead.
 - Am I about to dispatch a subagent without having composed the team? → STOP.
   Load `orchestrate` and follow its process first.
+- Did the user ask to execute, continue, resume, or implement a prior plan? → STOP.
+  Load `orchestrate`; treat the prior plan as context, then compose the team.
 - Am I about to skip a defined role because no specialist was found? → STOP.
   Roles are mandatory. Use adjacent match or generic agent acting in that role.
 - Am I dispatching independent scopes sequentially? → STOP. Parallel is default
@@ -99,7 +101,7 @@ file carries the rule.
 | Skill | Load when |
 |---|---|
 | wiki | Main-agent context before tasks, end-of-task ingest evaluation |
-| orchestrate | Assembly, delegation, review, and synthesis |
+| orchestrate | Planning or executing delegated work, including plan continuations; assembly, delegation, review, and synthesis |
 | agents-skills | Authoring or fixing skills |
 
 ---
