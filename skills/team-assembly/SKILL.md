@@ -111,6 +111,8 @@ Example: write a chapter, fix a specific bug.
 
 These are starting points, not prescriptions. Adapt roles, add or remove specialists, and change coordination patterns based on the actual request. A small UI fix needs one specialist; a full product launch may need 10+. Always analyze the request first (Step 1), then use templates as reference.
 
+The specialist names below are examples. Match by the equivalent role/domain, not the literal name — never delegate to a name that isn't actually available (see Step 3).
+
 ### Software Development
 
 | Phase | Role | Specialist Match |
