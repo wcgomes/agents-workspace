@@ -1,6 +1,6 @@
 ---
 name: agents-skills
-description: Create, refine, and validate Agent Skills following the agentskills.io specification. Use when writing a SKILL.md, creating a new skill directory, improving an existing skill's triggering or content, running evals, or diagnosing why a skill isn't activating. Covers frontmatter rules, body structure, progressive disclosure, scripts, and description optimization.
+description: Create, refine, and validate Agent Skills following the agentskills.io specification. Use when writing a SKILL.md, creating a new skill directory, improving an existing skill's triggering or content, running evals, or diagnosing why a skill isn't activating.
 ---
 
 # Agent Skills
@@ -100,7 +100,7 @@ allowed-tools: Bash(git:*) Bash(jq:*) Read
 The description decides activation. Poor description → skill never triggers.
 
 **Principles:**
-- **Imperative phrasing:** "Use this skill when..." not "This skill does..."
+- **Imperative phrasing:** "Use this skill when..." not "This skill helps..."
 - **User intent, not implementation:** what the user is trying to achieve, not internal mechanics
 - **Err on the pushy side:** explicitly list contexts, including implicit ones
 - **Name the boundary:** what the skill does NOT do, when relevant
@@ -122,7 +122,7 @@ description: >
   even if they don't explicitly mention "CSV" or "analysis."
 ```
 
-**Nuance:** agents often skip skills for simple one-step tasks they can handle alone (e.g. "read this PDF" may not trigger a PDF skill). Descriptions matter most for specialized knowledge or non-obvious domains.
+**Nuance:** agents often skip skills for simple one-step tasks they can handle alone. Descriptions matter most for specialized knowledge or non-obvious domains.
 
 ---
 
@@ -130,103 +130,9 @@ description: >
 
 Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separate files.
 
-### Recommended structure
-
-1. One-line summary of what the skill does
-2. Step-by-step instructions or procedure
-3. Concrete examples (inputs and outputs)
-4. Common edge cases / gotchas
-
-### Spend context wisely
-
 Ask for each paragraph: "Would the agent get this wrong without this instruction?" If no → cut it.
 
-- ✅ Project-specific conventions, domain procedures, non-obvious edge cases, environment-specific facts
-- ❌ General concepts the agent already understands (what a PDF is, how HTTP works, what a migration does)
-
-### Calibrate specificity
-
-| Task type | Approach |
-|---|---|
-| Flexible / multiple valid approaches | Explain *why*, give freedom |
-| Fragile / must follow sequence | Be prescriptive, exact commands, "do not modify" |
-
-### Provide defaults, not menus
-
-```markdown
-# Too many options
-You can use pypdf, pdfplumber, PyMuPDF, or pdf2image...
-
-# Clear default with escape hatch
-Use pdfplumber for text extraction. For scanned PDFs requiring OCR, use pdf2image with pytesseract instead.
-```
-
-### Favor procedures over declarations
-
-```markdown
-# Specific answer — only useful once
-Join `orders` to `customers` on `customer_id`, filter `region = 'EMEA'`, sum `amount`.
-
-# Reusable method — works for any query
-1. Read schema from `references/schema.yaml` to find relevant tables
-2. Join using `_id` foreign key convention
-3. Apply filters from the user's request as WHERE clauses
-4. Aggregate numeric columns, format as markdown table
-```
-
-### Aim for moderate detail
-
-Concise stepwise guidance with one working example > exhaustive documentation. Over-comprehensive skills trigger unproductive paths on instructions that don't apply.
-
----
-
-## Effective instruction patterns
-
-### Gotchas section — highest-value content
-
-Environment-specific facts that defy assumptions. Not general advice — concrete corrections:
-
-```markdown
-## Gotchas
-
-- The `users` table uses soft deletes. Queries must include
-  `WHERE deleted_at IS NULL` or results include deactivated accounts.
-- User ID is `user_id` in the database, `uid` in auth, `accountId` in billing.
-- The `/health` endpoint returns 200 as long as the web server runs,
-  even if DB is down. Use `/ready` for full service health.
-```
-
-> **Iteration tip:** when the agent makes a mistake you correct, add it to gotchas. Most direct way to improve a skill.
-
-### Templates for output format
-
-Concrete format example in a code block — agents pattern-match against structures better than prose descriptions. Short templates inline; long ones in `assets/`.
-
-### Checklists for multi-step workflows
-
-```markdown
-- [ ] Step 1: Analyze the form (`scripts/analyze_form.py`)
-- [ ] Step 2: Create field mapping (`fields.json`)
-- [ ] Step 3: Validate (`scripts/validate_fields.py`)
-- [ ] Step 4: Fill form (`scripts/fill_form.py`)
-```
-
-### Validation loops
-
-Do work → run validator → fix → repeat until pass.
-
-```markdown
-1. Make edits
-2. Run validation: `python scripts/validate.py output/`
-3. Fails? Review error → fix → re-validate
-4. Proceed only when validation passes
-```
-
-### Plan-validate-execute
-
-For destructive or batch ops. Agent creates structured plan → validates against source of truth → executes only on success.
-
-The critical step is validation with actionable errors: "Field 'signature_date' not found — available: customer_name, order_total, signature_date_signed".
+See [references/WRITING_SKILLS.md](references/WRITING_SKILLS.md) for body structure, patterns, and examples.
 
 ---
 
@@ -271,20 +177,6 @@ See [references/USING_SCRIPTS.md](references/USING_SCRIPTS.md) for language-spec
 
 Test each case **with skill** vs **without skill** (or previous version) to prove the skill adds value.
 
-**Structure:**
-- `evals/evals.json` — prompts, expected outputs, assertions
-- Workspace: `iteration-N/eval-name/{with_skill,without_skill}/`
-- Capture `timing.json` (tokens, duration) and `grading.json` (PASS/FAIL per assertion)
-
-**Process:**
-1. Design 2-3 test cases varying phrasing, detail, edge cases
-2. Run both configurations
-3. Grade with concrete evidence
-4. Aggregate in `benchmark.json`
-5. Human review actual outputs
-6. Feed failures + current `SKILL.md` to an LLM for improvements
-7. Iterate in `iteration-N+1/`
-
 See [references/EVALUATING.md](references/EVALUATING.md) for full workflow.
 
 ---
@@ -293,43 +185,7 @@ See [references/EVALUATING.md](references/EVALUATING.md) for full workflow.
 
 A skill only helps if it activates. Test triggering systematically.
 
-### Eval query design
-
-~20 queries split 60/40 train/validation. Balance should-trigger and should-not-trigger in both sets.
-
-**Should-trigger queries — vary:**
-- Phrasing (formal, casual, typos)
-- Explicitness (some name the domain, some describe need indirectly)
-- Detail (terse vs context-heavy)
-- Complexity (single-step vs multi-step)
-
-Most useful: queries where skill would help but connection isn't obvious.
-
-**Should-not-trigger queries — near-misses:**
-
-```
-# Weak (tests nothing)
-"Write a fibonacci function"
-
-# Strong (shares keywords, different need)
-"I need to update formulas in my Excel budget spreadsheet"
-```
-
-**Include real-world realism:** file paths, personal context, abbreviations, occasional typos.
-
-### Optimization loop
-
-1. Evaluate on train + validation sets (3 runs each query, trigger rate threshold 0.5)
-2. Identify train-set failures only
-3. Revise:
-   - Should-trigger failing → too narrow; broaden scope, add implicit-context cues
-   - Should-not-trigger false-triggering → too broad; add boundaries, clarify what it does NOT do
-   - **Avoid pasting keywords from failed queries** — overfitting. Generalize the category.
-   - Stuck? Try a structurally different framing, not incremental tweaks
-4. Repeat until train passes or improvement plateaus (~5 iterations)
-5. Select best iteration by **validation** pass rate (may not be the latest)
-
-See [references/OPTIMIZING_DESCRIPTIONS.md](references/OPTIMIZING_DESCRIPTIONS.md) for script examples.
+See [references/OPTIMIZING_DESCRIPTIONS.md](references/OPTIMIZING_DESCRIPTIONS.md) for eval query design and optimization loop.
 
 ---
 
@@ -345,7 +201,7 @@ Checks frontmatter and naming conventions.
 
 ## Best practices summary
 
-1. **Start from real expertise** — extract from actual tasks or synthesize from project artifacts (runbooks, schemas, code reviews, commit history, incident reports). Not generic references.
+1. **Start from real expertise** — extract from actual tasks or synthesize from project artifacts. Not generic references.
 2. **Refine with execution** — read agent traces, not just outputs. Wasted steps signal vague instructions.
 3. **Spend context wisely** — cut anything the agent would get right without the skill.
 4. **Scope coherently** — one skill = one coherent unit of work. Not too narrow, not too broad.

@@ -11,6 +11,14 @@ The wiki exists to eliminate unnecessary codebase exploration. With the right kn
 
 ---
 
+## <HARD-GATE> Before Any Task
+
+Read `wiki/index.md` BEFORE team composition or workspace exploration. No exceptions.
+
+This is the first action after receiving a request. The wiki provides context that eliminates unnecessary exploration and guides team assembly.
+
+---
+
 ## Design Principle
 
 Wiki files are loaded into agent context. Every line costs tokens.

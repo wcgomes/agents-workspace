@@ -30,8 +30,7 @@ marker.
     is expected, not a violation of The One Rule.
   - **Do not recompose a team or re-delegate** work that is inside your specialty.
   - **Only if the scope is genuinely multi-domain and exceeds your specialty**:
-    compose a sub-team for the out-of-domain parts (load `team-assembly`, then
-    `delegate`) and stay accountable for what you subdelegate.
+    compose a sub-team for the out-of-domain parts (load `orchestrate`) and stay accountable for what you subdelegate.
 
 - **Marker absent** (e.g., the request came from the user) → you are the main
   agent. The One Rule applies in full: compose and delegate. Do not treat yourself
@@ -45,23 +44,16 @@ When in doubt, the marker is absent, so you coordinate.
 
 Delegation is mandatory; team size scales with the work. Sizing is a quality
 decision, never an excuse to execute directly. Details on discovery, selection,
-sizing, and fallback are in the `team-assembly` skill.
+sizing, and fallback are in the `orchestrate` skill.
 
 ---
 
 ## Flow
 
-1. **Understand** — read the request. Read `wiki/index.md`; open only the pages
-   it points to. Define done criteria. (This is the only reading the main agent
-   does directly.)
-2. **Compose** — load `team-assembly`. Decide the team (one specialist or many)
-   and the execution order. Every request goes through this, including simple
-   ones.
-3. **Delegate** — load `delegate`. Hand off each scope with a structured
-   handoff. Parallelize independent scopes; sequence dependent ones.
-4. **Review & synthesize** — check each result for conformance and quality.
-   Resolve conflicts. Never pass raw subagent output through unreviewed.
-5. **Learn** — load `wiki`. Run the end-of-task ingest evaluation.
+1. **Context** — read `wiki/index.md` (hard-gate: before any action). Define done criteria.
+2. **Orchestrate** — load `orchestrate`. Analyze request → define roles → discover specialists → plan execution → handoff.
+3. **Review** — check conformance, quality, synthesize. Never pass raw subagent output through unreviewed.
+4. **Learn** — load `wiki`. Run the end-of-task ingest evaluation.
 
 ---
 
@@ -74,9 +66,13 @@ Before any tool call that touches the task, the main agent asks itself:
 - Is it anything else (read task files, search, edit, write, run commands)?
   → **not allowed.** Dispatch a subagent instead.
 - Am I about to dispatch a subagent without having composed the team? → STOP.
-  Load `team-assembly` and follow its process first.
+  Load `orchestrate` and follow its process first.
+- Am I about to skip a defined role because no specialist was found? → STOP.
+  Roles are mandatory. Use adjacent match or generic agent acting in that role.
+- Am I dispatching independent scopes sequentially? → STOP. Parallel is default
+  for independent work. Sequential only with explicit output dependency.
 - Am I about to dispatch to the harness's built-in generic agent? → only valid if
-  team-assembly's discovery found no specialist or adjacent fit — and I say so.
+  orchestrate's discovery found no specialist or adjacent fit — and I say so.
 
 Before reporting completion, confirm: every unit of work was done by a
 subagent, results were reviewed, outputs were synthesized.
@@ -102,11 +98,8 @@ file carries the rule.
 
 | Skill | Load when |
 |---|---|
-| team-assembly | Composing the team for any request (always, before delegating) |
-| delegate | Handing off, reviewing, or managing subagent work |
-| wiki | Reading workspace knowledge before a task, or ingesting learnings after one |
-| implement | (inside a subagent) writing or editing code |
-| debug | (inside a subagent) investigating errors |
+| wiki | Before any task (context), after any task (ingest) |
+| orchestrate | Composing team, handing off work, reviewing results |
 | agents-skills | Authoring or fixing skills |
 
 ---

@@ -27,25 +27,23 @@
 
 ## Workflow details
 
-- **Team-driven workflow** — the agent reads `wiki/index.md` for workspace context, loads `team-assembly`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
-- **Structured delegation** — `delegate` handles each handoff with a canonical shape (task, objective, scope, constraints, deliverable, return format). Specialists load `implement` for code work or `debug` for error investigation.
+- **Team-driven workflow** — the agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
+- **Structured delegation** — `orchestrate` handles each handoff with a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format). Specialists load `execute` for code work or error investigation.
 - **Automatic wiki maintenance** — agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
 - **The One Rule** — the main agent never does the work itself; it delegates every unit of work to a subagent. It coordinates: plans, delegates, reviews, synthesizes. Before any task tool call, a self-check confirms the action is allowed (read wiki, talk to user, dispatch subagent) or must be delegated. No size threshold — even a one-line change is delegated.
 - **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
 - **Parallel specialist teams** — independent scopes can be dispatched to multiple specialists automatically.
 - **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator and subscopes still follow the same rules.
+- **Role preservation** — roles defined during team composition are mandatory. If no specialist is found, adjacent match or generic agent acts in that role. Roles are never dropped from the plan.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
-| **Team assembly** | `team-assembly` | Analyzes domains, discovers specialists, selects coordination pattern, plans execution order. |
-| **Delegation** | `delegate` | Hands off work with structured handoffs, reviews results, manages status protocol. |
+| **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
 | **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then adds, updates, removes, and lints workspace knowledge after tasks. Tracks skill candidates. |
-| **Minimal changes** | `implement` | Validates understanding before acting. Writes the least code that solves the problem. |
-| **Systematic debugging** | `debug` | Investigates errors with observe-hypothesize-verify-fix-confirm cycle. |
 | **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
-Skills load **on-demand**, in flow order: `wiki` for context first, then `team-assembly` to compose the team, then `delegate` for each handoff.
+Skills load **on-demand**, in flow order: `wiki` for context first, then `orchestrate` to compose the team and delegate.
 
 ## 🎭 The Agency: AI Specialists Ready to Transform Your Workflow
 
@@ -153,11 +151,8 @@ These are the installer target paths currently supported. They are not the norma
 ```
 AGENTS.md              # Boot policy — copy to each workspace
 skills/                # Loadable behavioral rules — install globally
-  team-assembly/       # Team composition, domain analysis, coordination patterns
-  delegate/            # Handoff, review, status, subdelegation
+  orchestrate/         # Full coordination cycle: analyze, compose, handoff, review
   wiki/                # Wiki query and self-learning loop
-  implement/           # Validation and minimal changes
-  debug/               # Systematic error investigation
   agents-skills/       # Skill authoring and validation
 
 # In your workspace (created by the agent)
