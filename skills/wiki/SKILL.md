@@ -5,17 +5,17 @@ description: Use this skill when querying workspace knowledge before tasks or in
 
 # Wiki
 
-Workspace knowledge base and self-improvement loop. Query wiki before exploring blindly. Ingest learnings after every task.
+Workspace knowledge base and self-improvement loop. The coordinator queries wiki before broad exploration. Ingest learnings after every task.
 
 The wiki exists to eliminate unnecessary codebase exploration. With the right knowledge, the agent goes straight to the relevant code. If exploration is still needed, the wiki narrows the search — focused and directed, not open-ended.
 
 ---
 
-## <HARD-GATE> Before Any Task
+## <HARD-GATE> Coordinator Context Before Any Task
 
-Read `wiki/index.md` BEFORE team composition or workspace exploration. No exceptions.
+The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration. Specialists use handoff context unless wiki lookup is explicitly needed for their scope.
 
-This is the first action after receiving a request. The wiki provides context that eliminates unnecessary exploration and guides team assembly.
+This is the coordinator's first action after receiving a request. The wiki provides context that eliminates unnecessary exploration and guides team assembly.
 
 ---
 
@@ -36,15 +36,15 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 **Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet.
 
-**Query** — read `wiki/index.md` first. Identify relevant pages. Load only those.
+**Query** — coordinator reads `wiki/index.md` first. Identify relevant pages. Load only those.
 
-**Ingest** — end of every task, evaluate automatically if anything was learned.
+**Ingest** — end of every task, the coordinator evaluates automatically if anything was learned.
 
 ---
 
 ## <HARD-GATE> Auto-Evaluation at End of Task
 
-Run this checklist at the end of EVERY task. Do NOT skip.
+The coordinator runs this checklist at the end of EVERY task. Do NOT skip.
 
 1. Architectural decision made? → `wiki/decisions/<decision-name>.md`
 2. New code pattern or convention? → `wiki/conventions/<pattern-name>.md`
@@ -53,7 +53,9 @@ Run this checklist at the end of EVERY task. Do NOT skip.
 5. User corrected a misunderstanding? → ingest where relevant
 6. Non-obvious multi-step procedure? → evaluate for skill candidate
 
-Any YES → ingest. All NO → skip (but you must have evaluated each).
+Any YES → ingest. All NO → skip (but each item must have been evaluated).
+
+If the coordinator is prohibited from editing wiki files directly, delegate the wiki edit as a handoff and review the result before final response.
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
 

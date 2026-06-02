@@ -50,8 +50,8 @@ sizing, and fallback are in the `orchestrate` skill.
 
 ## Flow
 
-1. **Context** — read `wiki/index.md` (hard-gate: before any action). Define done criteria.
-2. **Orchestrate** — load `orchestrate`. Analyze request → define roles → discover specialists → plan execution → handoff.
+1. **Context** — main agent reads `wiki/index.md` (hard-gate: before any action). Define done criteria.
+2. **Orchestrate** — load `orchestrate`. Analyze request → define roles → discover specialists → plan execution → handoff → review → synthesize.
 3. **Review** — check conformance, quality, synthesize. Never pass raw subagent output through unreviewed.
 4. **Learn** — load `wiki`. Run the end-of-task ingest evaluation.
 
@@ -98,8 +98,8 @@ file carries the rule.
 
 | Skill | Load when |
 |---|---|
-| wiki | Before any task (context), after any task (ingest) |
-| orchestrate | Composing team, handing off work, reviewing results |
+| wiki | Main-agent context before tasks, end-of-task ingest evaluation |
+| orchestrate | Assembly, delegation, review, and synthesis |
 | agents-skills | Authoring or fixing skills |
 
 ---

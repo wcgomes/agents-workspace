@@ -27,9 +27,9 @@
 
 ## Workflow details
 
-- **Team-driven workflow** — the agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
-- **Structured delegation** — `orchestrate` handles each handoff with a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format). Specialists load `execute` for code work or error investigation.
-- **Automatic wiki maintenance** — agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
+- **Team-driven workflow** — the main agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
+- **Structured delegation** — `orchestrate` covers assembly, delegation, review, and synthesis. Each handoff uses a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format), and specialists execute the handed scope directly.
+- **Automatic wiki maintenance** — the main agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
 - **The One Rule** — the main agent never does the work itself; it delegates every unit of work to a subagent. It coordinates: plans, delegates, reviews, synthesizes. Before any task tool call, a self-check confirms the action is allowed (read wiki, talk to user, dispatch subagent) or must be delegated. No size threshold — even a one-line change is delegated.
 - **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
@@ -40,10 +40,10 @@
 | Mechanism | Skill | What it does |
 |---|---|---|
 | **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
-| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then adds, updates, removes, and lints workspace knowledge after tasks. Tracks skill candidates. |
+| **Self-learning wiki** | `wiki` | Main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. Tracks skill candidates. |
 | **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
-Skills load **on-demand**, in flow order: `wiki` for context first, then `orchestrate` to compose the team and delegate.
+Skills load **on-demand**, in flow order: `wiki` for main-agent context first, then `orchestrate` for assembly, delegation, review, and synthesis.
 
 ## 🎭 The Agency: AI Specialists Ready to Transform Your Workflow
 
@@ -67,7 +67,7 @@ A complete AI agency at your fingertips — from frontend wizards to Reddit comm
 - **Academic** — Research Assistant, Citation Manager
 - **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
 
-> Installed by default. Use `--no-agency` to skip and install only the 6 base skills. The workflow is designed to discover these specialists automatically and assemble the best team for each task.
+> Installed by default. Use `--no-agency` to skip agency-agents and install only the base workflow skills. The workflow is designed to discover these specialists automatically and assemble the best team for each task.
 
 ### Credits
 
@@ -101,7 +101,7 @@ cp AGENTS.md /path/to/your-project/
 
 **Step 3 — Let the agent create `wiki/`**
 
-The agent may create `wiki/` when setup is explicit, or when the `wiki` skill needs to ingest, maintain, or persist new knowledge. After that, the workflow treats `wiki/index.md` as the first workspace knowledge source before broad exploration, and maintains the wiki by adding, updating, removing, reindexing, and linting entries as part of self-learning. This is workspace-specific knowledge — do not copy from this repo.
+The agent may create `wiki/` when setup is explicit, or when the `wiki` skill needs to ingest, maintain, or persist new knowledge. After that, the main agent treats `wiki/index.md` as the first workspace knowledge source before broad exploration, and maintains the wiki by adding, updating, removing, reindexing, and linting entries as part of self-learning. This is workspace-specific knowledge — do not copy from this repo.
 
 > **Tip:** In an existing workspace, ask the agent to "set up the wiki" before starting. This primes the self-learning loop.
 
@@ -151,7 +151,7 @@ These are the installer target paths currently supported. They are not the norma
 ```
 AGENTS.md              # Boot policy — copy to each workspace
 skills/                # Loadable behavioral rules — install globally
-  orchestrate/         # Full coordination cycle: analyze, compose, handoff, review
+  orchestrate/         # Full coordination cycle: assemble, delegate, review, synthesize
   wiki/                # Wiki query and self-learning loop
   agents-skills/       # Skill authoring and validation
 

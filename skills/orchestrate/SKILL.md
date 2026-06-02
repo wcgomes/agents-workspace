@@ -5,18 +5,18 @@ description: Use when composing the team, handing off work to subagents, or revi
 
 # Orchestrate
 
-Full coordination cycle: analyze → compose → handoff → review.
+Full coordination cycle: analyze → assemble → delegate → review → synthesize.
 
 ---
 
 ## <HARD-GATES>
 
-1. **Read wiki first** — `wiki/index.md` before any analysis. No exceptions.
+1. **Coordinator context first** — the main agent reads `wiki/index.md` before orchestration. Specialists use handoff context unless wiki lookup is explicitly needed.
 2. **Roles are mandatory** — if specialist not found, use adjacent match or generic agent acting in that role. Never drop a role from the plan.
 3. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
 4. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria.
-5. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating.
-6. **Preserve team on continuation** — when user requests continuation of a task: reuse existing specialists unless new domains emerge. If new domains appear, add specialists to the team; never replace existing roles mid-task.
+5. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan.
+6. **Preserve team on continuation** — when user requests continuation of a task: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
 
 ---
 
@@ -29,7 +29,7 @@ Think about this like assembling a professional team for the job:
 - What phases does the work go through? (planning → implementation → review → testing)
 - Classify complexity: single-domain, multi-domain, or cross-functional.
 
-**For continuation requests:** Check if a team was already composed for this task. If yes, reuse those specialists. Only add new roles if the continuation introduces new domains not covered by the existing team.
+**For continuation requests:** Check if a team was already composed for this task. If yes, preserve existing roles and specialists by default. Add roles for new domains, or replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction.
 
 ---
 
@@ -43,7 +43,7 @@ For multi-domain work, ensure each domain has representation. Each phase that re
 
 ## Phase 3: Discover Specialists
 
-Before selecting, discover what specialists exist in the current environment. Inspect all observable sources — the dispatch tool, workspace and global config directories, agent descriptions, and any identifiers exposed by the platform. Do not assume the pool is empty; do not skip to whatever agent the harness offers by default.
+Before selecting, discover what specialists exist in the current environment. Use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator is prohibited from reading it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to whatever agent the harness offers by default.
 
 **Produce an explicit list** of the specialists you found (name + domain). This list is required output.
 
@@ -186,10 +186,9 @@ Estimated complexity: [single/multi-domain, coordination pattern]
 
 **Wait for user confirmation** before proceeding to handoff. User may adjust team, scope, or execution order.
 
-**Skip confirmation when:**
-- Single-domain, one specialist, clear scope
-- Trivial task (typo fix, rename, add import)
-- User already provided sufficient context
+**Skip confirmation only when:**
+- No confirmation trigger applies
+- User already approved the current team and execution plan
 
 ---
 
@@ -213,11 +212,12 @@ Return format: <status + concise summary>
 
 **Policy inheritance:** The `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it.
 
-**Constraints must include execution guardrails:**
-- Change only code directly related to the task — no drive-by changes
-- Match existing style, even if you'd write it differently
-- Self-review before reporting: confirm built exactly what was requested
-- For debugging: reproduce issue, apply minimal fix, verify fix, test for regressions
+**Constraints should include task-relevant execution guardrails:**
+- For edits: change only files directly related to the task; no drive-by changes
+- For implementation: match existing style, even if you'd write it differently
+- For investigation/debugging: reproduce or verify the issue when feasible before fixing
+- For verification: test or inspect the requested behavior and note any gaps
+- For all handoffs: self-review before reporting that the requested scope is complete
 
 Use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
 
@@ -303,21 +303,17 @@ Repeated delegated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts
 
 | Thought | Reality |
 |---|---|
-| "This is too simple to delegate" | Simple work is delegated to one specialist. The rule has no size threshold. |
-| "It's faster if I just do it" | Speed by breaking the operating mode is not allowed. Delegate. |
-| "I already know the answer" | Knowing ≠ executing. The specialist executes; you coordinate. |
-| "A team of one is pointless, so I'll do it" | A team of one means one specialist subagent — not you. |
 | "No specialist found, skip this role" | Roles are mandatory. Use adjacent match or generic agent acting in that role. |
 | "Sequential is safer" | Parallel is default for independent work. Sequential needs explicit dependency. |
-| "I just need to peek at the code first" | Reading task files is research. Research is a subagent's job. |
+| "Context is sufficient, so skip confirmation" | Confirmation depends on triggers, not context volume. |
+| "Continuation means the same team no matter what" | Preserve roles and specialists by default, but replace when unavailable, wrong, or user-directed. |
 
 ---
 
 ## Return Format
 
-After assembly, produce:
+Use the format that matches the current phase:
 
-- **Discovered specialists**: the specialists found during discovery (name + domain). If none found, state what sources were checked.
-- **Team roster**: (role, specialist, scope) per member
-- **Execution plan**: parallel groups + sequential order + dependencies
-- **Handoff summary**: what each specialist receives
+- **Internal assembly state**: discovered specialists (name + domain or sources checked), team roster (role, specialist, scope), execution plan (parallel groups, sequence, dependencies), and handoff summary.
+- **User-facing confirmation output**: team roster, execution plan, estimated complexity, and explicit request for approval when a confirmation trigger applies.
+- **Final synthesis**: status, concise summary of reviewed delegated results, files/artifacts changed when relevant, verification performed, and remaining concerns.
