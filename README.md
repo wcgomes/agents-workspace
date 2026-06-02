@@ -28,7 +28,7 @@
 ## Workflow details
 
 - **Team-driven workflow** — the agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request: analyzes domains, discovers available specialists, sizes the team (one specialist for a focused task, a full team for multi-domain work), selects a coordination pattern (parallel, sequential, or mixed), and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists.
-- **Structured delegation** — `orchestrate` handles each handoff with a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format). Constraints include execution guardrails to ensure minimal, focused work.
+- **Structured delegation** — `orchestrate` handles each handoff with a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format). Specialists load `execute` for code work or error investigation.
 - **Automatic wiki maintenance** — agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
 - **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
 - **The One Rule** — the main agent never does the work itself; it delegates every unit of work to a subagent. It coordinates: plans, delegates, reviews, synthesizes. Before any task tool call, a self-check confirms the action is allowed (read wiki, talk to user, dispatch subagent) or must be delegated. No size threshold — even a one-line change is delegated.
@@ -67,7 +67,7 @@ A complete AI agency at your fingertips — from frontend wizards to Reddit comm
 - **Academic** — Research Assistant, Citation Manager
 - **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
 
-> Installed by default. Use `--no-agency` to skip and install only the 3 base skills. The workflow is designed to discover these specialists automatically and assemble the best team for each task.
+> Installed by default. Use `--no-agency` to skip and install only the 6 base skills. The workflow is designed to discover these specialists automatically and assemble the best team for each task.
 
 ### Credits
 
