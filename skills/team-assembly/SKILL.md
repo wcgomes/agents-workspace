@@ -1,6 +1,6 @@
 ---
 name: team-assembly
-description: Use at the start of ANY request that requires work — building, fixing, researching, writing, analyzing, designing. Composes the specialist team (one or many) before delegating. Load before doing or delegating anything.
+description: Use when you receive a request to coordinate and must decide who does the work — at the start of any task the main agent takes on, or when a specialist hits work outside its domain and must compose a sub-team. Not for executing a focused scope you were already handed; in that case, just do the work.
 ---
 
 # Team Assembly
@@ -9,14 +9,35 @@ Compose the specialist team before any work begins. Analyze the request, decide
 how many specialists are needed, map roles, discover matching specialists, and
 plan the execution order.
 
+## Who Runs This
+
+This skill is for whoever is **coordinating** a request — deciding who does the
+work, not doing it.
+
+- **Main agent** (your input has no `[HANDOFF FROM COORDINATOR]` marker): always
+  runs this for every incoming request, before delegating. The main agent never
+  executes the work itself — see `AGENTS.md` → "The One Rule". Being knowledgeable
+  about the task is not being the specialist; compose and delegate.
+- **Specialist subagent** (your input begins with `[HANDOFF FROM COORDINATOR]`):
+  default is to **execute** the handed scope, not recompose a team. Run this skill
+  only if the scope turns out to be genuinely multi-domain and exceeds your
+  specialty — then you compose a sub-team for the parts outside your domain (see
+  `delegate` → Subdelegation). A focused, single-domain task you can do yourself is
+  never a reason to assemble.
+
+Direct execution is unlocked by the `[HANDOFF FROM COORDINATOR]` marker in your
+input, not by self-declaring as the specialist. No marker → you are the main
+agent: compose and delegate.
+
 Team size is a sizing decision (see `AGENTS.md` → "How to Delegate Well"):
 
 - **Focused, single-domain task** → one specialist. Correct sizing, not a shortcut.
 - **Multi-domain or cross-functional work** → a full team, one specialist per
   domain and phase.
 
-Every request goes through this composition, including simple ones. The output
-is always a team to delegate to — never a decision to execute the work yourself.
+When the main agent composes, the output is always a team to delegate to — never
+a decision to execute the work itself. When a specialist composes a sub-team, the
+output covers only the parts outside its own domain.
 
 Run this after `wiki/index.md` is read, before loading `delegate`.
 

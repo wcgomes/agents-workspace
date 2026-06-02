@@ -26,7 +26,13 @@ If the platform's subagent tool requires an agent identifier, use the specialist
 
 ### Canonical Handoff Shape
 
+Every handoff MUST start with the coordinator marker on its own first line. This
+marker is the portable signal that tells the receiving agent it is a specialist
+subagent acting on a delegated scope — not the main agent talking to the user.
+Only a coordinator emits it.
+
 ```
+[HANDOFF FROM COORDINATOR]
 Task: <what to do>
 Objective: <why this work is needed>
 Scope: <what is in and out>
@@ -38,11 +44,12 @@ Expected return format: <status + concise summary>
 
 ### Policy Inheritance
 
-Subagents must follow AGENTS.md policies. Include in constraints: "You must follow the specialist-first workflow. Load `delegate` before any substantive work. Do not bypass delegation."
-
-### Specialist Skills
-
-When handing off code work, include in constraints: "Load `implement` before writing or editing code. Load `debug` when investigating errors."
+The `[HANDOFF FROM COORDINATOR]` marker is what authorizes the subagent to execute
+directly under `AGENTS.md` → "If You Received a Handoff"; never omit it. The
+subagent already knows its role from that marker and loads `implement`/`debug` on
+its own when the work matches. So the constraint does not need to restate either —
+use Constraints only for task-specific rules (limits, files not to touch, expected
+behavior).
 
 ### Return Format Rule
 
@@ -81,9 +88,13 @@ Good candidates:
 
 Did it deliver what was requested? Nothing more, nothing less?
 
-Did the subagent follow the specialist-first workflow? (i.e., did it load `delegate` and relevant skills, or provide evidence of delegation rather than direct execution?)
+A specialist executing its handed scope directly is conformant — that is the
+expected behavior (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem
+only if the scope was genuinely multi-domain and the specialist neither
+subdelegated the out-of-domain parts nor flagged them.
 
-For subdelegation: did the subagent load `team-assembly` when composing sub-teams?
+For subdelegation: when a specialist did compose a sub-team, did it load
+`team-assembly` first and remain accountable for the result?
 
 ### Stage 2: Quality
 

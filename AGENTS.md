@@ -19,6 +19,28 @@ There is no task too small to delegate. "It's one line" is still delegated.
 
 ---
 
+## If You Received a Handoff
+
+The rule above is written for the coordinator. Your role is decided by one
+portable signal: whether your input begins with the `[HANDOFF FROM COORDINATOR]`
+marker.
+
+- **Marker present** → you are a specialist subagent acting on a delegated scope:
+  - **Execute the scope directly.** Do the work you were handed. Direct execution
+    is expected, not a violation of The One Rule.
+  - **Do not recompose a team or re-delegate** work that is inside your specialty.
+  - **Only if the scope is genuinely multi-domain and exceeds your specialty**:
+    compose a sub-team for the out-of-domain parts (load `team-assembly`, then
+    `delegate`) and stay accountable for what you subdelegate.
+
+- **Marker absent** (e.g., the request came from the user) → you are the main
+  agent. The One Rule applies in full: compose and delegate. Do not treat yourself
+  as the specialist just because the task looks focused or you know how to do it.
+
+When in doubt, the marker is absent, so you coordinate.
+
+---
+
 ## How to Delegate Well (Sizing the Team)
 
 Delegation is mandatory; team size scales with the work. Sizing is a quality
@@ -88,7 +110,7 @@ file carries the rule.
 |---|---|
 | team-assembly | Composing the team for any request (always, before delegating) |
 | delegate | Handing off, reviewing, or managing subagent work |
-| wiki | Reading workspace knowledge, or ingesting learnings after a task |
+| wiki | Reading workspace knowledge before a task, or ingesting learnings after one |
 | implement | (inside a subagent) writing or editing code |
 | debug | (inside a subagent) investigating errors |
 | agents-skills | Authoring or fixing skills |
