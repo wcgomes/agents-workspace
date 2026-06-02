@@ -5,9 +5,14 @@ description: Use when you receive a request to coordinate and must decide who do
 
 # Team Assembly
 
-Compose the specialist team before any work begins. Analyze the request, decide
-how many specialists are needed, map roles, discover matching specialists, and
-plan the execution order.
+This is a planning step. Before any work begins, think about what a professional
+team would look like to handle this request: what roles are needed, what phases
+the work goes through, and who is responsible for each phase. A code change
+likely needs a developer for execution and a reviewer for verification — both are
+part of the plan.
+
+Compose the team: analyze the request, define roles and phases, discover matching
+specialists, and plan the execution order.
 
 ## Who Runs This
 
@@ -47,10 +52,12 @@ Run this after `wiki/index.md` is read, before loading `delegate`.
 
 ### Step 1: Analyze Request
 
-- Identify all domains involved (engineering, design, testing, marketing, etc.)
-- Identify specific platforms, tools, or channels mentioned (e.g., Twitter, WeChat, PostgreSQL, React)
-- Identify workflow phases needed (planning → execution → verification)
-- Classify complexity: single-domain, multi-domain, or cross-functional
+Think about this like assembling a professional team for the job:
+
+- What domains are involved (engineering, design, testing, marketing, etc.)?
+- What specific platforms, tools, or channels are mentioned (e.g., Twitter, WeChat, PostgreSQL, React)?
+- What phases does the work go through? (e.g., planning → implementation → code review → testing). Each phase that requires distinct expertise needs a responsible role.
+- Classify complexity: single-domain, multi-domain, or cross-functional.
 
 ### Step 2: Define Ideal Roles
 
@@ -58,31 +65,28 @@ Run this after `wiki/index.md` is read, before loading `delegate`.
 - Apply templates below for common patterns
 - For multi-domain work, ensure each domain has representation
 
-### Step 3: Discover Available Specialists
+### Step 3: Discover and Select Specialists
 
-Discovery is mandatory and explicit — never assume the pool is empty, and never
-skip to whatever agent the harness offers by default. Enumerate what actually
-exists through BOTH portable channels:
-
-- **The dispatch tool itself**: read the list of agent types/identifiers the
-  subagent tool exposes (its parameters often enumerate the available agents).
-- **Config sources on disk**: the workspace, user, and global agent directories
-  (e.g. `.../agent/` folders in project and config locations). Read the agent
-  files' descriptions and declared specializations.
+Before selecting, discover what specialists exist in the current environment.
+Inspect all observable sources — the dispatch tool, workspace and global
+config directories, agent descriptions, and any identifiers exposed by the
+platform. Do not assume the pool is empty; do not skip to whatever agent the
+harness offers by default.
 
 Then:
 
 - Produce an explicit list of the specialists you found (name + domain). This list
   is required output (see Return Format).
 - Match each ideal role to a found specialist. Semantic match: domain + work-type,
-  NOT tech stack.
-- When a specific platform/channel is identified, prefer the platform-specific specialist over the generic domain specialist (e.g., Twitter Engager over generic Social Media Strategist for Twitter work)
-- For multi-platform work, combine: generic domain specialist for strategy + specific specialists per platform
-- Adjacent match acceptable when exact unavailable
-- The harness's built-in generic agent is a last resort, not a default. Selecting
-  it requires that discovery actually ran and found no specialist or adjacent fit —
-  with that stated.
-- If user specified agents, incorporate them
+  NOT tech stack. Do not over-narrow by requiring a specific technology in the
+  specialist's name — a "Frontend Developer" covers React, Vue, or any stack.
+- Adjacent match acceptable when exact unavailable. Adjacent means: same broader
+  domain or workflow phase (e.g., no test specialist → use an implementation
+  specialist for test work; no review specialist → use a debugging specialist).
+- The generic agent is a last resort, not a default. Selecting it requires that
+  discovery found no specialist or adjacent fit — state that.
+- If user specified agents, incorporate them and apply semantic matching for the
+  remaining roles.
 
 ### Step 4: Plan Execution Order
 
@@ -187,45 +191,11 @@ Coordination: Sequential with Quality Gates.
 
 ---
 
-## Handling Missing Specialists
-
-- Adjacent domain specialist > generalist
-- Adjacent means: same broader domain or workflow phase (e.g., no dedicated test specialist → use implementation specialist for test work; no dedicated review specialist → use debugging specialist for review)
-- Document which roles have no match
-- State fallback justification before using generalist
-
-### Invalid Reasons to Choose Generalist
-
-| Excuse | Reality |
-|---|---|
-| "Generalist seems faster" | Specialist fit improves quality, not just speed |
-| "One agent can own the whole rollout" | Mixed domains need different expertise |
-| "Fewer handoffs" | Handoffs are by design, not overhead |
-| "Convenience" | Convenience is never a valid selection criterion |
-| "No specialist title matches exactly" | Semantic match by domain, not title keywords |
-| "No specialist mentions the specific tech" | Domain specialist covers any tech in their domain |
-| "Specialist name doesn't mention the task verbatim" | Match by domain + work-type, not name |
-
-### Anti-Patterns
-
-| Pattern | Problem |
-|---|---|
-| Over-narrowing by tech stack | Looking for "React Specialist" instead of "Frontend Developer" |
-| Skipping discovery | Assuming no specialist exists without checking |
-| Premature fallback | Choosing generalist before exhausting adjacent specialists |
-| Title lexical match | Requiring exact word match between task and specialist name |
-
-## User-Specified Agents
-
-- If user names agents, incorporate into team
-- Apply semantic matching for unspecified roles
-- User preference overrides template defaults
-
 ## Return Format
 
 After assembly, produce:
 
-- **Discovered specialists**: the enumerated pool (name + domain) from Step 3. If empty, state explicitly that both channels were checked and nothing was found.
+- **Discovered specialists**: the specialists found during discovery (name + domain). If none found, state what sources were checked.
 - **Team roster**: (role, specialist, scope) per member
 - **Execution plan**: parallel groups + sequential order + dependencies
 - **Handoff summary**: what each specialist receives

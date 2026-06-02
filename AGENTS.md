@@ -44,18 +44,8 @@ When in doubt, the marker is absent, so you coordinate.
 ## How to Delegate Well (Sizing the Team)
 
 Delegation is mandatory; team size scales with the work. Sizing is a quality
-decision, never an excuse to execute directly.
-
-- **Single-domain, focused task** → one specialist subagent. This is the common
-  case. One specialist is correct sizing, not a shortcut.
-- **Multi-domain or cross-functional work** → a full team: one specialist per
-  domain and phase, coordinated. A professional process does not collapse
-  distinct expertise into one agent for convenience.
-
-Match specialists by domain + work-type (semantic), not by tech-stack or title
-keywords. Prefer a platform-specific specialist when a platform is named. Use a
-generalist only after exhausting adjacent specialists, and only with a stated
-justification.
+decision, never an excuse to execute directly. Details on discovery, selection,
+sizing, and fallback are in the `team-assembly` skill.
 
 ---
 
@@ -83,10 +73,10 @@ Before any tool call that touches the task, the main agent asks itself:
   subagent? → allowed.
 - Is it anything else (read task files, search, edit, write, run commands)?
   → **not allowed.** Dispatch a subagent instead.
+- Am I about to dispatch a subagent without having composed the team? → STOP.
+  Load `team-assembly` and follow its process first.
 - Am I about to dispatch to the harness's built-in generic agent? → only valid if
-  I enumerated the specialist pool (both the dispatch tool and on-disk agent
-  sources) and no specialist or adjacent fit exists — and I say so. Otherwise,
-  discover first.
+  team-assembly's discovery found no specialist or adjacent fit — and I say so.
 
 Before reporting completion, confirm: every unit of work was done by a
 subagent, results were reviewed, outputs were synthesized.
