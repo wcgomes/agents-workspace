@@ -60,13 +60,28 @@ Run this after `wiki/index.md` is read, before loading `delegate`.
 
 ### Step 3: Discover Available Specialists
 
-- Inspect all agent sources (workspace, user, global)
-- Read agent descriptions and declared specializations
-- Match each ideal role to available specialists
-- Semantic match: domain + work-type, NOT tech stack
+Discovery is mandatory and explicit — never assume the pool is empty, and never
+skip to whatever agent the harness offers by default. Enumerate what actually
+exists through BOTH portable channels:
+
+- **The dispatch tool itself**: read the list of agent types/identifiers the
+  subagent tool exposes (its parameters often enumerate the available agents).
+- **Config sources on disk**: the workspace, user, and global agent directories
+  (e.g. `.../agent/` folders in project and config locations). Read the agent
+  files' descriptions and declared specializations.
+
+Then:
+
+- Produce an explicit list of the specialists you found (name + domain). This list
+  is required output (see Return Format).
+- Match each ideal role to a found specialist. Semantic match: domain + work-type,
+  NOT tech stack.
 - When a specific platform/channel is identified, prefer the platform-specific specialist over the generic domain specialist (e.g., Twitter Engager over generic Social Media Strategist for Twitter work)
 - For multi-platform work, combine: generic domain specialist for strategy + specific specialists per platform
 - Adjacent match acceptable when exact unavailable
+- The harness's built-in generic agent is a last resort, not a default. Selecting
+  it requires that discovery actually ran and found no specialist or adjacent fit —
+  with that stated.
 - If user specified agents, incorporate them
 
 ### Step 4: Plan Execution Order
@@ -210,6 +225,7 @@ Coordination: Sequential with Quality Gates.
 
 After assembly, produce:
 
+- **Discovered specialists**: the enumerated pool (name + domain) from Step 3. If empty, state explicitly that both channels were checked and nothing was found.
 - **Team roster**: (role, specialist, scope) per member
 - **Execution plan**: parallel groups + sequential order + dependencies
 - **Handoff summary**: what each specialist receives

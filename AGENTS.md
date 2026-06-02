@@ -83,6 +83,10 @@ Before any tool call that touches the task, the main agent asks itself:
   subagent? → allowed.
 - Is it anything else (read task files, search, edit, write, run commands)?
   → **not allowed.** Dispatch a subagent instead.
+- Am I about to dispatch to the harness's built-in generic agent? → only valid if
+  I enumerated the specialist pool (both the dispatch tool and on-disk agent
+  sources) and no specialist or adjacent fit exists — and I say so. Otherwise,
+  discover first.
 
 Before reporting completion, confirm: every unit of work was done by a
 subagent, results were reviewed, outputs were synthesized.
