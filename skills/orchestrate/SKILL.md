@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Use when planning or executing delegated work, including "execute the plan" continuations. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review and synthesize.
+description: "Use when planning or executing delegated work, including execute-the-plan continuations. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review and synthesize."
 ---
 
 # Orchestrate
