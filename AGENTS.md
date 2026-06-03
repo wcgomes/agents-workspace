@@ -77,8 +77,9 @@ Before any tool call that touches the task, the main agent asks itself:
   does not reduce expertise or verification.
 - Am I dispatching independent scopes sequentially? → STOP. Parallel is default
   for independent work. Sequential only with explicit output dependency.
-- Am I about to dispatch to a generic/default agent? → only valid if
-  orchestrate's discovery found no exact or adjacent fit — and I say so.
+- Am I about to dispatch to a generic/default agent? → STOP. Only valid if
+  orchestrate's discovery found no exact or adjacent fit — and you MUST state
+  that justification in the handoff.
 
 Before reporting completion, confirm: every unit of work was done by a
 subagent, results were reviewed, outputs were synthesized.
@@ -94,6 +95,7 @@ subagent, results were reviewed, outputs were synthesized.
 | "I already know the answer" | Knowing ≠ executing. The specialist executes; you coordinate. |
 | "A team of one is pointless, so I'll do it" | A team of one means one delegated subagent selected through orchestration — not you. |
 | "I just need to peek at the code first" | Reading task files is research. Research is a subagent's job. |
+| "Generic is fine, no one will notice" | Every generic dispatch must be justified in the handoff. Undispatched specialists from discovery invalidate the handoff. |
 
 ---
 
