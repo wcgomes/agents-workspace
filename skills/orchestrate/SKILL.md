@@ -12,7 +12,7 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 ## <HARD-GATES>
 
 1. **Coordinator context first** — the main agent reads `wiki/index.md` before orchestration. Specialists use handoff context unless wiki lookup is explicitly needed.
-2. **Roles are mandatory** — if specialist not found, use adjacent match or generic agent acting in that role. Never drop or collapse a role from the plan.
+2. **Roles are mandatory** — if no exact specialist exists, use the best adjacent specialist. Use a generic/default agent acting in that role only when no exact or adjacent fit exists. Never drop or collapse a role from the plan.
 3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
 4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
 5. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
@@ -49,20 +49,21 @@ Role preservation means preserving separate role scopes, not just role labels in
 
 ## Phase 3: Discover Specialists
 
-Before selecting, discover what specialists exist in the current environment. Use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator is prohibited from reading it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to whatever agent the harness offers by default.
+Before selecting, discover what specialists exist in the current environment. Use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator is prohibited from reading it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to a generic/default agent.
 
-**Produce an explicit list** of the specialists you found (name + domain). This list is required output.
+**Produce an explicit list** of the specialists you found (name + domain). For each role, state the selected agent and why the match is exact, adjacent, or fallback. This list is required output.
 
 **Matching rules:**
 
 - **Semantic match**: domain + work-type, NOT tech stack. A "Frontend Developer" covers React, Vue, or any stack.
 - **Adjacent match** acceptable when exact unavailable. Adjacent means: same broader domain or workflow phase (e.g., no test specialist → use implementation specialist for test work).
-- **Generic agent is last resort**, not a default. Selecting it requires that discovery found no specialist or adjacent fit — state that explicitly.
-- **Generic still has a role**: never dispatch an unscoped generalist. If fallback is required, assign the generic agent to the defined role and scope.
-- **Same generic, separate scopes**: if generic fallback is used for multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the selected agent type is the same.
+- **Select the best discovered fit**: dispatch each role to the best exact or adjacent specialist found. Do not use a generic/default agent when an exact or adjacent specialist is available.
+- **Generic/default agent is last resort**, not a default. Selecting it requires that discovery found no exact or adjacent fit — state that explicitly.
+- **Generic/default still has a role**: never dispatch an unscoped generalist. If fallback is required, assign the generic/default agent to the defined role and scope.
+- **Same generic/default, separate scopes**: if generic/default fallback is used for multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the selected agent type is the same.
 - If user specified agents, incorporate them and apply semantic matching for the remaining roles.
 
-**Role preservation:** The roles defined in Phase 2 are mandatory. If the exact specialist is not found, use adjacent match. If no adjacent exists, use the generic agent — but the role (e.g., reviewer, tester, architect) stays in the plan and the handoff must instruct the generic agent to act in that role. "No specialist found" is not a valid reason to merge distinct domains or phases into one broad handoff.
+**Role preservation:** The roles defined in Phase 2 are mandatory. If the exact specialist is not found, use the best adjacent specialist. If no adjacent exists, use the generic/default agent — but the role (e.g., reviewer, tester, architect) stays in the plan and the handoff must instruct the generic/default agent to act in that role. "No specialist found" is not a valid reason to merge distinct domains or phases into one broad handoff.
 
 ---
 
@@ -99,7 +100,7 @@ Before selecting, discover what specialists exist in the current environment. Us
 ### Single Agent Structured
 
 **When:** task fits cleanly in one domain.  
-**How:** one specialist, structured handoff.  
+**How:** one selected specialist or adjacent specialist, structured handoff. Use a generic/default agent only under the fallback rule.  
 **Example:** write a chapter, fix a specific bug.
 
 ---
@@ -191,8 +192,8 @@ Coordination: Sequential with Quality Gates. Review/Consistency is required when
 **What to present:**
 ```
 Team Roster:
-- [Role] → [Specialist] : [Scope]
-- [Role] → [Specialist] : [Scope]
+- [Role] → [Selected Agent] : [Scope]
+- [Role] → [Selected Agent] : [Scope]
 ...
 
 Execution Plan:
@@ -215,7 +216,7 @@ Estimated complexity: [single/multi-domain, coordination pattern]
 
 ### Canonical Handoff Shape
 
-Every handoff MUST start with the coordinator marker on its own first line. This marker is the portable signal that tells the receiving agent it is a specialist subagent acting on a delegated scope — not the main agent talking to the user.
+Every handoff MUST start with the coordinator marker on its own first line. This marker is the portable signal that tells the receiving agent it is a delegated subagent acting on a scoped assignment — not the main agent talking to the user.
 
 ```
 [HANDOFF FROM COORDINATOR]
@@ -229,7 +230,7 @@ Deliverable: <artifact or decision>
 Return format: <status + concise summary>
 ```
 
-**Policy inheritance:** The `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it.
+**Policy inheritance:** The `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it. The marker authorizes execution, but it does not make the recipient the selected specialist; specialist selection still follows the discovery and matching rules above.
 
 **Constraints should include task-relevant execution guardrails:**
 - For edits: change only files directly related to the task; no drive-by changes
@@ -262,7 +263,7 @@ Good candidates:
 
 Did it deliver what was requested? Nothing more, nothing less?
 
-A specialist executing its handed scope directly is conformant — that is the expected behavior (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem only if the scope was genuinely multi-domain and the specialist neither subdelegated the out-of-domain parts nor flagged them.
+A delegated subagent executing its handed scope directly is conformant — that is the expected behavior (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem only if the scope was genuinely multi-domain and the subagent neither subdelegated the out-of-domain parts nor flagged them.
 
 For subdelegation: when a specialist did compose a sub-team, did it remain accountable for the result?
 
@@ -322,7 +323,7 @@ Repeated delegated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts
 
 | Thought | Reality |
 |---|---|
-| "No specialist found, skip this role" | Roles are mandatory. Use adjacent match or generic agent acting in that role. |
+| "No specialist found, skip this role" | Roles are mandatory. Use the best adjacent specialist; use a generic/default agent acting in that role only when no exact or adjacent fit exists. |
 | "Sequential is safer" | Parallel is default for independent work. Sequential needs explicit dependency. |
 | "Context is sufficient, so skip confirmation" | Confirmation depends on triggers, not context volume. |
 | "Continuation means the same team no matter what" | Preserve roles and specialists by default, but replace when unavailable, wrong, or user-directed. |
@@ -333,6 +334,6 @@ Repeated delegated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts
 
 Use the format that matches the current phase:
 
-- **Internal assembly state**: discovered specialists (name + domain or sources checked), team roster (role, specialist, scope), execution plan (parallel groups, sequence, dependencies), and handoff summary.
+- **Internal assembly state**: discovered specialists (name + domain or sources checked), team roster (role, selected agent, scope, exact/adjacent/fallback rationale), execution plan (parallel groups, sequence, dependencies), and handoff summary.
 - **User-facing confirmation output**: team roster, execution plan, estimated complexity, and explicit request for approval when a confirmation trigger applies.
 - **Final synthesis**: status, concise summary of reviewed delegated results, files/artifacts changed when relevant, verification performed, and remaining concerns.

@@ -25,11 +25,11 @@ The rule above is written for the coordinator. Your role is decided by one
 portable signal: whether your input begins with the `[HANDOFF FROM COORDINATOR]`
 marker.
 
-- **Marker present** → you are a specialist subagent acting on a delegated scope:
+- **Marker present** → you are a delegated subagent acting on a scoped assignment:
   - **Execute the scope directly.** Do the work you were handed. Direct execution
     is expected, not a violation of The One Rule.
-  - **Do not recompose a team or re-delegate** work that is inside your specialty.
-  - **Only if the scope is genuinely multi-domain and exceeds your specialty**:
+  - **Do not recompose a team or re-delegate** work that is inside your assigned role/scope.
+  - **Only if the scope is genuinely multi-domain and exceeds your assigned role/scope**:
     compose a sub-team for the out-of-domain parts (load `orchestrate`) and stay accountable for what you subdelegate.
 
 - **Marker absent** (e.g., the request came from the user) → you are the main
@@ -69,15 +69,16 @@ Before any tool call that touches the task, the main agent asks itself:
   Load `orchestrate` and follow its process first.
 - Did the user ask to execute, continue, resume, or implement a prior plan? → STOP.
   Load `orchestrate`; treat the prior plan as context, then compose the team.
-- Am I about to skip a defined role because no specialist was found? → STOP.
-  Roles are mandatory. Use adjacent match or generic agent acting in that role.
+- Am I about to skip a defined role because no exact specialist was found? → STOP.
+  Roles are mandatory. Use the best adjacent specialist; use a generic/default
+  agent only when no exact or adjacent fit exists. Keep the role scope explicit.
 - Am I about to combine multiple defined roles into one generic handoff? → STOP.
   Preserve separate role scopes unless merging has an explicit quality reason and
   does not reduce expertise or verification.
 - Am I dispatching independent scopes sequentially? → STOP. Parallel is default
   for independent work. Sequential only with explicit output dependency.
-- Am I about to dispatch to the harness's built-in generic agent? → only valid if
-  orchestrate's discovery found no specialist or adjacent fit — and I say so.
+- Am I about to dispatch to a generic/default agent? → only valid if
+  orchestrate's discovery found no exact or adjacent fit — and I say so.
 
 Before reporting completion, confirm: every unit of work was done by a
 subagent, results were reviewed, outputs were synthesized.
@@ -91,7 +92,7 @@ subagent, results were reviewed, outputs were synthesized.
 | "This is too simple to delegate" | Simple work is delegated to one specialist. The rule has no size threshold. |
 | "It's faster if I just do it" | Speed by breaking the operating mode is not allowed. Delegate. |
 | "I already know the answer" | Knowing ≠ executing. The specialist executes; you coordinate. |
-| "A team of one is pointless, so I'll do it" | A team of one means one specialist subagent — not you. |
+| "A team of one is pointless, so I'll do it" | A team of one means one delegated subagent selected through orchestration — not you. |
 | "I just need to peek at the code first" | Reading task files is research. Research is a subagent's job. |
 
 ---
