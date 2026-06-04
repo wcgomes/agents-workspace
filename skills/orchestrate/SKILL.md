@@ -116,12 +116,12 @@ The specialist names below are examples. Match by equivalent role/domain, not li
 
 | Phase | Role | Specialist Match |
 |---|---|---|
-| Planning | UX/Design | ux-researcher, ui-designer |
-| Planning | Architecture | software-architect, backend-architect |
-| Execution | Frontend | frontend-developer |
-| Execution | Backend | backend-architect, senior-developer |
-| Verification | Review | code-reviewer |
-| Verification | Testing | reality-checker, api-tester |
+| Planning | UX/Design | UX Researcher, UI Designer |
+| Planning | Architecture | Software Architect, Backend Architect |
+| Execution | Frontend | Frontend Developer |
+| Execution | Backend | Backend Architect, Senior Developer |
+| Verification | Review | Code Reviewer |
+| Verification | Testing | Reality Checker, API Tester |
 
 Coordination: Parallel Kickoff → Merge → Review.
 
@@ -129,10 +129,10 @@ Coordination: Parallel Kickoff → Merge → Review.
 
 | Phase | Role | Specialist Match |
 |---|---|---|
-| Investigation | Debug | incident-response-commander |
+| Investigation | Debug | Incident Response Commander |
 | Fix | Implementation | domain-appropriate developer |
-| Verification | Review | code-reviewer |
-| Verification | Testing | reality-checker |
+| Verification | Review | Code Reviewer |
+| Verification | Testing | Reality Checker |
 
 Coordination: Sequential with Quality Gates.
 
@@ -140,9 +140,9 @@ Coordination: Sequential with Quality Gates.
 
 | Phase | Role | Specialist Match |
 |---|---|---|
-| Strategy | Planning | growth-hacker, product-manager |
-| Execution | Content | content-creator, platform specialists |
-| Verification | Analytics | analytics-reporter |
+| Strategy | Planning | Growth Hacker, Product Manager |
+| Execution | Content | Content Creator, platform specialists |
+| Verification | Analytics | Analytics Reporter |
 
 Coordination: Parallel Kickoff → Merge → Review.
 
@@ -150,13 +150,13 @@ Coordination: Parallel Kickoff → Merge → Review.
 
 | Phase | Role | Specialist Match |
 |---|---|---|
-| All parallel | Market | trend-researcher |
-| All parallel | Technical | backend-architect, software-architect |
-| All parallel | Brand | brand-guardian |
-| All parallel | Growth | growth-hacker |
-| All parallel | UX | ux-researcher |
-| All parallel | Support | support-responder |
-| Synthesis | Coordination | project-shepherd |
+| All parallel | Market | Trend Researcher |
+| All parallel | Technical | Backend Architect, Software Architect |
+| All parallel | Brand | Brand Guardian |
+| All parallel | Growth | Growth Hacker |
+| All parallel | UX | UX Researcher |
+| All parallel | Support | Support Responder |
+| Synthesis | Coordination | Project Shepherd |
 
 Coordination: Full Parallel Discovery.
 
@@ -164,9 +164,9 @@ Coordination: Full Parallel Discovery.
 
 | Phase | Role | Specialist Match |
 |---|---|---|
-| Planning | Strategy | content-creator, product-manager |
-| Execution | Writing | technical-writer, content-creator |
-| Verification | Review | code-reviewer, reality-checker |
+| Planning | Strategy | Content Creator, Product Manager |
+| Execution | Writing | Technical Writer, Content Creator |
+| Verification | Review | Code Reviewer, Reality Checker |
 
 Coordination: Sequential with Quality Gates.
 
@@ -174,9 +174,9 @@ Coordination: Sequential with Quality Gates.
 
 | Phase | Role | Specialist Match |
 |---|---|---|
-| Discovery | Workspace Research / Architecture Analysis | research-assistant, software-architect, backend-architect |
-| Execution | Technical Writing / Documentation | technical-writer, content-creator |
-| Verification | Review / Consistency | reality-checker, code-reviewer |
+| Discovery | Workspace Research / Architecture Analysis | Research Assistant, Software Architect, Backend Architect |
+| Execution | Technical Writing / Documentation | Technical Writer, Content Creator |
+| Verification | Review / Consistency | Reality Checker, Code Reviewer |
 
 Coordination: Sequential with Quality Gates. Review/Consistency is required when broad or persistent docs are created. If no wiki-specific specialist exists, do not collapse research and writing into one generalist; use separate fallback handoffs for each role.
 
@@ -187,6 +187,7 @@ Coordination: Sequential with Quality Gates. Review/Consistency is required when
 Before composing each handoff:
 - Confirm the target agent appears in Phase 3's discovered specialists list as exact or adjacent.
 - If the target is generic/default, state why no exact or adjacent specialist was available.
+- Verify the agent name matches the exact format exposed by the dispatch interface (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use the exact identifier as discovered, not a reformatted version like "Software Architect" or "software_architect".
 - Do not proceed to handoff without this confirmation.
 
 ---
@@ -253,6 +254,8 @@ Return format: <status + concise summary>
 - For all handoffs: self-review before reporting that the requested scope is complete
 
 Use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
+
+**Dispatch failure recovery:** If a dispatch fails and the agent was a valid discovered specialist, do not immediately abandon the role or fall back to generic/default. First, verify that the agent name used in the dispatch exactly matches the identifier from the discovery phase — format mismatches (hyphen vs. space, case differences, separators) are a common cause of dispatch failure. Retry with the exact discovered identifier before concluding the agent is unavailable or escalating to fallback.
 
 **Return format rule:** Return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
 
@@ -341,6 +344,7 @@ Repeated delegated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts
 | "Context is sufficient, so skip confirmation" | Confirmation depends on triggers, not context volume. |
 | "Continuation means the same team no matter what" | Preserve roles and specialists by default, but replace when unavailable, wrong, or user-directed. |
 | "Generic is fine, no one will notice" | Every generic dispatch must be justified in the handoff. Undispatched specialists from discovery invalidate the handoff. |
+| "Dispatch failed, agent must be unavailable" | First verify the agent name format matches the exact discovered identifier. Format mismatches (case, separators) are a common cause of failure — retry with the correct format before falling back. |
 
 ---
 

@@ -27,6 +27,7 @@ Wiki files are loaded into agent context. Every line costs tokens.
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
+- **index.md is a lookup table** — file paths with descriptions and keywords for quick discovery; no instructions, no rules, no detailed content
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
@@ -36,7 +37,7 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 **Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
-**Query** — coordinator reads `wiki/index.md` first. Identify relevant pages. Load only those.
+**Query** — coordinator reads `wiki/index.md` first to find relevant pages by description and keywords. Load only those.
 
 **Ingest** — end of every task, the coordinator evaluates automatically if anything was learned.
 
@@ -65,7 +66,7 @@ Do NOT ask "should I update the wiki?" — evaluate automatically.
 
 ```
 wiki/
-├── index.md              # Always up to date — update when pages added/removed
+├── index.md              # Lean reference index — descriptions + keywords only
 ├── architecture.md       # System structure overview (single file)
 ├── conventions/          # One file per convention
 │   └── <pattern-name>.md
@@ -120,8 +121,6 @@ status: candidate
 [what goes wrong or gets missed without it]
 ```
 
-Add to `wiki/index.md` under `## Skill Candidates`.
-
 ### Propose (3rd+ encounter)
 
 When `encounters >= 3` and `status: candidate`, set `status: propose` and ask user.
@@ -130,7 +129,7 @@ When `encounters >= 3` and `status: candidate`, set `status: propose` and ask us
 
 1. Check for redundancy (globally installed skills + workspace skills)
 2. Create skill locally at `.agents/skills/<name>/SKILL.md`
-3. Delete candidate file, remove from `wiki/index.md`
+3. Delete candidate file
 
 ---
 
@@ -175,5 +174,5 @@ Do not leave the wiki internally inconsistent after editing it.
 
 ## Gotchas
 
-- Pages not linked from `index.md` are invisible.
+- Pages not linked from `index.md` are invisible. Keep index.md updated when pages are added or removed — but keep it lean: descriptions and keywords only.
 - Evaluate automatically — don't wait for the user to ask.
