@@ -1,19 +1,16 @@
 # Agents Workspace
 
-> **AI agent workflow toolkit.** Specialist-first, team-driven workflow with workspace memory. 
-> **Powered by [The Agency](https://github.com/msitarzewski/agency-agents)** with more than 144+ specialized agents trusted by 86k+ developers.
+**AI Agent toolkit** designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle for any type of work.
 
 Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
-**For anyone** who wants an optimized, consistent, self-learning workflow with teams of AI agents — for coding, design, marketing, research, writing, data analysis, or any other task.
-
-**Teams** needing consistent agent behavior across multiple projects.
+> **Powered by [The Agency](https://github.com/msitarzewski/agency-agents)** — 144+ specialized agents trusted by 86k+ developers, across 15 divisions: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic, and Specialized.
 
 ## How it works 
 
 **Describe what you want** — the main agent never executes the work itself; it assembles the right team of specialists, delegates every unit of work, reviews the results, and synthesizes them. Along the way, it builds a knowledge base in the wiki that makes future tasks faster and more accurate. You stay in control: suggest agents, adjust the team, or take over at any point.
 
-## Why use it
+**Your context stays clean** — debug data, tool logs, and raw code live inside the subagents. The main agent keeps its context focused on your task and conversation.
 
 | Without | With |
 |---|---|
@@ -27,51 +24,23 @@ Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platfo
 
 ## Workflow details
 
-- **Team-driven workflow** — the main agent reads `wiki/index.md` for workspace context, loads `orchestrate`, then composes the team for the request before planning or execution, including requests to execute, continue, resume, or implement a prior plan, even when that plan was not created through `orchestrate`. It analyzes domains, discovers available specialists, sizes the team, selects a coordination pattern, and plans execution order. Generalist execution is fallback only after exhausting adjacent specialists and must still act in a defined role-scoped handoff.
-- **Structured delegation** — `orchestrate` covers assembly, delegation, review, and synthesis. Each handoff uses a canonical shape (task, objective, scope, done criteria, constraints, deliverable, return format), and specialists execute the handed scope directly.
-- **Automatic wiki maintenance** — the main agent reads `wiki/index.md` before broad workspace exploration when available, then evaluates after every task what to add, update, remove, reindex, and lint to avoid orphaned or contradictory pages. No need to ask. Self-learning loop.
-- **Automatic skill candidate tracking** — agent detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
-- **The One Rule** — the main agent never does the work itself; it delegates every unit of work to a subagent. It coordinates: plans, delegates, reviews, synthesizes. Before any task tool call, a self-check confirms the action is allowed (read wiki, talk to user, dispatch subagent) or must be delegated. No size threshold — even a one-line change is delegated.
-- **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
-- **Parallel specialist teams** — independent scopes can be dispatched to multiple specialists automatically.
-- **Controlled subdelegation** — specialists may subdelegate when specialization or decomposition improves the task, while accountability stays with the delegator and subscopes still follow the same rules.
-- **Role preservation** — roles defined during team composition are mandatory. If no specialist is found, adjacent match or generic agent acts in that role. Roles are never dropped or collapsed: multiple roles mean multiple scoped handoffs unless there is an explicit quality reason to merge and verification is not reduced.
+1. **The One Rule** — the main agent never does the work. It delegates every unit to a subagent. Before any tool call, a self-check confirms the action is allowed: read wiki, talk to user, or dispatch subagent. Everything else is delegated — no size threshold.
+2. **Team-driven workflow** — main agent reads `wiki/index.md` for context, loads `orchestrate`, then composes the team: analyze domains, discover specialists, size the team, select coordination pattern, plan execution order. Generalist execution is fallback only.
+3. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
+4. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
+5. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
+6. **Automatic skill candidate tracking** — detects recurring procedural patterns. Tracks from first encounter, proposes at 3+.
+7. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
+8. **Controlled subdelegation** — specialists may subdelegate when specialization improves the task. Accountability stays with the delegator; subscopes follow the same rules.
+9. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
 | **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
-| **Self-learning wiki** | `wiki` | Main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. Tracks skill candidates. |
+| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. Tracks skill candidates. |
 | **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
-Skills load **on-demand**, in flow order: `wiki` for main-agent context first, then `orchestrate` for planning or executing delegated work, including execute, continue, resume, or implement prior-plan continuations.
-
-## 🎭 The Agency: AI Specialists Ready to Transform Your Workflow
-
-A complete AI agency at your fingertips — from frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.
-
-**144+ specialized agents** from [agency-agents](https://github.com/msitarzewski/agency-agents) across 15 divisions:
-
-- **Engineering** — Frontend, Backend, Mobile, AI Engineer, DevOps, Security, SRE, and more
-- **Design** — UI Designer, UX Researcher, Brand Guardian, Visual Storyteller
-- **Marketing** — Growth Hacker, Content Creator, SEO, Social Media, Podcast Strategist
-- **Sales** — Outbound Strategist, Deal Strategist, Sales Engineer, Pipeline Analyst
-- **Product** — Product Manager, Sprint Prioritizer, Trend Researcher
-- **Project Management** — Studio Producer, Project Shepherd, Jira Workflow Steward
-- **Testing** — Reality Checker, Performance Benchmarker, Accessibility Auditor
-- **Support** — Support Responder, Analytics Reporter, Infrastructure Maintainer
-- **Paid Media** — PPC Strategist, Ad Creative Strategist, Tracking Specialist
-- **Finance** — Finance Tracker, Accounts Payable Agent
-- **Strategy** — Strategic Advisor, Competitive Analyst
-- **Game Development** — Game Designer, Level Architect
-- **Spatial Computing** — XR Developer, VisionOS Engineer
-- **Academic** — Research Assistant, Citation Manager
-- **Specialized** — Legal, Healthcare, Compliance, Recruitment, Translation, and more
-
-> Installed by default. Use `--no-agency` to skip agency-agents and install only the base workflow skills. The workflow is designed to discover these specialists automatically and assemble the best team for each task.
-
-### Credits
-
-**Thank you to the [agency-agents community](https://github.com/msitarzewski/agency-agents)** for building and maintaining an incredible collection of 144+ specialized agents across 15 divisions. Their work makes multi-domain AI delegation practical and accessible.
+Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work.
 
 ## Setup in 4 steps
 
