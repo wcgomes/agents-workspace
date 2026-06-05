@@ -5,7 +5,7 @@
 
 **Simple by design.** Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
-**For anyone** who wants an optimized, consistent, self-learning workflow with AI agents — for coding, design, marketing, research, writing, data analysis, or any other task.
+**For anyone** who wants an optimized, consistent, self-learning workflow with teams of AI agents — for coding, design, marketing, research, writing, data analysis, or any other task.
 
 **Teams** needing consistent agent behavior across multiple projects.
 
