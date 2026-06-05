@@ -31,6 +31,8 @@ Wiki files are loaded into agent context. Every line costs tokens.
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
+**Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, dumps, and similar raw data are ephemeral artifacts — not knowledge. The wiki stores distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals a specific error condition worth remembering, write "X error happens when Y" — not the full log.
+
 ---
 
 ## Three Operations
@@ -169,6 +171,7 @@ Do not leave the wiki internally inconsistent after editing it.
 | "This is too minor to document" | Minor insights compound. |
 | "I'll update it later" | You won't. |
 | "Too specific to track" | Track anyway. |
+| "The log proves it happened" | Distill the insight, not the raw data. |
 
 ---
 
