@@ -1,6 +1,6 @@
 # Agents Workspace
 
-**AI Agent toolkit** designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle for any type of work.
+**AI Agent toolkit** designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle to handle kind of work.
 
 Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
