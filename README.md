@@ -2,7 +2,7 @@
 
 **AI Agent toolkit** designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle to handle any kind of task.
 
-> **Powered by [The Agency](https://github.com/msitarzewski/agency-agents)** — 144+ specialized agents trusted by 86k+ developers, across 15 divisions: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic, and Specialized.
+> **Powered by [The Agency](https://github.com/msitarzewski/agency-agents)** — A complete AI agency at your fingertips. Specialized agents across 15 divisions: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic. Trusted by 100k+ users.
 
 ## How it works 
 
