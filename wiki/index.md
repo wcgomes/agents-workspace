@@ -1,17 +1,18 @@
 # Wiki Index
 
-Quick-reference index for workspace documentation. Find files by topic or keyword.
+Quick-reference index. Find files by keyword.
 
-## Files
+## architecture
+- [architecture.md](architecture.md) — directory structure, data flow, component relationships
 
-| File | Description | Keywords |
-|---|---|---|
-| [architecture.md](architecture.md) | Directory structure, data flow, component relationships | structure, layout, folders, components, data flow |
-| [concepts/template-vs-installed.md](concepts/template-vs-installed.md) | Source code (`skills/`) vs installed artifacts distinction | template, installed, source, artifacts, skills directory, ~/.config |
-| [concepts/agents-md.md](concepts/agents-md.md) | AGENTS.md dual role: boot policy and workspace template | agents.md, boot, policy, template, operational |
-| [concepts/skill-system.md](concepts/skill-system.md) | Skill discovery, progressive loading, lifecycle | skills, discovery, loading, lifecycle, activation |
-| [concepts/installation-flow.md](concepts/installation-flow.md) | How `install.sh` works, install locations, update process | install, install.sh, setup, update, installer |
-| [conventions/editing-rules.md](conventions/editing-rules.md) | What to edit, what to never edit, how to update skills | editing, rules, never edit, modify, update |
-| [conventions/language.md](conventions/language.md) | Language convention for files and communication | language, english, localization |
+## concepts
+- [template-vs-installed.md](concepts/template-vs-installed.md) — source vs installed artifacts, skills directory paths
+- [agents-md.md](concepts/agents-md.md) — AGENTS.md dual role: boot policy and workspace template
+- [skill-system.md](concepts/skill-system.md) — skill discovery, progressive loading, lifecycle
+- [installation-flow.md](concepts/installation-flow.md) — how install.sh works, install locations, update process
+
+## conventions
+- [editing-rules.md](conventions/editing-rules.md) — what to edit, what to never edit, how to update skills
+- [language.md](conventions/language.md) — language convention for files and communication
 
 > Pages not listed here are invisible to the agent. Update this index when adding wiki pages.

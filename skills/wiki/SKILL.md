@@ -27,7 +27,7 @@ Wiki files are loaded into agent context. Every line costs tokens.
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is a lookup table** — file paths with descriptions and keywords for quick discovery; no instructions, no rules, no detailed content
+- **index.md is a keyword index** — grouped by topic with headers; one line per file: `[name.md](path/to/name.md) — short description using key terms`; no instructions, no rules, no detailed content
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
