@@ -2,25 +2,13 @@
 
 **AI Agent toolkit** designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle to handle kind of work.
 
-Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
-
 > **Powered by [The Agency](https://github.com/msitarzewski/agency-agents)** — 144+ specialized agents trusted by 86k+ developers, across 15 divisions: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic, and Specialized.
 
 ## How it works 
 
 **Describe what you want** — the main agent never executes the work itself; it assembles the right team of specialists, delegates every unit of work, reviews the results, and synthesizes them. Along the way, it builds a knowledge base in the wiki that makes future tasks faster and more accurate. You stay in control: suggest agents, adjust the team, or take over at any point.
 
-**Your context stays clean** — debug data, tool logs, and raw code live inside the subagents. The main agent keeps its context focused on your task and conversation.
-
-| Without | With |
-|---|---|
-| Agent implements directly, accumulates context | Assembles specialist teams and delegates with focused context |
-| Changes broader than needed | Minimal, targeted changes |
-| Skips verification, presents broken work | Two-stage review: spec compliance → code quality |
-| Verbose responses waste context window | Dense, filler-free communication |
-| Forgets what it learned between sessions | Self-learning wiki persists knowledge |
-| Same mistakes repeated across tasks | Skill candidates detect and codify patterns |
-| No workflow enforcement | One Rule (main agent always delegates, never executes) + self-check + anti-rationalization |
+**Your main agent context stays clean** — debug data, tool logs, and raw code live inside the subagents. The main agent keeps its context focused on your task and conversation.
 
 ## Workflow details
 
@@ -43,6 +31,8 @@ Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platfo
 Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work.
 
 ## Setup in 4 steps
+
+> Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
 **Step 1 — Install skills and agents globally**
 
