@@ -27,7 +27,7 @@ Wiki files are loaded into agent context. Every line costs tokens.
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is a keyword index** — grouped by topic with headers; one line per file: `[name.md](path/to/name.md) — short description using key terms`; no instructions, no rules, no detailed content
+- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to pages or folder-level `index.md` files; no instructions, no rules, no detailed content
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
@@ -39,7 +39,7 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 **Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
-**Query** — coordinator reads `wiki/index.md` first to find relevant pages by description and keywords. Load only those.
+**Query** — coordinator reads `wiki/index.md` first to route by descriptions and keywords. Choose the most relevant direct page or folder index, then load only relevant linked pages.
 
 **Ingest** — end of every task, the coordinator evaluates automatically if anything was learned.
 
@@ -68,11 +68,13 @@ Do NOT ask "should I update the wiki?" — evaluate automatically.
 
 ```
 wiki/
-├── index.md              # Lean reference index — descriptions + keywords only
+├── index.md              # Required routing map — compact descriptions + keywords
 ├── architecture.md       # System structure overview (single file)
 ├── conventions/          # One file per convention
+│   ├── index.md          # Optional folder index for larger/topic-rich wikis
 │   └── <pattern-name>.md
 ├── domain/               # One file per business rule
+│   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR
 │   └── <decision-name>.md
@@ -82,6 +84,17 @@ wiki/
 ```
 
 This is a starting point. Create additional folders and subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder. Keep it navigable.
+
+Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from the root index. Larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough keywords to choose the right path.
+
+As a heuristic, split when `wiki/index.md` exceeds ~50 lines, OR a single topic group exceeds ~10 entries: move that group into a folder-level `index.md` and link the folder index from root instead of the individual pages. These numbers are guidance, not law — apply judgment, but they are easy to check by counting lines and entries.
+
+### Navigation
+
+1. Read `wiki/index.md` first.
+2. Pick the most relevant direct page or folder index from the keywords.
+3. If you open a folder index, read only the linked pages that match the task.
+4. Avoid opening broad or unrelated wiki areas just because they exist.
 
 ---
 
@@ -155,7 +168,8 @@ Remove a page or section when it is obsolete, contradicted, duplicated elsewhere
 
 When the wiki changes, check for:
 - stale references
-- missing `wiki/index.md` links for important pages
+- pages that are not reachable from `wiki/index.md` directly or through folder indexes
+- root index past the split heuristic (~50 lines, or a group over ~10 entries) that should move to a folder index
 - contradictory guidance across pages
 - orphaned pages that are no longer discoverable from `wiki/index.md`
 
@@ -177,5 +191,5 @@ Do not leave the wiki internally inconsistent after editing it.
 
 ## Gotchas
 
-- Pages not linked from `index.md` are invisible. Keep index.md updated when pages are added or removed — but keep it lean: descriptions and keywords only.
+- Pages not reachable from `wiki/index.md` are invisible. Keep root and folder indexes updated when pages are added, moved, or removed — but keep them lean: descriptions and keywords only.
 - Evaluate automatically — don't wait for the user to ask.
