@@ -6,7 +6,7 @@
 # Antigravity, and Copilot.
 #
 # Usage:
-#   ./install.sh [--opencode|--claude|--copilot|--all] [--list] [--help]
+#   ./install.sh [--opencode|--claude|--copilot|--all] [--division <list>] [--list] [--help]
 #
 # Install directly:
 #   curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
@@ -40,13 +40,14 @@ usage() {
 Usage: install.sh [options]
 
 Options:
-  --opencode      Install only for OpenCode
-  --claude        Install only for Claude Code
-  --copilot       Install only for Copilot
-  --all           Install to all detected tools (default)
-  --no-agency     Skip agency-agents installation
-  --list          List available skills without installing
-  --help          Show this help
+  --opencode          Install only for OpenCode
+  --claude            Install only for Claude Code
+  --copilot           Install only for Copilot
+  --all               Install to all detected tools (default)
+  --division <list>   Comma-separated agency-agents divisions to install
+  --no-agency         Skip agency-agents installation
+  --list              List available skills without installing
+  --help              Show this help
 
 Examples:
   install.sh              # Interactive mode
@@ -54,6 +55,7 @@ Examples:
   install.sh --claude      # Install only for Claude Code
   install.sh --all --no-agency  # Install all without agency-agents
   install.sh --list         # List available skills
+  install.sh --opencode --division engineering,security
 
 Install directly:
   curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
@@ -148,7 +150,12 @@ install_antigravity_ours() {
 install_agency_tool() {
   local tool="$1"
   local agency_dir="$2"
+  local divisions="$3"
   local success=true
+  local division_args=()
+  if [[ -n "$divisions" ]]; then
+    division_args=("--division" "$divisions")
+  fi
 
   case "$tool" in
     antigravity)
@@ -156,7 +163,7 @@ install_agency_tool() {
         info "Running convert.sh for $tool..."
         if "$agency_dir/scripts/convert.sh" --tool antigravity 2>/dev/null; then
           info "Running install.sh for $tool..."
-          "$agency_dir/scripts/install.sh" --tool antigravity --no-interactive 2>/dev/null || success=false
+          "$agency_dir/scripts/install.sh" --tool antigravity --no-interactive "${division_args[@]}" 2>/dev/null || success=false
         else
           success=false
         fi
@@ -166,7 +173,7 @@ install_agency_tool() {
       info "Running convert.sh for $tool..."
       if "$agency_dir/scripts/convert.sh" --tool opencode 2>&1 | grep -v "^$" > /dev/null; then
         info "Running install.sh for $tool..."
-        "$agency_dir/scripts/install.sh" --tool opencode --no-interactive 2>/dev/null || success=false
+        "$agency_dir/scripts/install.sh" --tool opencode --no-interactive "${division_args[@]}" 2>/dev/null || success=false
         if [[ -d ".opencode/agents" && -n "$(ls -A .opencode/agents 2>/dev/null)" ]]; then
           info "Moving agents to global location..."
           mkdir -p "${HOME}/.config/opencode/agents"
@@ -181,11 +188,11 @@ install_agency_tool() {
       ;;
     copilot)
       info "Running install.sh for $tool..."
-      "$agency_dir/scripts/install.sh" --tool copilot --no-interactive 2>/dev/null || success=false
+      "$agency_dir/scripts/install.sh" --tool copilot --no-interactive "${division_args[@]}" 2>/dev/null || success=false
       ;;
     claude)
       info "Running install.sh for $tool..."
-      "$agency_dir/scripts/install.sh" --tool claude-code --no-interactive 2>/dev/null || success=false
+      "$agency_dir/scripts/install.sh" --tool claude-code --no-interactive "${division_args[@]}" 2>/dev/null || success=false
       ;;
   esac
 
@@ -315,6 +322,7 @@ main() {
   local selected_tools=()
   local explicit_all=false
   local skip_agency=false
+  local divisions=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -323,6 +331,13 @@ main() {
       --copilot)     selected_tools+=("copilot");     shift ;;
       --all)         selected_tool="all";             explicit_all=true; shift ;;
       --no-agency)   skip_agency=true;                shift ;;
+      --division)
+        if [[ -n "${2:-}" ]]; then
+          divisions="$2"; shift 2
+        else
+          err "--division requires a comma-separated list of divisions"
+          usage
+        fi ;;
       --list)        list_only=true;                  shift ;;
       --help|-h)    usage ;;
       *)             err "Unknown option: $1"; usage ;;
@@ -426,7 +441,7 @@ main() {
 
           local agency_failed=()
           for t in "${selected_tools[@]}"; do
-            install_agency_tool "$t" "$agency_dir" || agency_failed+=("$t")
+            install_agency_tool "$t" "$agency_dir" "$divisions" || agency_failed+=("$t")
           done
 
           if [[ ${#agency_failed[@]} -gt 0 ]]; then
