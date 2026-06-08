@@ -157,13 +157,16 @@ install_agency_tool() {
     division_args=("--division" "$divisions")
   fi
 
+  local -a install_cmd=()
   case "$tool" in
     antigravity)
       if [[ -d "$agency_dir/integrations/antigravity" ]]; then
         info "Running convert.sh for $tool..."
         if "$agency_dir/scripts/convert.sh" --tool antigravity 2>/dev/null; then
           info "Running install.sh for $tool..."
-          "$agency_dir/scripts/install.sh" --tool antigravity --no-interactive ${division_args[@]+"${division_args[@]}"} 2>/dev/null || success=false
+          install_cmd=("$agency_dir/scripts/install.sh" --tool antigravity --no-interactive)
+          [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+          "${install_cmd[@]}" 2>/dev/null || success=false
         else
           success=false
         fi
@@ -173,7 +176,9 @@ install_agency_tool() {
       info "Running convert.sh for $tool..."
       if "$agency_dir/scripts/convert.sh" --tool opencode 2>&1 | grep -v "^$" > /dev/null; then
         info "Running install.sh for $tool..."
-        "$agency_dir/scripts/install.sh" --tool opencode --no-interactive ${division_args[@]+"${division_args[@]}"} 2>/dev/null || success=false
+        install_cmd=("$agency_dir/scripts/install.sh" --tool opencode --no-interactive)
+        [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+        "${install_cmd[@]}" 2>/dev/null || success=false
         if [[ -d ".opencode/agents" && -n "$(ls -A .opencode/agents 2>/dev/null)" ]]; then
           info "Moving agents to global location..."
           mkdir -p "${HOME}/.config/opencode/agents"
@@ -188,11 +193,15 @@ install_agency_tool() {
       ;;
     copilot)
       info "Running install.sh for $tool..."
-      "$agency_dir/scripts/install.sh" --tool copilot --no-interactive ${division_args[@]+"${division_args[@]}"} 2>/dev/null || success=false
+      install_cmd=("$agency_dir/scripts/install.sh" --tool copilot --no-interactive)
+      [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+      "${install_cmd[@]}" 2>/dev/null || success=false
       ;;
     claude)
       info "Running install.sh for $tool..."
-      "$agency_dir/scripts/install.sh" --tool claude-code --no-interactive ${division_args[@]+"${division_args[@]}"} 2>/dev/null || success=false
+      install_cmd=("$agency_dir/scripts/install.sh" --tool claude-code --no-interactive)
+      [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+      "${install_cmd[@]}" 2>/dev/null || success=false
       ;;
   esac
 
