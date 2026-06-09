@@ -91,8 +91,48 @@ Wiki content and workspace-local skills are preserved — only global skills and
 | `--claude` | Claude Code only |
 | `--copilot` | Copilot only |
 | `--no-agency` | Skip agency-agents |
+| `--division <list>` | Install only specific divisions (comma-separated) |
 | `--list` | Show available skills |
 | `--help` | Show help |
+
+### Using `--division`
+
+Filter which agency-agents divisions to install using `--division` with a comma-separated list:
+
+```bash
+# Via curl — install only engineering and security
+curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --division engineering,security
+
+# Local — install specific divisions
+./tools/install.sh --division engineering,security
+
+# Combine with --opencode
+./tools/install.sh --opencode --division design,marketing
+
+# Combine with --all
+./tools/install.sh --all --division testing,support
+```
+
+### Available divisions
+
+| Division | Description |
+|---|---|
+| `academic` | Rigor acadêmico para narrativas e world-building |
+| `design` | UI/UX, brand, visual design |
+| `engineering` | Frontend, backend, DevOps, arquitetura |
+| `finance` | Contabilidade, análise financeira, tax |
+| `game-development` | Unity, Unreal, Godot, Roblox, Blender |
+| `gis` | Geospatial, mapping, GIS analysis |
+| `marketing` | Growth, SEO, social media, content |
+| `paid-media` | PPC, programmatic, paid social |
+| `product` | Product management, sprint, trends |
+| `project-management` | Orchestration, Jira, experiment tracking |
+| `sales` | Outbound, discovery, deal strategy, proposals |
+| `security` | AppSec, pentest, cloud security, compliance |
+| `spatial-computing` | XR, AR/VR, visionOS, WebXR |
+| `specialized` | Agentes que não se encaixam em outras categorias |
+| `support` | Customer support, analytics, finance tracker, legal |
+| `testing` | QA, performance, API testing, accessibility |
 
 ### Supported tools
 
