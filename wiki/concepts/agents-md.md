@@ -32,7 +32,6 @@ Skills never override `AGENTS.md` — only an explicit user instruction can.
 - **The One Rule** — the main agent never executes; it delegates everything.
 - **If You Received a Handoff** — role discriminator via the `[HANDOFF FROM COORDINATOR]` marker: marker present → delegated subagent (execute directly); marker absent → main agent (coordinate).
 - **Flow** — context → orchestrate → review → learn, with short pointers into the skills.
-- **Skill Activation** — when to load each skill.
 - **Communication** — concise style, no preambles.
 - **Instruction Priority** — user > active skills > AGENTS.md.
 

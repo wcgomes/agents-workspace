@@ -35,18 +35,6 @@ Delegation is mandatory; team size scales with the work (one specialist is fine)
 
 ---
 
-## Skill Activation
-
-Load a skill when its trigger matches. Skills carry the detailed workflow; this file carries the rule.
-
-| Skill | Load when |
-|---|---|
-| wiki | Main-agent context before tasks, end-of-task ingest evaluation |
-| orchestrate | Planning or executing delegated work, including plan continuations; assembly, delegation, review, and synthesis |
-| agents-skills | Authoring or fixing skills |
-
----
-
 ## Communication
 
 Be concise when speaking to the user. Say what matters, skip the rest. No preambles, no filler, no obvious explanations. Answer directly.
