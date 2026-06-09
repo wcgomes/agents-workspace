@@ -115,24 +115,9 @@ curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/i
 
 ### Available divisions
 
-| Division | Description |
-|---|---|
-| `academic` | Rigor acadêmico para narrativas e world-building |
-| `design` | UI/UX, brand, visual design |
-| `engineering` | Frontend, backend, DevOps, arquitetura |
-| `finance` | Contabilidade, análise financeira, tax |
-| `game-development` | Unity, Unreal, Godot, Roblox, Blender |
-| `gis` | Geospatial, mapping, GIS analysis |
-| `marketing` | Growth, SEO, social media, content |
-| `paid-media` | PPC, programmatic, paid social |
-| `product` | Product management, sprint, trends |
-| `project-management` | Orchestration, Jira, experiment tracking |
-| `sales` | Outbound, discovery, deal strategy, proposals |
-| `security` | AppSec, pentest, cloud security, compliance |
-| `spatial-computing` | XR, AR/VR, visionOS, WebXR |
-| `specialized` | Agentes que não se encaixam em outras categorias |
-| `support` | Customer support, analytics, finance tracker, legal |
-| `testing` | QA, performance, API testing, accessibility |
+`academic`, `design`, `engineering`, `finance`, `game-development`, `gis`, `marketing`, `paid-media`, `product`, `project-management`, `sales`, `security`, `spatial-computing`, `specialized`, `support`, `testing`
+
+See [🎭 The Agency](https://github.com/msitarzewski/agency-agents) for details on each division.
 
 ### Supported tools
 
