@@ -9,13 +9,9 @@ Workspace knowledge base and self-improvement loop. The coordinator queries wiki
 
 The wiki exists to eliminate unnecessary codebase exploration: with the right knowledge the agent goes straight to relevant code; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
 
----
-
 ## <HARD-GATE> Coordinator Context Before Any Task
 
 The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. Specialists use handoff context unless wiki lookup is explicitly needed for their scope.
-
----
 
 ## Design Principle
 
@@ -31,8 +27,6 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 **Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
 
----
-
 ## Three Operations
 
 **Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
@@ -40,8 +34,6 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 **Query** — coordinator reads `wiki/index.md` first to route by descriptions and keywords. Choose the most relevant direct page or folder index, then load only relevant linked pages.
 
 **Ingest** — end of every task, the coordinator evaluates automatically if anything was learned.
-
----
 
 ## <HARD-GATE> Auto-Evaluation at End of Task
 
@@ -59,8 +51,6 @@ Any YES → ingest. All NO → skip (but each item must have been evaluated).
 If the coordinator is prohibited from editing wiki files directly, delegate the wiki edit as a handoff and review the result before final response.
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
-
----
 
 ## Wiki Structure
 
@@ -94,8 +84,6 @@ As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic g
 3. If you open a folder index, read only the linked pages that match the task.
 4. Don't open broad or unrelated wiki areas just because they exist.
 
----
-
 ## <HARD-GATE> Auto Skill-Candidate Evaluation
 
 If you performed a non-obvious sequence of steps that could apply to future tasks, evaluate for skill candidate.
@@ -109,8 +97,6 @@ If you performed a non-obvious sequence of steps that could apply to future task
 - One-line change with no domain knowledge
 - Already covered by existing skill
 - Standard tool operations with no domain-specific logic
-
----
 
 ## Skill Candidate Tracking
 
@@ -144,8 +130,6 @@ When `encounters >= 3` and `status: candidate`, set `status: propose` and ask us
 2. Create skill locally at `.agents/skills/<name>/SKILL.md`
 3. Delete candidate file
 
----
-
 ## Wiki Maintenance
 
 When the wiki changes, maintain it deliberately.
@@ -164,8 +148,6 @@ When the wiki changes, check for:
 
 Do not leave the wiki internally inconsistent after editing it.
 
----
-
 ## Rationalization Prevention
 
 | Excuse | Reality |
@@ -175,8 +157,6 @@ Do not leave the wiki internally inconsistent after editing it.
 | "I'll update it later" | You won't. |
 | "Too specific to track" | Track anyway. |
 | "The log proves it happened" | Distill the insight, not the raw data. |
-
----
 
 ## Gotchas
 

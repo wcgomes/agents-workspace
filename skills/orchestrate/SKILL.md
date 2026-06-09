@@ -7,8 +7,6 @@ description: "Use when planning or executing delegated work, including execute-t
 
 Full coordination cycle: analyze → assemble → delegate → review → synthesize.
 
----
-
 ## <HARD-GATES>
 
 1. **Coordinator context first** — the main agent reads `wiki/index.md` before orchestration. Specialists use handoff context unless wiki lookup is explicitly needed.
@@ -21,8 +19,6 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
 9. **Dispatch rationale required** — every handoff must name the target agent and its match type (exact, adjacent, or fallback). Fallback handoffs must state why no exact or adjacent specialist was available.
 
----
-
 ## Phase 1: Analyze Request
 
 Assemble a professional team for the job:
@@ -34,15 +30,11 @@ Assemble a professional team for the job:
 
 **Continuation requests:** if a team was already composed through orchestration, preserve existing roles and specialists by default; add roles for new domains, replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction. If the prior plan was not orchestrated, treat it as context and compose roles from scratch.
 
----
-
 ## Phase 2: Define Roles
 
 Map each domain + phase to a specialist role; apply the templates below for common patterns. For multi-domain work, ensure each domain has representation; each phase needing distinct expertise needs a responsible role. For coding/refactoring, define at least an implementation role and a review role unless the user opts out of review or the task is trivial.
 
 Role preservation means preserving separate role *scopes*, not just labels. With multiple roles, plan one handoff per role/scope unless there is an explicit reason to merge and merging does not reduce expertise, independence, or verification.
-
----
 
 ## Phase 3: Discover Specialists
 
@@ -62,8 +54,6 @@ Before selecting, discover what specialists exist in the current environment: us
 
 **Role preservation:** roles defined in Phase 2 are mandatory. No exact specialist → best adjacent; no adjacent → generic/default acting in that role — but the role (reviewer, tester, architect) stays in the plan and the handoff instructs the generic/default agent to act in it. "No specialist found" never justifies merging distinct domains or phases into one broad handoff.
 
----
-
 ## Phase 4: Plan Execution
 
 - Identify dependencies between scopes
@@ -71,8 +61,6 @@ Before selecting, discover what specialists exist in the current environment: us
 - Parallel groups: scopes with no integration deps
 - Sequential: output of one feeds another
 - Review always after parallel batches
-
----
 
 ## Coordination Patterns
 
@@ -99,8 +87,6 @@ Before selecting, discover what specialists exist in the current environment: us
 **When:** task fits cleanly in one domain and a specialist or adjacent specialist is available.  
 **How:** one selected specialist or adjacent specialist, structured handoff. Generic/default only under the fallback rule with justification.  
 **Example:** write a chapter, fix a specific bug.
-
----
 
 ## Team Templates
 
@@ -174,8 +160,6 @@ Coordination: Sequential with Quality Gates.
 
 Coordination: Sequential with Quality Gates. Review/Consistency is required when broad or persistent docs are created. If no wiki-specific specialist exists, do not collapse research and writing into one generalist; use separate fallback handoffs for each role.
 
----
-
 ## Pre-Dispatch Verification
 
 Before composing each handoff:
@@ -183,8 +167,6 @@ Before composing each handoff:
 - If the target is generic/default, state why no exact or adjacent specialist was available.
 - Verify the agent name matches the exact format exposed by the dispatch interface (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use the exact identifier as discovered, not a reformatted version like "Software Architect" or "software_architect".
 - Do not proceed to handoff without this confirmation.
-
----
 
 ## Phase 4.5: User Confirmation (Conditional)
 
@@ -214,8 +196,6 @@ Estimated complexity: [single/multi-domain, coordination pattern]
 **Skip confirmation only when:**
 - No confirmation trigger applies
 - User already approved the current team and execution plan
-
----
 
 ## Phase 5: Handoff
 
@@ -253,8 +233,6 @@ Also use Constraints for additional task-specific rules (limits, files not to to
 
 **Return format rule:** return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
 
----
-
 ## Parallel Delegation
 
 Use only when scopes non-overlapping and no integration deps.
@@ -264,8 +242,6 @@ Good candidates:
 - separate evidence gathering
 - independent validation or analysis
 - complementary specialists with distinct responsibilities
-
----
 
 ## Phase 6: Review and Synthesize
 
@@ -278,8 +254,6 @@ A delegated subagent executing its handed scope directly is conformant — that 
 ### Stage 2: Quality
 
 Is it correct, maintainable, and usable for the current task? With multiple delegated outputs: compare against assigned scopes, resolve conflicts, and synthesize a single coherent result before returning upward. Do not pass through raw delegated output without review.
-
----
 
 ## Status Protocol
 
@@ -296,8 +270,6 @@ This protocol applies across the delegation tree, including subdelegated work.
 
 **If stuck** — two cycles with no progress (repeated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts): stop redispatching, declare the blocker, and choose among: provide missing context, decompose differently, escalate (ask the user for direction), or apply justified fallback.
 
----
-
 ## Subdelegation Rules
 
 - Allowed when specialist fit improves
@@ -308,8 +280,6 @@ This protocol applies across the delegation tree, including subdelegated work.
 - Avoid uncontrolled fan-out
 - Preserve explicit scope ownership
 - Do not subdelegate to avoid synthesis or review responsibility
-
----
 
 ## Rationalization Prevention
 
@@ -324,8 +294,6 @@ This protocol applies across the delegation tree, including subdelegated work.
 | "Continuation means the same team no matter what" | Preserve roles and specialists by default, but replace when unavailable, wrong, or user-directed. |
 | "Generic is fine, no one will notice" | Every generic dispatch must be justified in the handoff. Undispatched specialists from discovery invalidate the handoff. |
 | "Dispatch failed, agent must be unavailable" | First verify the agent name format matches the exact discovered identifier. Format mismatches (case, separators) are a common cause of failure — retry with the correct format before falling back. |
-
----
 
 ## Return Format
 

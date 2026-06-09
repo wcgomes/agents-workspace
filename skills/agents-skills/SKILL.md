@@ -9,8 +9,6 @@ Create skills that follow the agentskills.io standard. A skill is a directory wi
 
 > **Golden rule:** Add what the agent lacks, omit what it knows. If the agent would get it right without your instruction, cut it.
 
----
-
 ## Quickstart — minimal skill
 
 Create `<name>/SKILL.md` (directory name MUST match `name`):
@@ -32,8 +30,6 @@ Replace `<sides>` with the number of sides (6 for standard, 20 for d20).
 
 That's a complete skill. Expand only as needed.
 
----
-
 ## Directory structure
 
 ```
@@ -46,8 +42,6 @@ skill-name/
 ```
 
 Keep file references one level deep from `SKILL.md`. Avoid deeply nested chains.
-
----
 
 ## Frontmatter
 
@@ -93,8 +87,6 @@ allowed-tools: Bash(git:*) Bash(jq:*) Read
 ---
 ```
 
----
-
 ## Writing descriptions
 
 The description decides activation. Poor description → skill never triggers.
@@ -124,8 +116,6 @@ description: >
 
 **Nuance:** agents often skip skills for simple one-step tasks they can handle alone. Descriptions matter most for specialized knowledge or non-obvious domains.
 
----
-
 ## Writing the body
 
 Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separate files.
@@ -133,8 +123,6 @@ Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separ
 Ask for each paragraph: "Would the agent get this wrong without this instruction?" If no → cut it.
 
 See [references/WRITING_SKILLS.md](references/WRITING_SKILLS.md) for body structure, patterns, and examples.
-
----
 
 ## Progressive disclosure
 
@@ -154,8 +142,6 @@ Read `references/api-errors.md` when the API returns a non-200 status.
 See references/ for details.
 ```
 
----
-
 ## Scripts
 
 Bundle executables in `scripts/` when the agent repeats the same logic. Use one-off commands (`uvx`, `npx`) for simple invocations.
@@ -171,23 +157,17 @@ Bundle executables in `scripts/` when the agent repeats the same logic. Use one-
 
 See [references/USING_SCRIPTS.md](references/USING_SCRIPTS.md) for language-specific setup (Python PEP 723, Deno, Bun, Ruby).
 
----
-
 ## Evaluating skills
 
 Test each case **with skill** vs **without skill** (or previous version) to prove the skill adds value.
 
 See [references/EVALUATING.md](references/EVALUATING.md) for full workflow.
 
----
-
 ## Optimizing descriptions (triggering)
 
 A skill only helps if it activates. Test triggering systematically.
 
 See [references/OPTIMIZING_DESCRIPTIONS.md](references/OPTIMIZING_DESCRIPTIONS.md) for eval query design and optimization loop.
-
----
 
 ## Validation
 
@@ -197,8 +177,6 @@ skills-ref validate ./my-skill
 
 Checks frontmatter and naming conventions.
 
----
-
 ## Best practices summary
 
 1. **Start from real expertise** — extract from actual tasks or synthesize from project artifacts. Not generic references.
@@ -206,8 +184,6 @@ Checks frontmatter and naming conventions.
 3. **Spend context wisely** — cut anything the agent would get right without the skill.
 4. **Scope coherently** — one skill = one coherent unit of work. Not too narrow, not too broad.
 5. **Iterate with evals** — test systematically, not anecdotally.
-
----
 
 ## Gotchas
 

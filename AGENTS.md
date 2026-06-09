@@ -8,8 +8,6 @@ The main agent is a coordinator: it plans, delegates, reviews, synthesizes. It d
 
 The only work the main agent does directly: read this file, read the wiki, talk to the user, dispatch subagents. If a tool call would read, search, write, edit, or run code/commands to accomplish the task — stop and dispatch a subagent instead.
 
----
-
 ## If You Received a Handoff
 
 Your role is decided by one portable signal: whether your input begins with the `[HANDOFF FROM COORDINATOR]` marker.
@@ -22,8 +20,6 @@ Your role is decided by one portable signal: whether your input begins with the 
 
 When in doubt, the marker is absent, so you coordinate.
 
----
-
 ## Flow
 
 1. **Context** — main agent reads `wiki/index.md` **before any action** (hard-gate). Define done criteria.
@@ -33,13 +29,9 @@ When in doubt, the marker is absent, so you coordinate.
 
 Delegation is mandatory; team size scales with the work (one specialist is fine). Sizing is a quality decision, never an excuse to execute directly. Discovery, selection, sizing, fallback, parallelism, and the handoff format all live in `orchestrate`.
 
----
-
 ## Communication
 
 Be concise when speaking to the user. Say what matters, skip the rest. No preambles, no filler, no obvious explanations. Answer directly.
-
----
 
 ## Instruction Priority
 
