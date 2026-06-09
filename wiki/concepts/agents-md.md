@@ -6,7 +6,7 @@
 
 | Role | Description |
 |---|---|
-| **Operational** | Read by the agent at the start of each session. Defines The One Rule, flow, self-check, anti-rationalization. |
+| **Operational** | Read by the agent at the start of each session. Defines The One Rule, role discrimination, flow, and skill activation. |
 | **Template** | Copied to each workspace (`cp AGENTS.md /path/to/project/`). Not installed globally. |
 
 ## Why Not Install Globally?
@@ -30,11 +30,13 @@ Skills never override `AGENTS.md` — only an explicit user instruction can.
 ## What AGENTS.md Defines
 
 - **The One Rule** — the main agent never executes; it delegates everything.
-- **Flow** — context → orchestrate → review → learn.
-- **Self-Check** — checks before each action.
-- **Anti-Rationalization** — table of common rationalizations and their rebuttals.
+- **If You Received a Handoff** — role discriminator via the `[HANDOFF FROM COORDINATOR]` marker: marker present → delegated subagent (execute directly); marker absent → main agent (coordinate).
+- **Flow** — context → orchestrate → review → learn, with short pointers into the skills.
 - **Skill Activation** — when to load each skill.
 - **Communication** — concise style, no preambles.
+- **Instruction Priority** — user > active skills > AGENTS.md.
+
+Operational detail lives in the skills, not here: delegation, review, and rationalization-prevention mechanics are in the `orchestrate` skill; the context/ingest loop is in the `wiki` skill.
 
 ## Editing
 

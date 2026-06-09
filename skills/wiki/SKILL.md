@@ -5,17 +5,15 @@ description: Use this skill when querying workspace knowledge before tasks or in
 
 # Wiki
 
-Workspace knowledge base and self-improvement loop. The coordinator queries wiki before broad exploration. Ingest learnings after every task.
+Workspace knowledge base and self-improvement loop. The coordinator queries wiki before broad exploration; ingest learnings after every task.
 
-The wiki exists to eliminate unnecessary codebase exploration. With the right knowledge, the agent goes straight to the relevant code. If exploration is still needed, the wiki narrows the search — focused and directed, not open-ended.
+The wiki exists to eliminate unnecessary codebase exploration: with the right knowledge the agent goes straight to relevant code; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
 
 ---
 
 ## <HARD-GATE> Coordinator Context Before Any Task
 
-The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration. Specialists use handoff context unless wiki lookup is explicitly needed for their scope.
-
-This is the coordinator's first action after receiving a request. The wiki provides context that eliminates unnecessary exploration and guides team assembly.
+The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. Specialists use handoff context unless wiki lookup is explicitly needed for their scope.
 
 ---
 
@@ -23,15 +21,15 @@ This is the coordinator's first action after receiving a request. The wiki provi
 
 Wiki files are loaded into agent context. Every line costs tokens.
 
-- **Compact** — short paragraphs, bullet points, no filler
+- **Compact** — short paragraphs, bullets, no filler
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to pages or folder-level `index.md` files; no instructions, no rules, no detailed content
+- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to pages or folder-level `index.md` files; no instructions, rules, or detailed content
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
-**Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, dumps, and similar raw data are ephemeral artifacts — not knowledge. The wiki stores distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals a specific error condition worth remembering, write "X error happens when Y" — not the full log.
+**Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
 
 ---
 
@@ -83,18 +81,18 @@ wiki/
 └── ...
 ```
 
-This is a starting point. Create additional folders and subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder. Keep it navigable.
+This is a starting point. Create additional folders/subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder; keep it navigable.
 
-Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from the root index. Larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough keywords to choose the right path.
+Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from root; larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough keywords to choose the right path.
 
-As a heuristic, split when `wiki/index.md` exceeds ~50 lines, OR a single topic group exceeds ~10 entries: move that group into a folder-level `index.md` and link the folder index from root instead of the individual pages. These numbers are guidance, not law — apply judgment, but they are easy to check by counting lines and entries.
+As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic group exceeds ~10 entries: move that group into a folder-level `index.md` and link the folder index from root instead of the individual pages. Guidance, not law — apply judgment, but they're easy to check by counting.
 
 ### Navigation
 
 1. Read `wiki/index.md` first.
 2. Pick the most relevant direct page or folder index from the keywords.
 3. If you open a folder index, read only the linked pages that match the task.
-4. Avoid opening broad or unrelated wiki areas just because they exist.
+4. Don't open broad or unrelated wiki areas just because they exist.
 
 ---
 
@@ -152,26 +150,17 @@ When `encounters >= 3` and `status: candidate`, set `status: propose` and ask us
 
 When the wiki changes, maintain it deliberately.
 
-### Add
-
-Create a new page when the knowledge is new, stable enough to reuse, and not already covered by an existing page.
-
-### Update
-
-Update an existing page when the knowledge already belongs there, a rule was clarified, or a page became incomplete or misleading.
-
-### Remove
-
-Remove a page or section when it is obsolete, contradicted, duplicated elsewhere, or no longer useful. When removing content, also update or remove references from `wiki/index.md` and related pages.
+- **Add** — create a page when the knowledge is new, stable enough to reuse, and not already covered.
+- **Update** — when the knowledge already belongs on a page, a rule was clarified, or a page became incomplete or misleading.
+- **Remove** — when a page/section is obsolete, contradicted, duplicated elsewhere, or no longer useful. Also update or remove references from `wiki/index.md` and related pages.
 
 ### Lint
 
 When the wiki changes, check for:
 - stale references
-- pages that are not reachable from `wiki/index.md` directly or through folder indexes
+- pages not reachable (orphaned) from `wiki/index.md` directly or through folder indexes
 - root index past the split heuristic (~50 lines, or a group over ~10 entries) that should move to a folder index
 - contradictory guidance across pages
-- orphaned pages that are no longer discoverable from `wiki/index.md`
 
 Do not leave the wiki internally inconsistent after editing it.
 

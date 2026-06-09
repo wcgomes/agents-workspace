@@ -25,46 +25,42 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 
 ## Phase 1: Analyze Request
 
-Think about this like assembling a professional team for the job:
+Assemble a professional team for the job:
 
 - What domains are involved (engineering, design, testing, marketing, etc.)?
-- What specific platforms, tools, or channels are mentioned?
-- What phases does the work go through? (planning → implementation → review → testing)
+- What platforms, tools, or channels are mentioned?
+- What phases does the work go through (planning → implementation → review → testing)?
 - Classify complexity: single-domain, multi-domain, or cross-functional.
 
-**For continuation requests:** Check if a team was already composed through orchestration. If yes, preserve existing roles and specialists by default. Add roles for new domains, or replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction. If the prior plan was not orchestrated, treat it as context and compose roles from scratch.
+**Continuation requests:** if a team was already composed through orchestration, preserve existing roles and specialists by default; add roles for new domains, replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction. If the prior plan was not orchestrated, treat it as context and compose roles from scratch.
 
 ---
 
 ## Phase 2: Define Roles
 
-Map each domain + phase to a specialist role. Apply templates below for common patterns.
+Map each domain + phase to a specialist role; apply the templates below for common patterns. For multi-domain work, ensure each domain has representation; each phase needing distinct expertise needs a responsible role. For coding/refactoring, define at least an implementation role and a review role unless the user opts out of review or the task is trivial.
 
-For multi-domain work, ensure each domain has representation. Each phase that requires distinct expertise needs a responsible role.
-
-For coding or refactoring work, define at least an implementation role and a review role unless the user explicitly opts out of review or the task is trivial.
-
-Role preservation means preserving separate role scopes, not just role labels in prose. If multiple roles are defined, plan one handoff per role/scope unless there is an explicit reason to merge and merging does not reduce expertise, independence, or verification.
+Role preservation means preserving separate role *scopes*, not just labels. With multiple roles, plan one handoff per role/scope unless there is an explicit reason to merge and merging does not reduce expertise, independence, or verification.
 
 ---
 
 ## Phase 3: Discover Specialists
 
-Before selecting, discover what specialists exist in the current environment. Use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator is prohibited from reading it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to a generic/default agent.
+Before selecting, discover what specialists exist in the current environment: use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator may not read it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to a generic/default agent.
 
-**Produce an explicit list** of the specialists you found (name + domain). For each role, state the selected agent and why the match is exact, adjacent, or fallback. This list is required output.
+**Produce an explicit list** of specialists found (name + domain). For each role, state the selected agent and why the match is exact, adjacent, or fallback. This list is required output.
 
 **Matching rules:**
 
 - **Semantic match**: domain + work-type, NOT tech stack. A "Frontend Developer" covers React, Vue, or any stack.
-- **Adjacent match** acceptable when exact unavailable. Adjacent means: the specialist's primary domain overlaps with the role's domain (e.g., backend developer for a database task), or the specialist's workflow phase matches the role's phase (e.g., implementation specialist covering testing in the same codebase). If the connection requires more than one inferential step, it is not adjacent — it is fallback.
-- **Select the best discovered fit**: dispatch each role to the best exact or adjacent specialist found. Do not use a generic/default agent when an exact or adjacent specialist is available.
-- **Generic/default agent is last resort**, not a default. Selecting it requires that discovery found no specialist or adjacent fit — state that explicitly in the handoff, not just in internal notes.
-- **Generic/default still has a role**: never dispatch an unscoped generalist. If fallback is required, assign the generic/default agent to the defined role and scope.
-- **Same generic/default, separate scopes**: if generic/default fallback is used for multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the selected agent type is the same.
-- If user specified agents, incorporate them and apply semantic matching for the remaining roles.
+- **Adjacent match** acceptable when exact unavailable: the specialist's primary domain overlaps the role's domain (e.g., backend dev for a database task), or their workflow phase matches the role's phase (e.g., implementation specialist covering testing in the same codebase). If the connection needs more than one inferential step, it is fallback, not adjacent.
+- **Select the best discovered fit**: dispatch each role to the best exact or adjacent specialist found. Never use generic/default when an exact or adjacent specialist is available.
+- **Generic/default is last resort**: selecting it requires that discovery found no specialist or adjacent fit — state that explicitly in the handoff, not just internal notes.
+- **Generic/default still has a role**: never dispatch an unscoped generalist. Assign the generic/default agent to the defined role and scope.
+- **Same generic/default, separate scopes**: if generic/default fallback covers multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the agent type is the same.
+- If the user specified agents, incorporate them and apply semantic matching for the remaining roles.
 
-**Role preservation:** The roles defined in Phase 2 are mandatory. If the exact specialist is not found, use the best adjacent specialist. If no adjacent exists, use the generic/default agent — but the role (e.g., reviewer, tester, architect) stays in the plan and the handoff must instruct the generic/default agent to act in that role. "No specialist found" is not a valid reason to merge distinct domains or phases into one broad handoff.
+**Role preservation:** roles defined in Phase 2 are mandatory. No exact specialist → best adjacent; no adjacent → generic/default acting in that role — but the role (reviewer, tester, architect) stays in the plan and the handoff instructs the generic/default agent to act in it. "No specialist found" never justifies merging distinct domains or phases into one broad handoff.
 
 ---
 
@@ -108,9 +104,7 @@ Before selecting, discover what specialists exist in the current environment. Us
 
 ## Team Templates
 
-These are starting points, not prescriptions. Adapt roles, add or remove specialists based on the actual request. A small UI fix needs one specialist; a full product launch may need 10+.
-
-The specialist names below are examples. Match by equivalent role/domain, not literal name — never delegate to a name that isn't actually available.
+Starting points, not prescriptions. Adapt roles, add or remove specialists based on the actual request — a small UI fix needs one specialist; a full product launch may need 10+. The specialist names below are examples: match by equivalent role/domain, not literal name, and never delegate to a name that isn't actually available.
 
 ### Software Development
 
@@ -227,7 +221,7 @@ Estimated complexity: [single/multi-domain, coordination pattern]
 
 ### Canonical Handoff Shape
 
-Every handoff MUST start with the coordinator marker on its own first line. This marker is the portable signal that tells the receiving agent it is a delegated subagent acting on a scoped assignment — not the main agent talking to the user.
+Every handoff MUST start with the coordinator marker on its own first line. This marker is the portable signal that tells the receiving agent it is a delegated subagent on a scoped assignment — not the main agent talking to the user.
 
 ```
 [HANDOFF FROM COORDINATOR]
@@ -244,20 +238,20 @@ Deliverable: <artifact or decision>
 Return format: <status + concise summary>
 ```
 
-**Policy inheritance:** The `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it. The marker authorizes execution, but it does not make the recipient the selected specialist; specialist selection still follows the discovery and matching rules above.
+**Policy inheritance:** the `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it. The marker authorizes execution but does not make the recipient the selected specialist — specialist selection still follows the discovery and matching rules above.
 
 **Constraints should include task-relevant execution guardrails:**
-- For edits: change only files directly related to the task; no drive-by changes
-- For implementation: match existing style, even if you'd write it differently
-- For investigation/debugging: reproduce or verify the issue when feasible before fixing
-- For verification: test or inspect the requested behavior and note any gaps
-- For all handoffs: self-review before reporting that the requested scope is complete
+- Edits: change only files directly related to the task; no drive-by changes
+- Implementation: match existing style, even if you'd write it differently
+- Investigation/debugging: reproduce or verify the issue when feasible before fixing
+- Verification: test or inspect the requested behavior and note any gaps
+- All handoffs: self-review before reporting the scope complete
 
-Use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
+Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
 
-**Dispatch failure recovery:** If a dispatch fails and the agent was a valid discovered specialist, do not immediately abandon the role or fall back to generic/default. First, verify that the agent name used in the dispatch exactly matches the identifier from the discovery phase — format mismatches (hyphen vs. space, case differences, separators) are a common cause of dispatch failure. Retry with the exact discovered identifier before concluding the agent is unavailable or escalating to fallback.
+**Dispatch failure recovery:** if a dispatch fails and the agent was a valid discovered specialist, do not abandon the role or fall back to generic/default yet. First verify the dispatched name exactly matches the discovery-phase identifier — format mismatches (hyphen vs. space, case, separators) are a common cause. Retry with the exact identifier before concluding the agent is unavailable or escalating to fallback.
 
-**Return format rule:** Return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
+**Return format rule:** return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
 
 ---
 
@@ -277,22 +271,13 @@ Good candidates:
 
 ### Stage 1: Conformance
 
-Did it deliver what was requested? Nothing more, nothing less?
+Did it deliver what was requested — nothing more, nothing less?
 
-A delegated subagent executing its handed scope directly is conformant — that is the expected behavior (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem only if the scope was genuinely multi-domain and the subagent neither subdelegated the out-of-domain parts nor flagged them.
-
-For subdelegation: when a specialist did compose a sub-team, did it remain accountable for the result?
+A delegated subagent executing its handed scope directly is conformant — that is expected (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem only if the scope was genuinely multi-domain and the subagent neither subdelegated the out-of-domain parts nor flagged them. If a specialist composed a sub-team, confirm it stayed accountable for the result.
 
 ### Stage 2: Quality
 
-Is it correct, maintainable, and usable for the current task?
-
-If multiple delegated outputs return:
-- compare them against the assigned scopes
-- resolve conflicts
-- synthesize a single coherent result before returning upward
-
-Do not pass through raw delegated output without review.
+Is it correct, maintainable, and usable for the current task? With multiple delegated outputs: compare against assigned scopes, resolve conflicts, and synthesize a single coherent result before returning upward. Do not pass through raw delegated output without review.
 
 ---
 
@@ -307,18 +292,9 @@ Delegated agents report one of:
 | `NEEDS_CONTEXT` | Missing information | Re-dispatch with more context |
 | `BLOCKED` | Cannot complete | Assess context, break task, or escalate |
 
-This protocol applies across the delegation tree, including subdelegated work. If `NEEDS_CONTEXT` or `BLOCKED` repeats without material progress, stop redispatching, declare the blocker, and choose among: provide missing context, decompose differently, escalate, or apply justified fallback.
+This protocol applies across the delegation tree, including subdelegated work.
 
----
-
-## If Stuck
-
-Two cycles with no progress:
-- stop
-- explain the blocker
-- ask for direction if needed
-
-Repeated delegated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts as no progress.
+**If stuck** — two cycles with no progress (repeated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts): stop redispatching, declare the blocker, and choose among: provide missing context, decompose differently, escalate (ask the user for direction), or apply justified fallback.
 
 ---
 
@@ -339,6 +315,9 @@ Repeated delegated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts
 
 | Thought | Reality |
 |---|---|
+| "This is too simple to delegate" / "It's faster if I just do it" | The One Rule has no size threshold. Simple work goes to one specialist. Breaking the operating mode for speed is not allowed. |
+| "I already know the answer" / "I just need to peek at the code first" | Knowing ≠ executing; reading task files is research. The specialist executes and researches; you coordinate. |
+| "A team of one is pointless, so I'll do it" | A team of one means one delegated subagent selected through orchestration — not you. |
 | "No specialist found, skip this role" | Roles are mandatory. Use the best adjacent specialist; use a generic/default agent acting in that role only when no exact or adjacent fit exists. |
 | "Sequential is safer" | Parallel is default for independent work. Sequential needs explicit dependency. |
 | "Context is sufficient, so skip confirmation" | Confirmation depends on triggers, not context volume. |
