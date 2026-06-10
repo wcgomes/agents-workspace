@@ -41,7 +41,7 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 The coordinator runs this checklist at the end of EVERY task. Do NOT skip.
 
-1. Architectural decision made? → `wiki/decisions/<decision-name>.md`
+1. Architectural decision made? → `wiki/decisions/<NNNN-decision-name>.md`
 2. New code pattern or convention? → `wiki/conventions/<pattern-name>.md`
 3. Domain rule clarified or corrected? → `wiki/domain/<rule-name>.md`
 4. System structure insight? → `wiki/architecture.md`
@@ -67,7 +67,7 @@ wiki/
 │   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR
-│   └── <decision-name>.md
+│   └── <NNNN-decision-name>.md
 ├── skill-candidates/     # Recurring patterns tracked for skill promotion
 │   └── <pattern-name>.md
 ├── records/             # Date-bound artifacts
