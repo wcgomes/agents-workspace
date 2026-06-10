@@ -27,6 +27,8 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 **Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
 
+**Date-bound artifacts go in `wiki/records/`.** Material from a specific event worth keeping — e.g., incidents, research, audits, meetings, reviews. Use a `YYYYMMDD-` filename prefix (e.g., `wiki/records/incidents/20260110-pg-outage.md`).
+
 ## Three Operations
 
 **Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
@@ -68,6 +70,7 @@ wiki/
 │   └── <decision-name>.md
 ├── skill-candidates/     # Recurring patterns tracked for skill promotion
 │   └── <pattern-name>.md
+├── records/             # Date-bound artifacts
 └── ...
 ```
 
