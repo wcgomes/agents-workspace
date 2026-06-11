@@ -21,8 +21,7 @@ Wiki files are loaded into agent context. Every line costs tokens.
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to `.md` files only (pages or folder-level `index.md`); no instructions, rules, or detailed content
-- **Links point to files, not folders** — index files must link to `.md` files; for a subfolder, link to that subfolder's `index.md`, never the folder path itself. Links are files, not folders — easier to follow relationships.
+- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to `.md` files only (page or subfolder's `index.md`, never the folder itself); no instructions, rules, or detailed content
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
