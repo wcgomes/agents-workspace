@@ -54,7 +54,7 @@ AGENTS.md ← operational + template
 ```
 wiki/index.md              ← update when pages change
 wiki/architecture.md       ← update when structure changes
-wiki/concepts/*.md         ← maintain with relevant changes
+wiki/domain/*.md          ← maintain with relevant changes
 wiki/conventions/*.md      ← maintain with relevant changes
 ```
 

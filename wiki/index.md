@@ -5,11 +5,11 @@ Quick-reference index. Find files by keyword.
 ## architecture
 - [architecture.md](architecture.md) — directory structure, data flow, component relationships
 
-## concepts
-- [template-vs-installed.md](concepts/template-vs-installed.md) — source vs installed artifacts, skills directory paths
-- [agents-md.md](concepts/agents-md.md) — AGENTS.md dual role: boot policy and workspace template
-- [skill-system.md](concepts/skill-system.md) — skill discovery, progressive loading, lifecycle
-- [installation-flow.md](concepts/installation-flow.md) — how install.sh works, install locations, update process
+## domain
+- [template-vs-installed.md](domain/template-vs-installed.md) — source vs installed artifacts, skills directory paths
+- [agents-md.md](domain/agents-md.md) — AGENTS.md dual role: boot policy and workspace template
+- [skill-system.md](domain/skill-system.md) — skill discovery, progressive loading, lifecycle
+- [installation-flow.md](domain/installation-flow.md) — how install.sh works, install locations, update process
 
 ## conventions
 - [editing-rules.md](conventions/editing-rules.md) — what to edit, what to never edit, how to update skills
