@@ -2,6 +2,13 @@
 
 > What to edit, what to never edit, how to maintain consistency.
 
+## User Intent: "Edit a skill" = edit the template
+
+When the user asks to modify, update, fix, or create a skill, they mean the source template under `skills/` in the workspace. Never edit the installed copy in `~/.config/opencode/skills/` to apply a user-requested change — even if it has the same name as the skill being edited.
+
+- After editing the template, remind the user to run `./tools/install.sh` (the agent never runs it automatically).
+- This rule overrides any interpretation that editing the installed copy is a valid shortcut; the installed copy is a build artifact, not an editable source.
+
 ## Editing Matrix
 
 | File/Directory | Edit? | How |

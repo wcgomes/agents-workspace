@@ -46,7 +46,6 @@ The coordinator runs this checklist at the end of EVERY task. Do NOT skip.
 3. Domain rule clarified or corrected? → `wiki/domain/<rule-name>.md`
 4. System structure insight? → `wiki/architecture.md`
 5. User corrected a misunderstanding? → ingest where relevant
-6. Non-obvious multi-step procedure? → evaluate for skill candidate
 
 Any YES → ingest. All NO → skip (but each item must have been evaluated).
 
@@ -68,8 +67,6 @@ wiki/
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR
 │   └── <NNNN-decision-name>.md
-├── skill-candidates/     # Recurring patterns tracked for skill promotion
-│   └── <pattern-name>.md
 ├── records/             # Date-bound artifacts
 └── ...
 ```
@@ -86,52 +83,6 @@ As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic g
 2. Pick the most relevant direct page or folder index from the keywords.
 3. If you open a folder index, read only the linked pages that match the task.
 4. Don't open broad or unrelated wiki areas just because they exist.
-
-## <HARD-GATE> Auto Skill-Candidate Evaluation
-
-If you performed a non-obvious sequence of steps that could apply to future tasks, evaluate for skill candidate.
-
-**Activate when ALL:**
-- Multi-step procedure (3+ steps)
-- Required domain knowledge or convention (not obvious)
-- Could apply to future similar tasks
-
-**Skip when:**
-- One-line change with no domain knowledge
-- Already covered by existing skill
-- Standard tool operations with no domain-specific logic
-
-## Skill Candidate Tracking
-
-One candidate per file in `wiki/skill-candidates/`.
-
-### Track (1st or 2nd encounter)
-
-Create `wiki/skill-candidates/<pattern-name>.md`:
-
-```markdown
----
-name: <pattern-name>
-encounters: 1
-status: candidate
----
-
-## Trigger
-[brief: what task context activates this]
-
-## Why a skill
-[what goes wrong or gets missed without it]
-```
-
-### Propose (3rd+ encounter)
-
-When `encounters >= 3` and `status: candidate`, set `status: propose` and ask user.
-
-### Promotion Sequence
-
-1. Check for redundancy (globally installed skills + workspace skills)
-2. Create skill locally at `.agents/skills/<name>/SKILL.md`
-3. Delete candidate file
 
 ## Wiki Maintenance
 
