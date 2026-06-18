@@ -26,7 +26,7 @@
 |---|---|---|
 | **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
 | **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. Tracks skill candidates. |
-| **Skill authoring** | `agents-skills` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
+| **Skill authoring** | `skill-builder` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 
 Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work.
 
@@ -137,7 +137,7 @@ AGENTS.md              # Boot policy — copy to each workspace
 skills/                # Loadable behavioral rules — install globally
   orchestrate/         # Full coordination cycle: assemble, delegate, review, synthesize
   wiki/                # Wiki query and self-learning loop
-  agents-skills/       # Skill authoring and validation
+  skill-builder/       # Skill authoring and validation
 
 # In your workspace (created by the agent)
 wiki/                  # Workspace knowledge — created on setup/first ingest, then maintained automatically

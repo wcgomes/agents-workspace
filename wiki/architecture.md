@@ -17,7 +17,7 @@
 │  Global Installation (~/.config/opencode/skills/)   │
 │  ├── orchestrate/SKILL.md                           │
 │  ├── wiki/SKILL.md                                  │
-│  ├── agents-skills/SKILL.md                         │
+│  ├── skill-builder/SKILL.md                         │
 │  └── ... (agency-agents: 144+ specialists)          │
 └──────────────────────┬──────────────────────────────┘
                        │ copied from
@@ -26,7 +26,7 @@
 │  Source Code (agents-workspace/skills/)             │
 │  ├── orchestrate/SKILL.md + (no references/)        │
 │  ├── wiki/SKILL.md                                  │
-│  └── agents-skills/SKILL.md + references/           │
+│  └── skill-builder/SKILL.md + references/           │
 └─────────────────────────────────────────────────────┘
 ```
 

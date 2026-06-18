@@ -1,5 +1,5 @@
 ---
-name: agents-skills
+name: skill-builder
 description: Create, refine, and validate Agent Skills following the agentskills.io specification. Use when writing a SKILL.md, creating a new skill directory, improving an existing skill's triggering or content, running evals, or diagnosing why a skill isn't activating.
 ---
 

@@ -26,7 +26,7 @@ When the user asks to modify, update, fix, or create a skill, they mean the sour
 ```
 ~/.config/opencode/skills/orchestrate/SKILL.md   ← DO NOT EDIT
 ~/.config/opencode/skills/wiki/SKILL.md           ← DO NOT EDIT
-~/.config/opencode/skills/agents-skills/SKILL.md  ← DO NOT EDIT
+~/.config/opencode/skills/skill-builder/SKILL.md  ← DO NOT EDIT
 ```
 
 **Why:** `install.sh` overwrites these files. Edits are lost.
@@ -38,7 +38,7 @@ When the user asks to modify, update, fix, or create a skill, they mean the sour
 ```
 skills/orchestrate/SKILL.md    ← source of truth
 skills/wiki/SKILL.md           ← source of truth
-skills/agents-skills/SKILL.md  ← source of truth
+skills/skill-builder/SKILL.md  ← source of truth
 ```
 
 After editing, remind the user to update the installation:

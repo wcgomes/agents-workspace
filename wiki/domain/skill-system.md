@@ -31,7 +31,7 @@ Skills are loaded in three progressive stages:
 |---|---|---|---|
 | `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, synthesize | `skills/` |
 | `wiki` | Context before tasks, ingestion after | Workspace knowledge base, self-learning | `skills/` |
-| `agents-skills` | Creating or improving skills | Authoring following agentskills.io spec | `skills/` |
+| `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `skills/` |
 
 > **Note:** Platform built-in skills are not documented in this workspace — each platform may have its own integrated skills. The focus is on skills in `skills/` (source code).
 
@@ -69,6 +69,6 @@ The description in the frontmatter is what determines if a skill activates. Rule
 
 ## References
 
-- [agentskills.io specification](../../skills/agents-skills/references/SPECIFICATION.md)
-- [Writing Skills guide](../../skills/agents-skills/references/WRITING_SKILLS.md)
-- [Best Practices](../../skills/agents-skills/references/BEST_PRACTICES.md)
+- [agentskills.io specification](../../skills/skill-builder/references/SPECIFICATION.md)
+- [Writing Skills guide](../../skills/skill-builder/references/WRITING_SKILLS.md)
+- [Best Practices](../../skills/skill-builder/references/BEST_PRACTICES.md)

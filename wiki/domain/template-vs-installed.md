@@ -42,4 +42,4 @@ Skills created by the agent from skill candidates live in `.agents/skills/` with
 
 ## References Subdirectory
 
-The `references/` subdirectory within a skill (e.g., `agents-skills/references/`) is **not** installed. Only `SKILL.md` is copied. If a skill needs references, they must be accessed from the source repository or included in the `SKILL.md` itself.
+The `references/` subdirectory within a skill (e.g., `skill-builder/references/`) is **not** installed. Only `SKILL.md` is copied. If a skill needs references, they must be accessed from the source repository or included in the `SKILL.md` itself.
