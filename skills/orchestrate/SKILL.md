@@ -214,6 +214,7 @@ Target agent: <agent name or identifier>
 Match type: exact | adjacent | fallback
 Fallback justification: <required only when match type is fallback — why no exact or adjacent fit>
 Context: <paths, snippets, facts>
+Spec ref: <path to specs/changes/<id>/ — optional, present only when a spec-builder artifact exists>
 Deliverable: <artifact or decision>
 Return format: <status + concise summary>
 ```
@@ -250,6 +251,8 @@ Good candidates:
 Did it deliver what was requested — nothing more, nothing less?
 
 A delegated subagent executing its handed scope directly is conformant — that is expected (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem only if the scope was genuinely multi-domain and the subagent neither subdelegated the out-of-domain parts nor flagged them. If a specialist composed a sub-team, confirm it stayed accountable for the result.
+
+If `Spec ref:` is present in the handoff, verify conformity against the persisted spec (load `spec-builder` `verify`) in addition to the done criteria.
 
 ### Stage 2: Quality
 

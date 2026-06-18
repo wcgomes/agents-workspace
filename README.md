@@ -14,20 +14,22 @@
 
 1. **The One Rule** — the main agent never does the work. It delegates every unit to a subagent. Before any tool call, a self-check confirms the action is allowed: read wiki, talk to user, or dispatch subagent. Everything else is delegated — no size threshold.
 2. **Team-driven workflow** — main agent reads `wiki/index.md` for context, loads `orchestrate`, then composes the team: analyze domains, discover specialists, size the team, select coordination pattern, plan execution order. Generalist execution is fallback only.
-3. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
-4. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
-5. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
-6. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
-7. **Controlled subdelegation** — specialists may subdelegate when specialization improves the task. Accountability stays with the delegator; subscopes follow the same rules.
-8. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
+3. **Spec-driven development (when needed)** — for work needing a durable behavior contract (new features, API/contract changes, migrations), load `spec-builder` before orchestration. Specs live in `specs/` (source spec per domain + `changes/<id>/` deltas); `orchestrate` consumes them via an optional `Spec ref` handoff field and checks conformity during review.
+4. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
+5. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
+6. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
+7. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
+8. **Controlled subdelegation** — specialists may subdelegate when specialization improves the task. Accountability stays with the delegator; subscopes follow the same rules.
+9. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
 | **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
 | **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. |
 | **Skill authoring** | `skill-builder` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
+| **Spec-driven development** | `spec-builder` | Creates, evolves, and archives durable behavior contracts (`specs/`) before implementation. `orchestrate` consumes via `Spec ref`. |
 
-Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work.
+Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work. When work needs a durable behavior contract, `spec-builder` loads before `orchestrate`.
 
 ## Setup in 3 steps
 
@@ -133,6 +135,7 @@ skills/                # Loadable behavioral rules — install globally
   orchestrate/         # Full coordination cycle: assemble, delegate, review, synthesize
   wiki/                # Wiki query and self-learning loop
   skill-builder/       # Skill authoring and validation
+  spec-builder/        # Spec-driven development: durable behavior contracts
 
 # In your workspace (created by the agent)
 wiki/                  # Workspace knowledge — created on setup/first ingest, then maintained automatically
@@ -141,6 +144,7 @@ wiki/                  # Workspace knowledge — created on setup/first ingest, 
   conventions/         # One file per convention
   domain/              # One file per business rule
   decisions/           # One file per ADR
+specs/                 # Durable behavior contracts — created by the agent when spec-builder is used (source specs + changes/)
 .agents/skills/        # Workspace-local skills (explicit creation)
   <your-custom-skill>/
 ```

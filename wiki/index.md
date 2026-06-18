@@ -15,4 +15,7 @@ Quick-reference index. Find files by keyword.
 - [editing-rules.md](conventions/editing-rules.md) — what to edit, what to never edit, how to update skills
 - [language.md](conventions/language.md) — language convention for files and communication
 
+## decisions
+- [0001-adopt-spec-driven-development.md](decisions/0001-adopt-spec-driven-development.md) — adopt spec-builder skill for spec-driven development; specs/ + Spec ref handoff field
+
 > Pages not listed here are invisible to the agent. Update this index when adding wiki pages.

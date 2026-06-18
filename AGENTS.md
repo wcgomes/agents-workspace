@@ -24,6 +24,7 @@ When in doubt, the marker is absent, so you coordinate.
 
 1. **Context** — main agent reads `wiki/index.md` **before any action** (hard-gate). Define done criteria.
 2. **Orchestrate** — load `orchestrate` **before planning or executing work**, including "execute/continue/resume the plan" continuations. It carries team assembly, delegation, review, and synthesis.
+   - **Spec** — when work needs a durable behavior contract before implementation, load `spec-builder` before orchestration.
 3. **Review** — check conformance and quality; synthesize. Never pass raw subagent output through unreviewed.
 4. **Learn** — load `wiki` and run the end-of-task ingest evaluation.
 
