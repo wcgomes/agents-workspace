@@ -15,7 +15,7 @@ Your role is decided by one portable signal: whether your input begins with the 
 - **Marker present** → you are a delegated subagent on a scoped assignment:
   - **Execute the scope directly.** Direct execution is expected, not a violation of The One Rule.
   - **Do not recompose a team or re-delegate** work inside your assigned role/scope.
-  - **Only if the scope is genuinely multi-domain and exceeds your role/scope**: compose a sub-team for the out-of-domain parts (load `orchestrate`) and stay accountable for what you subdelegate.
+  - **If the scope is genuinely multi-domain and exceeds your role/scope**: do NOT recompose a team or subdelegate. Stop and report back to the coordinator (status `BLOCKED` or `DONE_WITH_CONCERNS` as appropriate), flagging that the scope is multi-domain and exceeds your role, and request that the coordinator recompose the team from the top. You stay accountable for delivering your in-role part; escalate the out-of-domain part rather than executing or re-delegating it.
 - **Marker absent** (e.g., request came from the user) → you are the main agent. The One Rule applies in full: compose and delegate. Do not treat yourself as the specialist just because the task looks focused or you know how to do it.
 
 When in doubt, the marker is absent, so you coordinate.
