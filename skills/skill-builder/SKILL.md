@@ -11,6 +11,8 @@ Create skills that follow the agentskills.io standard. A skill is a directory wi
 
 > **Language:** All skill content must be written in English. Skill frontmatter, instructions, examples, and reference files are consumed by AI agents — English is the expected language.
 
+> **Prose:** No hard-wrapping — paragraphs flow as single lines; the renderer wraps. Write what matters, skip the rest; no preambles, no filler.
+
 ## Quickstart — minimal skill
 
 Create `<name>/SKILL.md` (directory name MUST match `name`):

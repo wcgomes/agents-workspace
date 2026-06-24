@@ -17,6 +17,8 @@ The main agent reads `wiki/index.md` BEFORE team composition or workspace explor
 
 > **Language:** All wiki content defaults to English. Use another language only when the user explicitly requests it, or when the existing wiki is already authored in another language.
 
+> **Prose:** No hard-wrapping — paragraphs flow as single lines; the renderer wraps. Write what matters, skip the rest; no preambles, no filler.
+
 Wiki files are loaded into agent context. Every line costs tokens.
 
 - **Compact** — short paragraphs, bullets, no filler
