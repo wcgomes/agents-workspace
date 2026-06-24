@@ -2,7 +2,7 @@
 
 **A lightweight AI Agent harness to handle any kind of task!**
 
-From software developement and engineering to design, marketing, sales, finance, paid media, project management or whatever you need to be done.
+From software engineering to design, marketing, sales, finance, paid media, project management or whatever you need to be done.
 
 Designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle.
 

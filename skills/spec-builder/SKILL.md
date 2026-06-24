@@ -38,7 +38,7 @@ Skip confirmation only when the user explicitly requests a spec.
 
 ```
 specs/
-├── <domain>/spec.md              # source of truth: current contract
+├── <domain>/spec.md              # source of truth: realized contract (updated only on archive; in-progress changes live in changes/<id>/)
 └── changes/<id>/
     ├── proposal.md               # Intent / Scope / Non-goals
     ├── spec.md                   # DELTA: ## ADDED/MODIFIED/REMOVED Requirements + Scenarios
@@ -46,7 +46,7 @@ specs/
     └── design.md                 # (Full mode only) technical approach
 ```
 
-**Source spec format:** `# <Domain> Specification` / `## Purpose` / `## Requirements` / `### Requirement: <name>` / `#### Scenario: <name>` (Given/When/Then for software; one-line acceptance condition for non-software). Organized by domain (feature area, work stream, or bounded context).
+**Source spec format:** `# <Domain> Specification` / `## Purpose` / `## Requirements` / `### Requirement: <name>` / `#### Scenario: <name>` (Given/When/Then for software; one-line acceptance condition for non-software). Organized by domain (feature area, work stream, or bounded context). Prescriptive contract here; descriptive domain facts live in `wiki/domain/` — load via `propose`.
 
 **Change id:** short kebab, e.g. `add-auth-rate-limit`.
 

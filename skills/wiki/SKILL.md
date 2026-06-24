@@ -43,7 +43,7 @@ The coordinator runs this checklist at the end of EVERY task. Do NOT skip.
 
 1. Architectural decision made? → `wiki/decisions/<NNNN-decision-name>.md`
 2. New code pattern or convention? → `wiki/conventions/<pattern-name>.md`
-3. Domain rule clarified or corrected? → `wiki/domain/<rule-name>.md`
+3. Domain rule clarified or corrected? → `wiki/domain/<rule-name>.md` (descriptive facts; prescriptive contracts go in specs/<domain>/spec.md — see spec-builder)
 4. System structure insight? → `wiki/architecture.md`
 5. User corrected a misunderstanding? → ingest where relevant
 
@@ -62,7 +62,7 @@ wiki/
 ├── conventions/          # One file per convention
 │   ├── index.md          # Optional folder index for larger/topic-rich wikis
 │   └── <pattern-name>.md
-├── domain/               # One file per business rule
+├── domain/               # One file per business rule — descriptive, post-hoc distilled facts (prescriptive behavior contracts go in specs/<domain>/spec.md; see spec-builder)
 │   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR
