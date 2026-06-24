@@ -25,6 +25,8 @@ Skip confirmation only when the user explicitly requests a spec.
 
 ## Principles
 
+> **Language:** Spec artifacts (proposals, spec deltas, task plans, design docs) default to English. Use another language only when the user explicitly requests it, or when existing specs in the workspace are already authored in that language.
+
 - **Spec = outcome**: deliverables, acceptance conditions, constraints, scenarios. Implementation detail (class/function names, library choices, step-by-step execution) goes in `tasks.md`/`design.md`, never the spec.
 - **What/HOW split test:** "If execution can change without changing the visible outcome, it likely does not belong in the spec."
 - **Scenarios** are testable acceptance conditions covering happy path + edge cases. **Software:** use Given/When/Then. **Non-software:** use a one-line acceptance condition (e.g., "X delivered and stakeholder Y approves").

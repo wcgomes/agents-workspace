@@ -15,6 +15,8 @@ The main agent reads `wiki/index.md` BEFORE team composition or workspace explor
 
 ## Design Principle
 
+> **Language:** All wiki content defaults to English. Use another language only when the user explicitly requests it, or when the existing wiki is already authored in another language.
+
 Wiki files are loaded into agent context. Every line costs tokens.
 
 - **Compact** — short paragraphs, bullets, no filler
