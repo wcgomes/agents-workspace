@@ -110,8 +110,9 @@ These are the installer target paths currently supported. They are not the norma
 4. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
 5. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
 6. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
-7. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
-8. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
+7. **Auto skill evaluation** — during wiki ingest, the agent evaluates whether content is better suited as a recurring procedural skill rather than declarative wiki knowledge. When clearly procedural and recurring, it flags the user to decide (create a skill with `skill-builder` or keep in wiki) — never auto-creates. High-confidence only; declarative knowledge stays in the wiki.
+8. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
+9. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
