@@ -1,6 +1,6 @@
 ---
 name: spec-builder
-description: Create, evolve, and archive spec-driven development artifacts (proposals, outcome specs, task plans). Use when work needs a durable outcome contract before execution — new deliverables or outcome changes, API/contract changes, migrations, security/privacy-sensitive work, or any long-running task where the outcome must be agreed upfront. Do NOT use for trivial fixes, exploratory spikes, or tasks where the handoff's done criteria suffice. Produces specs/ artifacts that orchestrate consumes via Spec ref.
+description: Create, evolve, and archive spec-driven workflow artifacts (proposals, outcome specs, task plans). Use when work needs a durable outcome contract before execution — new deliverables or outcome changes, API/contract changes, migrations, security/privacy-sensitive work, or any long-running task where the outcome must be agreed upfront. Do NOT use for trivial fixes, exploratory spikes, or tasks where the handoff's done criteria suffice. Produces specs/ artifacts that orchestrate consumes via Spec ref.
 ---
 
 # Spec-Builder

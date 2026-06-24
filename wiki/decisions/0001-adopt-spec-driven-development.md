@@ -6,7 +6,7 @@ Accepted (2026-06-18)
 
 ## Context
 
-The workspace template had a wiki knowledge base + `orchestrate` skill for delegation, but no durable behavior-contract layer. Plans were ephemeral (in-context handoffs); review checked against handoff done-criteria only, with no persistent spec to detect drift. The `wiki/decisions/` ADR slot was reserved in `wiki/SKILL.md` but dormant.
+The workspace template had a wiki knowledge base + `orchestrate` skill for delegation, but no durable outcome-contract layer. Plans were ephemeral (in-context handoffs); review checked against handoff done-criteria only, with no persistent spec to detect drift. The `wiki/decisions/` ADR slot was reserved in `wiki/SKILL.md` but dormant.
 
 ## Decision
 
@@ -17,6 +17,9 @@ Add a `spec-builder` skill implementing spec-driven development (SDD).
 - **Rigor:** Lite (default) vs Full (cross-team, API/contract, migration, security/privacy, ambiguity-prone).
 - **Integration:** `orchestrate` consumes artifacts via an optional `Spec ref:` handoff field; Phase 6 review checks spec conformity when a Spec ref is present.
 - `AGENTS.md` Flow points to the skill; `orchestrate` itself is unchanged except for consuming the `Spec ref`.
+- **HARD-GATES:** user confirms before creating specs and before archiving — no auto-create, no auto-archive.
+- **Fluid, not waterfall:** specs evolve mid-work. Refine the current change in place vs. start a new change; loop spec ↔ execution ↔ verify. `verify` (`converge`) catches drift.
+- **Domain-agnostic vocabulary:** outcome/execution (not behavior/implementation). Software-specific precision (Given/When/Then scenarios, TDD task ordering, scenarios→tests mapping, data model & API contracts) carried as `Software:` notes.
 
 ## Rationale
 

@@ -1,85 +1,60 @@
 # Agents Workspace
 
-**AI Agent toolkit** designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle to handle any kind of task.
+**A lightweight AI Agent harness to handle any kind of task!**
 
-> **Powered by [🎭 The Agency](https://github.com/msitarzewski/agency-agents)** — A complete AI agency at your fingertips. Specialized agents across 15 divisions: Engineering, Design, Marketing, Sales, Product, Project Management, Testing, Support, Paid Media, Finance, Strategy, Game Development, Spatial Computing, Academic.
+From software developement and engineering to design, marketing, sales, finance, paid media, project management or whatever you need to be done.
 
-## How it works 
+Designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle.
 
-**Describe what you want** — the main agent never executes the work itself; it assembles the right team of specialists, delegates every unit of work, reviews the results, and synthesizes them. Along the way, it builds a knowledge base in the wiki that makes future tasks faster and more accurate. You stay in control: suggest agents, adjust the team, or take over at any point.
+Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
-**Your main agent context stays clean** — debug data, tool logs, and raw code live inside the subagents. The main agent keeps its context focused on your task and conversation.
+## Quick Start
 
-## Workflow details
+### Manual
 
-1. **The One Rule** — the main agent never does the work. It delegates every unit to a subagent. Before any tool call, a self-check confirms the action is allowed: read wiki, talk to user, or dispatch subagent. Everything else is delegated — no size threshold.
-2. **Team-driven workflow** — main agent reads `wiki/index.md` for context, loads `orchestrate`, then composes the team: analyze domains, discover specialists, size the team, select coordination pattern, plan execution order. Generalist execution is fallback only.
-3. **Spec-driven development (when needed)** — for work needing a durable behavior contract (new features, API/contract changes, migrations), load `spec-builder` before orchestration. Specs live in `specs/` (source spec per domain + `changes/<id>/` deltas); `orchestrate` consumes them via an optional `Spec ref` handoff field and checks conformity during review.
-4. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
-5. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
-6. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
-7. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
-8. **Controlled subdelegation** — specialists may subdelegate when specialization improves the task. Accountability stays with the delegator; subscopes follow the same rules.
-9. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
+No script needed — just copy the files where they belong.
 
-| Mechanism | Skill | What it does |
-|---|---|---|
-| **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
-| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. |
-| **Skill authoring** | `skill-builder` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
-| **Spec-driven development** | `spec-builder` | Creates, evolves, and archives durable behavior contracts (`specs/`) before implementation. `orchestrate` consumes via `Spec ref`. |
+**Copy `AGENTS.md` into your workspace:**
 
-Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work. When work needs a durable behavior contract, `spec-builder` loads before `orchestrate`.
+```bash
+cp AGENTS.md /path/to/your-project/
+```
 
-## Setup in 3 steps
+**Copy `skills/` to your global skills path:**
 
-> Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
+| Tool | Skills path |
+|---|---|
+| OpenCode | `~/.config/opencode/skills/` |
+| Claude Code | `~/.claude/skills/` |
+| Copilot | `~/.copilot/skills/` |
 
-**Step 1 — Install skills and agents globally**
+```bash
+cp -r skills/* ~/.config/opencode/skills/
+```
+
+**Install agents from The Agency (Optional, but recommeded):**
+
+[Follow the instructions from their repository](https://github.com/msitarzewski/agency-agents)
+
+### Or use the installer (convenience)
 
 One-time setup. The agent loads only what each task needs.
 
 **Via curl:**
+
 ```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 ```
 
 **Or clone and run locally:**
+
 ```bash
 git clone https://github.com/wcgomes/agents-workspace.git
 cd agents-workspace
 ./tools/install.sh
 ```
 
-**Step 2 — Copy `AGENTS.md` into your workspace**
-
-```bash
-cp AGENTS.md /path/to/your-project/
-```
-
-`AGENTS.md` is the boot contract. The agent reads it on every session start. It defines the operating mode (The One Rule: the main agent never executes, it delegates every unit of work to a subagent) and the flow: read context, compose the specialist team, delegate to best semantic match, review, and synthesize. It is **not** installed globally.
-
-**Step 3 — Let the agent create `wiki/`**
-
-The agent may create `wiki/` when setup is explicit, or when the `wiki` skill needs to ingest, maintain, or persist new knowledge. After that, the main agent treats `wiki/index.md` as the first workspace knowledge source before broad exploration, and maintains the wiki by adding, updating, removing, reindexing, and linting entries as part of self-learning. This is workspace-specific knowledge — do not copy from this repo.
-
-> **Tip:** In an existing workspace, ask the agent to "set up the wiki" before starting. This primes the self-learning loop.
-
-**Updating**
-
-To update skills and agents to the latest version, run the install script again. Then update `AGENTS.md` in your workspace if the boot policy changed:
-
-```bash
-# Re-run the installer to update skills and agents globally
-curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
-
-# Update AGENTS.md in your workspace
-cp AGENTS.md /path/to/your-project/
-```
-
-Wiki content and workspace-local skills are preserved — only global skills and agents are overwritten.
-
-### Installer options
+#### Installer options
 
 | Flag | Description |
 |---|---|
@@ -92,7 +67,7 @@ Wiki content and workspace-local skills are preserved — only global skills and
 | `--list` | Show available skills |
 | `--help` | Show help |
 
-### Using `--division`
+#### Using `--division`
 
 Filter which agency-agents divisions to install using `--division` with a comma-separated list:
 
@@ -110,7 +85,7 @@ curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/i
 ./tools/install.sh --all --division testing,support
 ```
 
-### Available divisions
+##### Available divisions
 
 `academic`, `design`, `engineering`, `finance`, `game-development`, `gis`, `marketing`, `paid-media`, `product`, `project-management`, `sales`, `security`, `spatial-computing`, `specialized`, `support`, `testing`
 
@@ -127,6 +102,26 @@ These are the installer target paths currently supported. They are not the norma
 | Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
 | OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
 
+## Workflow details
+
+1. **The One Rule** — the main agent never does the work. It delegates every unit to a subagent. Before any tool call, a self-check confirms the action is allowed: read wiki, talk to user, or dispatch subagent. Everything else is delegated — no size threshold.
+2. **Team-driven workflow** — main agent reads `wiki/index.md` for context, loads `orchestrate`, then composes the team: analyze domains, discover specialists, size the team, select coordination pattern, plan execution order. Generalist execution is fallback only.
+3. **Spec-driven workflow (when needed)** — for work needing a durable behavior contract (new features, API/contract changes, migrations), load `spec-builder` before orchestration. Specs live in `specs/` (source spec per domain + `changes/<id>/` deltas); `orchestrate` consumes them via an optional `Spec ref` handoff field and checks conformity during review.
+4. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
+5. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
+6. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
+7. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
+8. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
+
+| Mechanism | Skill | What it does |
+|---|---|---|
+| **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
+| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. |
+| **Skill authoring** | `skill-builder` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
+| **Spec-driven workflow** | `spec-builder` | Creates, evolves, and archives durable behavior contracts (`specs/`) before implementation. `orchestrate` consumes via `Spec ref`. |
+
+Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work. When work needs a durable behavior contract, `spec-builder` loads before `orchestrate`.
+
 ## Structure
 
 ```
@@ -135,7 +130,7 @@ skills/                # Loadable behavioral rules — install globally
   orchestrate/         # Full coordination cycle: assemble, delegate, review, synthesize
   wiki/                # Wiki query and self-learning loop
   skill-builder/       # Skill authoring and validation
-  spec-builder/        # Spec-driven development: durable behavior contracts
+  spec-builder/        # Spec-driven workflow: durable behavior contracts
 
 # In your workspace (created by the agent)
 wiki/                  # Workspace knowledge — created on setup/first ingest, then maintained automatically
