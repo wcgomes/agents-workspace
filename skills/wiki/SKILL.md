@@ -49,6 +49,8 @@ The coordinator runs this checklist at the end of EVERY task. Do NOT skip.
 
 Any YES → ingest. All NO → skip (but each item must have been evaluated).
 
+**Wiki vs skill.** Wiki = declarative knowledge (what is true / decided / how the system is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when the content is clearly procedural AND clearly recurring — flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. One-off or rare → wiki, stay silent. Decisions, architecture facts, domain rules, one-off conventions → always wiki, no signal. When in doubt → wiki, stay silent.
+
 If the coordinator is prohibited from editing wiki files directly, delegate the wiki edit as a handoff and review the result before final response.
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
