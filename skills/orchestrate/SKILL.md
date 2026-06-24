@@ -250,7 +250,7 @@ Good candidates:
 
 Did it deliver what was requested — nothing more, nothing less?
 
-A delegated subagent executing its handed scope directly is conformant — that is expected (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem only if the scope was genuinely multi-domain and the subagent neither subdelegated the out-of-domain parts nor flagged them. If a specialist composed a sub-team, confirm it stayed accountable for the result.
+A delegated subagent executing its handed scope directly is conformant — that is expected (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem if the subagent hit genuinely multi-domain out-of-scope work and neither flagged it back to the coordinator nor stayed within its role — specifically, if it silently absorbed out-of-scope work or attempted uncontrolled subdelegation. Subagents do not compose sub-teams; when scope exceeds their role they escalate to the coordinator, which then recomposes the team from the top.
 
 If `Spec ref:` is present in the handoff, verify conformity against the persisted spec (load `spec-builder` `verify`) in addition to the done criteria.
 
@@ -269,20 +269,19 @@ Delegated agents report one of:
 | `NEEDS_CONTEXT` | Missing information | Re-dispatch with more context |
 | `BLOCKED` | Cannot complete | Assess context, break task, or escalate |
 
-This protocol applies across the delegation tree, including subdelegated work.
+This protocol applies across the delegation tree, including work the coordinator recomposed after a subagent escalated out-of-scope parts.
 
 **If stuck** — two cycles with no progress (repeated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts): stop redispatching, declare the blocker, and choose among: provide missing context, decompose differently, escalate (ask the user for direction), or apply justified fallback.
 
-## Subdelegation Rules
+## Escalation Rules
 
-- Allowed when specialist fit improves
-- Same discovery/selection rules apply
-- Delegating agent remains accountable
-- Review subdelegated output before integrating
-- Avoid loops and ping-pong
-- Avoid uncontrolled fan-out
-- Preserve explicit scope ownership
-- Do not subdelegate to avoid synthesis or review responsibility
+- Subagents do not compose sub-teams or subdelegate.
+- When handed scope is genuinely multi-domain and exceeds a subagent's role, the subagent escalates back to the coordinator (status `BLOCKED` or `DONE_WITH_CONCERNS`), flagging the out-of-domain part rather than executing or re-delegating it.
+- The coordinator remains the sole integrator and recomposes the team from the top.
+- The subagent stays accountable for delivering its in-role part; it escalates the out-of-domain part, not abandons it.
+- Review escalated output before recomposing; avoid loops and ping-pong by resolving scope boundaries at the coordinator.
+- Preserve explicit scope ownership: a subagent never absorbs out-of-scope work silently.
+- Escalation is not a way to avoid synthesis or review responsibility — the subagent must still deliver and self-review its in-role part.
 
 ## Rationalization Prevention
 
