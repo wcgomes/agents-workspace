@@ -11,13 +11,13 @@ Canonical section structures for each artifact. Copy verbatim; fill in. Use RFC 
 <Why this change — the problem or opportunity. One to three sentences.>
 
 ## Scope
-<What behavior is in scope. Reference affected domains/requirements.>
+<What outcome is in scope. Reference affected domains/requirements.>
 
 ## Non-goals
 <Explicitly out of scope — prevents scope creep.>
 
 ## Approach
-<Brief technical direction. Full technical detail goes in design.md (Full mode).>
+<Brief approach. Full detail goes in design.md (Full mode).>
 
 ## Clarifications
 <!-- Full mode only — Q&A resolved during clarify. Remove section in Lite. -->
@@ -35,9 +35,10 @@ Only include sections that apply to this change. Source spec uses the same Requi
 ## ADDED Requirements
 
 ### Requirement: <name>
-<Observable behavior statement. RFC 2119 keywords as needed.>
+<Outcome statement. RFC 2119 keywords as needed.>
 
 #### Scenario: <name>
+<!-- Software: Given/When/Then. Non-software: one-line acceptance condition (e.g., "X delivered and stakeholder Y approves"). -->
 - Given <initial state>
 - When <action>
 - Then <observable outcome>
@@ -45,9 +46,10 @@ Only include sections that apply to this change. Source spec uses the same Requi
 ## MODIFIED Requirements
 
 ### Requirement: <name>
-<Updated behavior statement.>
+<Updated outcome statement.>
 
 #### Scenario: <name>
+<!-- Software: Given/When/Then. Non-software: one-line acceptance condition (e.g., "X delivered and stakeholder Y approves"). -->
 - Given <initial state>
 - When <action>
 - Then <observable outcome>
@@ -60,7 +62,7 @@ Only include sections that apply to this change. Source spec uses the same Requi
 
 ## 3. tasks.md
 
-The executable "how" — consumed by `orchestrate` via handoffs. Dependency-ordered; `[P]` marks parallelizable items; one file path per task; checkpoint validation per phase.
+The executable "how" — consumed by `orchestrate` via handoffs. Dependency-ordered; `[P]` marks parallelizable items; one file path per task; checkpoint validation per phase. **Software:** order tasks test-first (write test, confirm failing, then implement); checkpoint = spec scenario maps to a passing test.
 
 ```markdown
 # Tasks: <change-id>
@@ -81,20 +83,20 @@ The executable "how" — consumed by `orchestrate` via handoffs. Dependency-orde
 
 ## 4. design.md (Full mode only)
 
-Keep lean — only what `tasks.md` cannot carry. Omit sections that add no value.
+Keep lean — only what `tasks.md` cannot carry. Omit sections that add no value. **Software:** cover data model and API contracts under Approach or Significant decisions.
 
 ```markdown
 # Design: <change-id>
 
-## Technical approach
+## Approach
 <Chosen approach and rationale. Alternatives considered.>
 
-## Architecture decisions
+## Significant decisions
 <Decisions affecting structure, with trade-offs.>
 
-## Data flow
+## Flow
 <Inputs → transformations → outputs. Diagram if useful.>
 
-## File changes
+## Artifact changes
 <Anticipated files/modules and the nature of each change.>
 ```
