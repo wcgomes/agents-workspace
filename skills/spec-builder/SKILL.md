@@ -42,7 +42,7 @@ Skip confirmation only when the user explicitly requests a spec.
 
 ```
 specs/
-├── <domain>/spec.md              # source of truth: realized contract (updated only on archive; in-progress changes live in changes/<id>/)
+├── <domain>/spec.md              # realized spec: the archived/merged contract (updated only on archive; in-progress changes live in changes/<id>/)
 └── changes/<id>/
     ├── proposal.md               # Intent / Scope / Non-goals
     ├── spec.md                   # DELTA: ## ADDED/MODIFIED/REMOVED Requirements + Scenarios
@@ -53,6 +53,31 @@ specs/
 **Source spec format:** `# <Domain> Specification` / `## Purpose` / `## Requirements` / `### Requirement: <name>` / `#### Scenario: <name>` (Given/When/Then for software; one-line acceptance condition for non-software). Organized by domain (feature area, work stream, or bounded context). Prescriptive contract here; descriptive domain facts live in `wiki/domain/` — load via `propose`.
 
 **Change id:** short kebab, e.g. `add-auth-rate-limit`.
+
+## State lifecycle
+
+A spec change moves through explicit states. The **active/archived** distinction is encoded by folder location (no separate status field): top-level `changes/<id>/` = active (WIP), `changes/archive/<YYYYMMDD>-<id>/` = archived/immutable. The four in-progress sub-states below (Draft / Planned / In-progress / Verified) are **procedural** — determined by which actions have run (propose→plan→execution→verify), not by folder location.
+
+| State | Trigger | Artifacts present | Source spec `specs/<domain>/spec.md` |
+|---|---|---|---|
+| Draft | `propose` done | `proposal.md` + `spec.md` (delta) | May not exist yet (created on first archive for the domain) |
+| Planned | `plan` done | + `tasks.md` (+ `design.md` in Full) | Unchanged |
+| In-progress | execution underway | Unchanged; `tasks.md` checklist being completed | Unchanged |
+| Verified | `verify` passed | Unchanged; awaiting archive confirmation (HARD-GATE) | Unchanged |
+| Archived | `archive` done | Delta merged into source spec; `changes/<id>/` moved to `changes/archive/<YYYYMMDD>-<id>/` | Updated (created if domain is new) |
+
+**Live contract** (the prescriptive contract in force at any moment) = `specs/<domain>/spec.md` (if it exists) **plus** every `changes/<id>/spec.md` delta where `<id>` is NOT under `changes/archive/`. To reason about the live contract during WIP, read the realized spec and all active deltas together; never assume the realized spec alone reflects in-progress work.
+
+**File movement rules:**
+- Source spec `specs/<domain>/spec.md` is created on the first `archive` for that domain (before that, the domain's contract lives only in active deltas).
+- `changes/<id>/` moves to `changes/archive/<YYYYMMDD>-<id>/` ONLY on `archive`. If a change folder sits at the top of `changes/` (not under `archive/`), it is ACTIVE — expect its delta to still be evolving.
+
+```
+[Draft] -> [Planned] -> [In-progress] -> [Verified] --HARD-GATE--> [Archived]
+   |           |             |                |                        |
+ propose     plan         execution        verify                   archive
+                                                              (merge delta + move folder)
+```
 
 ## Rigor: Lite vs Full
 
@@ -65,6 +90,8 @@ For each: what it does, output, and handoff to orchestrate.
 
 ### `propose`
 Prerequisite: user confirmed spec creation (see HARD-GATE). If not confirmed, RECOMMEND and wait — do not proceed.
+
+**Before proposing a new change:** scan `specs/changes/` (top-level entries, excluding `changes/archive/`) for an ACTIVE change folder in the same domain or overlapping scope. If one exists and the new intent refines it (defect in current behavior, requirement clarification, improvement within the same scope), edit that change's `spec.md` (delta) in place per "Evolving a spec mid-work" — do NOT open a new change. Only open a new `changes/<new-id>/` when scope genuinely expands (new requirement, different bounded context, behavior outside this change).
 Create `changes/<id>/proposal.md` + `spec.md` (delta). **Load the `wiki` skill and query the workspace wiki (`index.md` first, then relevant pages) for context relevant to the spec — conventions, architecture, domain rules, prior decisions (ADRs). Use findings as proactive guardrails before drafting.**
 - **Output:** change folder with proposal + delta spec.
 - **Handoff:** none yet — awaits `plan`.
@@ -99,6 +126,8 @@ SDD is **fluid, not waterfall** — execution, verification, and user feedback u
 - **Refines the current change** (defect in current behavior, requirement clarification, improvement within the same scope): edit `changes/<id>/spec.md` (delta) in place. Update `tasks.md`/`design.md` accordingly.
 - **Expands scope** (new requirement, different bounded context, behavior outside this change): start a new `changes/<new-id>/`.
 
+**Active vs. archived:** the active/archived distinction is determined solely by folder location. Top-level `changes/<id>/` = ACTIVE — its delta is mutable and part of the live contract. `changes/archive/<YYYYMMDD>-<id>/` = archived/immutable — never edit an archived delta; if a new need arises, open a new active change.
+
 **Loop:** spec ↔ execution ↔ verify. When behavior changes, the spec changes with it — even small adjustments. Never let execution drift from the spec. `verify` (`converge`) exists to catch drift.
 
 Flow: iterate within the change until execution matches the spec and verification passes → then request archive (see HARD-GATE below).
@@ -117,6 +146,14 @@ If the user requests further changes instead, return to the fluid loop above —
 - After `plan`, the coordinator loads `orchestrate` and dispatches handoffs from `tasks.md`. Each handoff SHOULD carry `Spec ref: specs/changes/<id>/` so review can check against the spec.
 - `verify` runs AS PART OF orchestrate's Phase 6 review (Stage 1 Conformance) when a Spec ref exists — it checks spec conformity in addition to done-criteria conformance.
 - `orchestrate` is **NOT modified** by this skill; it only consumes the `Spec ref`.
+
+## Wiki synchronization
+
+Specs (prescriptive, lifecycle-bound) and `wiki/domain/` (descriptive, append-only/stable) are distinct but must agree on what the system is. They are NOT redundant — see the wiki SKILL.md for the canonical distinction.
+
+- **Read-side (`propose`):** `wiki/domain/` is the descriptive source (how the system IS); `specs/<domain>/spec.md` (plus active deltas) is the prescriptive source (how it MUST be). Read both before drafting a delta. If they conflict, flag it as drift to resolve — never silently pick one. Resolution: if the wiki reflects shipped behavior the spec never captured, the spec delta should formalize it; if the wiki is simply stale, queue a wiki update.
+- **Write-side (`archive`):** any domain rule NEW or MODIFIED in the delta MUST be reflected in `wiki/domain/` via the post-task wiki ingest (the coordinator delegates; spec-builder reports the decision, never writes wiki directly). Removed requirements → remove or annotate the corresponding wiki domain page as superseded. Both sources MUST agree post-archive.
+- **Boundary restatement:** specs hold the prescriptive contract and carry the lifecycle (WIP deltas, archived source). `wiki/domain/` holds the distilled descriptive fact and is append-only/stable. On archive, the descriptive counterpart is ingested here.
 
 ## Templates
 
