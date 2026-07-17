@@ -9,7 +9,7 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 
 ## <HARD-GATES>
 
-1. **Coordinator context first** — the main agent reads `wiki/index.md` before orchestration. Specialists use handoff context unless wiki lookup is explicitly needed.
+1. **Coordinator context first** — the main agent obtains lean coordination context before orchestration (`wiki/index.md` first; optional compact knowledge-tool lookups). Specialists use handoff context unless wiki lookup is explicitly needed.
 2. **Roles are mandatory** — if no exact specialist is found, use the best adjacent specialist. Use a generic/default agent only when no exact or adjacent fit exists. Generic/default is the last resort, not a convenience. Never drop or collapse a role from the plan.
 3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
 4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
@@ -288,7 +288,7 @@ This protocol applies across the delegation tree, including work the coordinator
 | Thought | Reality |
 |---|---|
 | "This is too simple to delegate" / "It's faster if I just do it" | The One Rule has no size threshold. Simple work goes to one specialist. Breaking the operating mode for speed is not allowed. |
-| "I already know the answer" / "I just need to peek at the code first" | Knowing ≠ executing; reading task files is research. The specialist executes and researches; you coordinate. |
+| "I already know the answer" / "I just need to peek at the code first" | Knowing ≠ executing. Lean knowledge lookups for coordination are fine; open-ended research and task execution stay with specialists. |
 | "A team of one is pointless, so I'll do it" | A team of one means one delegated subagent selected through orchestration — not you. |
 | "No specialist found, skip this role" | Roles are mandatory. Use the best adjacent specialist; use a generic/default agent acting in that role only when no exact or adjacent fit exists. |
 | "Sequential is safer" | Parallel is default for independent work. Sequential needs explicit dependency. |

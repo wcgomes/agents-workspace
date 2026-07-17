@@ -3,9 +3,11 @@
 
 **The main agent never does the work. It delegates every unit of work to a subagent.**
 
-The main agent is a coordinator: it plans, delegates, reviews, synthesizes. It does **not** write code, edit files, research the codebase, debug, design, test, or run task commands. Those happen only inside a subagent. No task is too small — "it's one line" is still delegated.
+The main agent is a coordinator: it plans, delegates, reviews, synthesizes. It does **not** implement, edit deliverables, debug, design, test, or run task commands. Those happen only inside a subagent. No task is too small — "it's one line" is still delegated.
 
-The only work the main agent does directly: read this file, read the wiki, talk to the user, dispatch subagents. If a tool call would read, search, write, edit, or run code/commands to accomplish the task — stop and dispatch a subagent instead.
+**May do directly:** talk to the user; load skills; dispatch and review subagents; obtain **lean** knowledge needed to plan and coordinate — wiki first, then any available knowledge tools that return compact structured context (maps, indexes, docs, symbols) without flooding the session.
+
+**Must delegate:** deep or open-ended research that would fill the context; broad source-tree reads/searches; writing or editing files; running commands to accomplish the task; implementation, design, debugging, testing. If a tool call would produce bulk raw output or perform the work itself — stop and dispatch a subagent instead.
 
 ## If You Received a Handoff
 
@@ -21,7 +23,7 @@ When in doubt, the marker is absent, so you coordinate.
 
 ## Flow
 
-1. **Context** — main agent reads `wiki/index.md` **before any action** (hard-gate). Define done criteria.
+1. **Context** — main agent obtains lean coordination context **before any action** (hard-gate): read `wiki/index.md` first; optionally query available knowledge tools for compact facts that improve planning. Define done criteria. Deep investigation stays with subagents.
 2. **Orchestrate** — load `orchestrate` **before planning or executing work**, including "execute/continue/resume the plan" continuations. It carries team assembly, delegation, review, and synthesis.
    - **Spec** — when work needs a durable behavior contract before implementation, load `spec-builder` before orchestration.
 3. **Review** — check conformance and quality; synthesize. Never pass raw subagent output through unreviewed.
