@@ -2,7 +2,8 @@
 #
 # install.sh -- Install agents-workspace + agency-agents skills into your AI tools
 #
-# Downloads the latest versions and installs skills to OpenCode, Claude Code,
+# Always downloads GitHub main.zip (never installs from the local working tree).
+# Installs skills from templates/skills inside the archive to OpenCode, Claude Code,
 # Antigravity, and Copilot.
 #
 # Usage:
@@ -369,7 +370,7 @@ main() {
     exit 1
   fi
 
-  local src="${tmp_dir}/${REPO_NAME}/skills"
+  local src="${tmp_dir}/${REPO_NAME}/templates/skills"
   if [[ ! -d "$src" ]]; then
     err "Skills directory not found in agents-workspace archive."
     exit 1

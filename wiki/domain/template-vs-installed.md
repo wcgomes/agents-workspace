@@ -1,45 +1,52 @@
 # Template vs Installed
 
-> Critical distinction: `skills/` is source code. What is installed is a copy.
+> Critical distinction: `templates/` is distribution **source**. Installed/copied artifacts are runtime copies. Do not treat templates as the live contracts of a consumer workspace until install/copy.
 
 ## The Problem
 
-If you edit an installed skill directly (`~/.config/opencode/skills/orchestrate/SKILL.md`), the next time you run `install.sh` it will overwrite your change. Guaranteed data loss.
+If you edit an installed skill (`~/.config/opencode/skills/orchestrate/SKILL.md`), the next `install.sh` overwrites it. Guaranteed data loss.
+
+If you treat `templates/AGENTS.md` as the live boot policy while working **in this repo**, you mix consumer product policy with distribution-maintenance work. Use the **repo root** `AGENTS.md` for meta guidance here; use `templates/AGENTS.md` only as the source you edit for consumers.
 
 ## Concept
 
 | Concept | What it is | Where it lives | Versioned? |
 |---|---|---|---|
-| **Template** | Skill source code | `skills/<name>/SKILL.md` | Yes (git) |
-| **Installed** | Runtime copy | `~/.config/opencode/skills/<name>/SKILL.md` | No |
+| **Skill template** | Skill source code | `templates/skills/<name>/SKILL.md` | Yes (git) |
+| **Installed skill** | Runtime copy | `~/.config/<tool>/skills/<name>/SKILL.md` | No |
+| **AGENTS.md template** | Consumer boot-policy source | `templates/AGENTS.md` | Yes (git) |
+| **Consumer AGENTS.md** | Live boot policy | `<project>/AGENTS.md` (manual copy) | Project-local |
+| **Distribution meta AGENTS.md** | Guidance for *this* repo only | Repo root `AGENTS.md` | Yes (git) |
 
-## Installation Flow
+## Installation / copy flow
 
 ```
-skills/ (templates)
-    │
-    │  install.sh
-    ▼
-~/.config/opencode/skills/ (installed)
-    │
-    │  loaded by
-    ▼
-Runtime agent
+templates/skills/          templates/AGENTS.md
+       │                          │
+       │  install.sh              │  manual cp (not in install.sh)
+       ▼                          ▼
+ ~/.config/.../skills/     <consumer-project>/AGENTS.md
+       │                          │
+       └──────── loaded by consumer runtime agent ────────┘
 ```
+
+Repo root `AGENTS.md` is **not** part of install/copy. It stays in the distribution repo for agents developing the harness.
 
 ## Rules
 
-1. **To change a skill**: edit `skills/<name>/SKILL.md` and remind the user to run `install.sh`.
-2. **Never edit** files in `~/.config/opencode/skills/` directly.
-3. **To verify what is installed**: read the templates in `skills/` — they are the source of truth.
-4. **To add a new skill**: create `skills/<name>/SKILL.md` and remind the user to run `install.sh`.
+1. **Change a skill**: edit `templates/skills/<name>/SKILL.md` → remind user to run `./tools/install.sh`.
+2. **Never edit** installed files under `~/.config/opencode/skills/` (or platform equivalents).
+3. **Source of truth for skill content**: `templates/skills/`.
+4. **Change consumer boot policy**: edit `templates/AGENTS.md` → remind user to re-copy to projects.
+5. **Add a skill**: create `templates/skills/<name>/SKILL.md` → remind user to run `install.sh`.
+6. **Working in agents-workspace**: follow root meta `AGENTS.md`; do not assume `templates/` is already "installed" into this session.
 
-> **Important:** The agent **never** runs `install.sh` automatically. Only remind the user to run the script manually when needed.
+> **Important:** The agent **never** runs `install.sh` automatically. Only remind the user.
 
 ## Exception: Workspace-Local Skills
 
-Skills created by the agent from skill candidates live in `.agents/skills/` within the workspace. These are local to the project and are **not** managed by `install.sh`.
+Skills created from skill candidates live in `.agents/skills/` in a **consumer** workspace. Not managed by `install.sh`.
 
 ## References Subdirectory
 
-The `references/` subdirectory within a skill (e.g., `skill-builder/references/`) is **not** installed. Only `SKILL.md` is copied. If a skill needs references, they must be accessed from the source repository or included in the `SKILL.md` itself.
+`references/` (and similar) under a skill template are **not** installed. Only `SKILL.md` is copied. Access references from the source repo or inline them in `SKILL.md`.

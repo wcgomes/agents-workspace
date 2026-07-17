@@ -9,7 +9,7 @@
 - Wiki pages (`wiki/**/*.md`)
 - `AGENTS.md`
 - `README.md`
-- Skill files (`skills/**/SKILL.md`)
+- Skill files (`templates/skills/**/SKILL.md`)
 - Commit messages
 - Code comments (when applicable)
 - Variable names, function names, and identifiers

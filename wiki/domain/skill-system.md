@@ -29,12 +29,12 @@ Skills are loaded in three progressive stages:
 
 | Skill | Trigger | Function | Source |
 |---|---|---|---|
-| `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, synthesize | `skills/` |
-| `wiki` | Context before tasks, ingestion after | Workspace knowledge base, self-learning | `skills/` |
-| `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `skills/` |
-| `spec-builder` | Work needs a durable outcome contract before execution | Specs, proposals, task plans for spec-driven development | `skills/` |
+| `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, synthesize | `templates/skills/` |
+| `wiki` | Context before tasks, ingestion after | Workspace knowledge base, self-learning | `templates/skills/` |
+| `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `templates/skills/` |
+| `spec-builder` | Work needs a durable outcome contract before execution | Specs, proposals, task plans for spec-driven development | `templates/skills/` |
 
-> **Note:** Platform built-in skills are not documented in this workspace — each platform may have its own integrated skills. The focus is on skills in `skills/` (source code).
+> **Note:** Platform built-in skills are not documented in this workspace — each platform may have its own integrated skills. The focus is on skills in `templates/skills/` (source code).
 
 ## Skill Lifecycle
 
@@ -70,6 +70,6 @@ The description in the frontmatter is what determines if a skill activates. Rule
 
 ## References
 
-- [agentskills.io specification](../../skills/skill-builder/references/SPECIFICATION.md)
-- [Writing Skills guide](../../skills/skill-builder/references/WRITING_SKILLS.md)
-- [Best Practices](../../skills/skill-builder/references/BEST_PRACTICES.md)
+- [agentskills.io specification](../../templates/skills/skill-builder/references/SPECIFICATION.md)
+- [Writing Skills guide](../../templates/skills/skill-builder/references/WRITING_SKILLS.md)
+- [Best Practices](../../templates/skills/skill-builder/references/BEST_PRACTICES.md)

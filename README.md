@@ -8,19 +8,21 @@ Designed to create a professional workflow with dynamic team assembly of special
 
 Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
+**This repository is a template distribution.** Installable source lives under `templates/` (`templates/skills/` for skills, `templates/AGENTS.md` for the workspace boot-policy template). Those files become live operational contracts only after you install skills and copy `AGENTS.md` into a project. The root `AGENTS.md` in *this* repo is meta guidance for maintaining the distribution — not the consumer boot policy.
+
 ## Quick Start
 
 ### Manual
 
 No script needed — just copy the files where they belong.
 
-**Copy `AGENTS.md` into your workspace:**
+**Copy `templates/AGENTS.md` into your workspace:**
 
 ```bash
-cp AGENTS.md /path/to/your-project/
+cp templates/AGENTS.md /path/to/your-project/
 ```
 
-**Copy `skills/` to your global skills path:**
+**Copy `templates/skills/` to your global skills path:**
 
 | Tool | Skills path |
 |---|---|
@@ -29,7 +31,7 @@ cp AGENTS.md /path/to/your-project/
 | Copilot | `~/.copilot/skills/` |
 
 ```bash
-cp -r skills/* ~/.config/opencode/skills/
+cp -r templates/skills/* ~/.config/opencode/skills/
 ```
 
 **Install agents from The Agency (Optional, but recommeded):**
@@ -40,13 +42,15 @@ cp -r skills/* ~/.config/opencode/skills/
 
 One-time setup. The agent loads only what each task needs.
 
+The installer **always downloads GitHub `main.zip`** and installs from `templates/skills` inside that archive. It does **not** install skills from your local working tree — even if you run `./tools/install.sh` from a clone. For local WIP, use the manual `cp` steps above.
+
 **Via curl:**
 
 ```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 ```
 
-**Or clone and run locally:**
+**Or clone and run the script** (still installs published `main`, not your tree):
 
 ```bash
 git clone https://github.com/wcgomes/agents-workspace.git
@@ -126,21 +130,26 @@ Skills load **on-demand**: `wiki` for context first, then `orchestrate` for plan
 ## Structure
 
 ```
-AGENTS.md              # Boot policy — copy to each workspace
-skills/                # Loadable behavioral rules — install globally
-  orchestrate/         # Full coordination cycle: assemble, delegate, review, synthesize
-  wiki/                # Wiki query and self-learning loop
-  skill-builder/       # Skill authoring and validation
-  spec-builder/        # Spec-driven workflow: durable behavior contracts
+# This repository (template distribution)
+AGENTS.md              # Meta only — guidance for working ON this distribution (not consumer boot policy)
+tools/install.sh       # Downloads main.zip; installs templates/skills from archive (not local tree)
+wiki/                  # Knowledge about this product (distribution maintainers / agents here)
+templates/             # SOURCE for install/copy — not live until installed/copied
+  AGENTS.md            # Consumer boot-policy TEMPLATE — copy to each project root
+  skills/              # Skill source of truth — install globally via install.sh
+    orchestrate/       # Full coordination cycle: assemble, delegate, review, synthesize
+    wiki/              # Wiki query and self-learning loop
+    skill-builder/     # Skill authoring and validation
+    spec-builder/      # Spec-driven workflow: durable behavior contracts
 
-# In your workspace (created by the agent)
+# In your project workspace (after install + copy)
+AGENTS.md              # Live boot policy (copied from templates/AGENTS.md)
 wiki/                  # Workspace knowledge — created on setup/first ingest, then maintained automatically
   index.md
-  architecture.md      # System structure overview
-  conventions/         # One file per convention
-  domain/              # One file per business rule
-  decisions/           # One file per ADR
-specs/                 # Durable behavior contracts — created by the agent when spec-builder is used (source specs + changes/)
+  architecture.md
+  conventions/
+  domain/
+  decisions/
+specs/                 # Durable behavior contracts — when spec-builder is used
 .agents/skills/        # Workspace-local skills (explicit creation)
-  <your-custom-skill>/
 ```

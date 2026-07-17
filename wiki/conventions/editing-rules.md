@@ -1,95 +1,108 @@
 # Editing Rules
 
-> What to edit, what to never edit, how to maintain consistency.
+> What to edit, what never to edit, how to keep distribution source and consumer runtime consistent.
 
-## User Intent: "Edit a skill" = edit the template
+## User intent: "Edit a skill" = edit the template
 
-When the user asks to modify, update, fix, or create a skill, they mean the source template under `skills/` in the workspace. Never edit the installed copy in `~/.config/opencode/skills/` to apply a user-requested change — even if it has the same name as the skill being edited.
+When the user asks to modify, update, fix, or create a skill, they mean the source under `templates/skills/` in this distribution repo. Never edit the installed copy in `~/.config/opencode/skills/` for a user-requested change.
 
-- After editing the template, remind the user to run `./tools/install.sh` (the agent never runs it automatically).
-- This rule overrides any interpretation that editing the installed copy is a valid shortcut; the installed copy is a build artifact, not an editable source.
+- After editing a skill template, remind the user to run `./tools/install.sh` (the agent never runs it automatically).
+- Installed copies are build artifacts, not editable sources.
 
-## Editing Matrix
+## Editing matrix
 
 | File/Directory | Edit? | How |
 |---|---|---|
-| `skills/<name>/SKILL.md` (template) | **Yes** | Edit directly, remind the user to run `install.sh` |
-| `~/.config/opencode/skills/` (installed) | **Never** | Edit the template and re-install |
-| `AGENTS.md` (workspace) | **Yes, when requested** | Only with explicit user instruction |
-| `wiki/` (workspace) | **Yes** | Maintained automatically by the agent |
-| `.agents/skills/` (workspace) | **Yes** | Local skills created by the agent |
+| `templates/skills/<name>/SKILL.md` | **Yes** | Source of truth; remind `install.sh` |
+| `~/.config/opencode/skills/` (installed) | **Never** | Edit template + re-install |
+| `templates/AGENTS.md` | **Yes, when requested** | Consumer boot template; remind re-copy |
+| Repo root `AGENTS.md` | **Yes, when requested** | Meta for this distribution only; keep short |
+| Consumer workspace `AGENTS.md` | **Yes, when requested** | Only with explicit user instruction in that project |
+| `wiki/` (any workspace) | **Yes** | Agent-maintained knowledge |
+| `.agents/skills/` (consumer) | **Yes** | Workspace-local skills |
 
-## Detailed Rules
+## Detailed rules
 
-### Installed Skills — NEVER edit
+### Installed skills — NEVER edit
 
 ```
 ~/.config/opencode/skills/orchestrate/SKILL.md   ← DO NOT EDIT
 ~/.config/opencode/skills/wiki/SKILL.md           ← DO NOT EDIT
 ~/.config/opencode/skills/skill-builder/SKILL.md  ← DO NOT EDIT
+~/.config/opencode/skills/spec-builder/SKILL.md   ← DO NOT EDIT
 ```
 
-**Why:** `install.sh` overwrites these files. Edits are lost.
+**Why:** `install.sh` overwrites these files.
 
-**What to do:** Edit the corresponding template in `skills/`. The agent **never** runs `install.sh` automatically — only remind the user to run the script manually.
+**What to do:** Edit `templates/skills/`. Remind the user to run `./tools/install.sh` manually.
 
-### Templates — Edit with care
+### Templates — edit with care
 
 ```
-skills/orchestrate/SKILL.md    ← source of truth
-skills/wiki/SKILL.md           ← source of truth
-skills/skill-builder/SKILL.md  ← source of truth
+templates/skills/*/SKILL.md   ← skill source of truth
+templates/AGENTS.md           ← consumer boot-policy source
 ```
 
-After editing, remind the user to update the installation:
+After skill edits:
+
 ```bash
 ./tools/install.sh
 ```
 
-> **Important:** The agent **never** runs `install.sh` automatically. Only remind the user to run the script manually.
+After `templates/AGENTS.md` edits:
 
-### AGENTS.md — Edit only when requested
-
-```
-AGENTS.md ← operational + template
+```bash
+cp templates/AGENTS.md /path/to/your-project/
 ```
 
-**Rule:** If the user did not ask to edit, do not edit. If they asked, edit with precision.
+> The agent **never** runs `install.sh` or mass-copies `AGENTS.md` automatically.
 
-### Wiki — Maintain automatically
+### AGENTS.md — three files, three intents
+
+| Path | Intent |
+|---|---|
+| `templates/AGENTS.md` | Product boot policy for consumers |
+| Repo root `AGENTS.md` | Meta for agents working **in** agents-workspace |
+| Consumer project root | Live policy for that project |
+
+Do not treat `templates/AGENTS.md` as the live session policy while developing this distribution. Do not edit any `AGENTS.md` unless the user asked (or the task clearly targets that file).
+
+### Wiki — maintain automatically
 
 ```
-wiki/index.md              ← update when pages change
-wiki/architecture.md       ← update when structure changes
-wiki/domain/*.md          ← maintain with relevant changes
-wiki/conventions/*.md      ← maintain with relevant changes
+wiki/index.md
+wiki/architecture.md
+wiki/domain/*.md
+wiki/conventions/*.md
 ```
 
-The agent maintains the wiki as part of the self-learning cycle.
+Each workspace (including this distribution repo) owns its own `wiki/`.
 
-### Workspace-Local Skills
+### Workspace-local skills
 
 ```
-.agents/skills/<name>/SKILL.md ← skills created by the agent
+.agents/skills/<name>/SKILL.md
 ```
 
-These are local to the workspace. They are not managed by `install.sh`. They can be edited freely.
+Consumer-only. Not managed by `install.sh`. Editable freely.
 
-## Maintenance Checklist
+## Maintenance checklist
 
-When changing the repository:
+When changing the distribution repository:
 
-- [ ] Template changed in `skills/`? → Remind the user to run `install.sh`
-- [ ] New skill created? → Remind the user that `install.sh` discovers automatically via `skills/*/SKILL.md` (no script edits needed)
-- [ ] `AGENTS.md` changed? → Notify users to copy it again
+- [ ] Template skill changed in `templates/skills/`? → Remind user to run `install.sh`
+- [ ] New skill under `templates/skills/`? → Remind user `install.sh` discovers via `templates/skills/*/SKILL.md`
+- [ ] `templates/AGENTS.md` changed? → Notify re-copy to projects
+- [ ] Root meta `AGENTS.md` changed? → Keep short; no consumer install impact
 - [ ] Wiki page added/removed? → Update `wiki/index.md`
 - [ ] Breaking change? → Document in README.md
 
-## Common Errors
+## Common errors
 
 | Error | Consequence | Fix |
 |---|---|---|
-| Editing installed skill | Loss on next installation | Edit the template |
-| Editing `AGENTS.md` without request | Possible workflow breakage | Ask the user |
-| Not running `install.sh` after editing template | Installed skill is outdated | Remind the user to run after editing |
-| Copying `wiki/` between workspaces | Incorrect knowledge in target workspace | Each workspace creates its own |
+| Editing installed skill | Loss on next install | Edit `templates/skills/` |
+| Treating `templates/AGENTS.md` as live policy here | Wrong boot semantics in distribution work | Use root meta; edit templates only as product source |
+| Editing any `AGENTS.md` without request | Workflow breakage | Ask the user |
+| Not re-installing after skill template edit | Stale runtime skills | Remind user to run `install.sh` |
+| Copying `wiki/` between workspaces | Wrong knowledge in target | Each workspace owns its wiki |
