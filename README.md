@@ -8,41 +8,15 @@ Designed to create a professional workflow with dynamic team assembly of special
 
 Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
-**This repository is a template distribution.** Installable source lives under `templates/` (`templates/skills/` for skills, `templates/AGENTS.md` for the workspace boot-policy template). Those files become live operational contracts only after you install skills and copy `AGENTS.md` into a project. The root `AGENTS.md` in *this* repo is meta guidance for maintaining the distribution — not the consumer boot policy.
+**This repository is a template distribution.** Installable source lives under `templates/` (`templates/skills/` for skills, `templates/AGENTS.md` for the boot-policy template). Those files become live operational contracts after you run the installer (skills + global boot policy). The root `AGENTS.md` in *this* repo is meta guidance for maintaining the distribution — not the consumer boot policy.
 
 ## Quick Start
 
-### Manual
+### Use the installer (recommended)
 
-No script needed — just copy the files where they belong.
+One-time setup. Installs **skills** and the **boot policy** globally for each selected tool. The agent loads only what each task needs.
 
-**Copy `templates/AGENTS.md` into your workspace:**
-
-```bash
-cp templates/AGENTS.md /path/to/your-project/
-```
-
-**Copy `templates/skills/` to your global skills path:**
-
-| Tool | Skills path |
-|---|---|
-| OpenCode | `~/.config/opencode/skills/` |
-| Claude Code | `~/.claude/skills/` |
-| Copilot | `~/.copilot/skills/` |
-
-```bash
-cp -r templates/skills/* ~/.config/opencode/skills/
-```
-
-**Install agents from The Agency (Optional, but recommeded):**
-
-[Follow the instructions from their repository](https://github.com/msitarzewski/agency-agents)
-
-### Or use the installer (convenience)
-
-One-time setup. The agent loads only what each task needs.
-
-The installer **always downloads GitHub `main.zip`** and installs from `templates/skills` inside that archive. It does **not** install skills from your local working tree — even if you run `./tools/install.sh` from a clone. For local WIP, use the manual `cp` steps above.
+The installer **always downloads GitHub `main.zip`** and installs from `templates/` inside that archive. It does **not** install from your local working tree — even if you run `./tools/install.sh` from a clone. For local WIP, use the manual `cp` steps below.
 
 **Via curl:**
 
@@ -57,6 +31,22 @@ git clone https://github.com/wcgomes/agents-workspace.git
 cd agents-workspace
 ./tools/install.sh
 ```
+
+#### What gets installed
+
+| Artifact | Source | Destinations (global) |
+|---|---|---|
+| Skills | `templates/skills/` | Per-tool skill dirs (see table below) |
+| Boot policy | `templates/AGENTS.md` | Per-tool global instruction file (marker-upsert) |
+
+Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-workspace:end -->` markers. Re-running the installer replaces only that block; content outside the markers is preserved. Copilot uses a dedicated instructions file (full replace is safe).
+
+| Tool | Skills path | Boot policy path |
+|---|---|---|
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/AGENTS.md` |
+| Claude Code | `~/.claude/skills/` | `~/.claude/CLAUDE.md` |
+| Copilot | `~/.copilot/skills/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/GEMINI.md` |
 
 #### Installer options
 
@@ -95,16 +85,30 @@ curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/i
 
 See [🎭 The Agency](https://github.com/msitarzewski/agency-agents) for details on each division.
 
+### Manual install (local WIP)
+
+```bash
+# Skills (example: OpenCode)
+cp -r templates/skills/* ~/.config/opencode/skills/
+
+# Boot policy — append/replace the managed marker block in the tool's global file
+# (see destinations table above). Prefer re-running install.sh when possible.
+```
+
+**Install agents from The Agency (optional, but recommended):**
+
+[Follow the instructions from their repository](https://github.com/msitarzewski/agency-agents)
+
 ### Supported tools
 
 These are the installer target paths currently supported. They are not the normative discovery contract; runtime discovery should remain source-based and platform-aware.
 
-| Tool | Skills path | Agents path |
-|---|---|---|
-| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` |
-| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
-| Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
-| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
+| Tool | Skills path | Agents path | Boot policy path |
+|---|---|---|---|
+| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` | `~/.gemini/GEMINI.md` |
+| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` | `~/.claude/CLAUDE.md` |
+| Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` | `~/.config/opencode/AGENTS.md` |
 
 ## Workflow details
 
@@ -132,18 +136,23 @@ Skills load **on-demand**: `wiki` for context first, then `orchestrate` for plan
 ```
 # This repository (template distribution)
 AGENTS.md              # Meta only — guidance for working ON this distribution (not consumer boot policy)
-tools/install.sh       # Downloads main.zip; installs templates/skills from archive (not local tree)
+tools/install.sh       # Downloads main.zip; installs skills + global boot policy from archive
 wiki/                  # Knowledge about this product (distribution maintainers / agents here)
-templates/             # SOURCE for install/copy — not live until installed/copied
-  AGENTS.md            # Consumer boot-policy TEMPLATE — copy to each project root
+templates/             # SOURCE for install — not live until installed
+  AGENTS.md            # Boot-policy TEMPLATE — installed globally (marker-upsert) via install.sh
   skills/              # Skill source of truth — install globally via install.sh
     orchestrate/       # Full coordination cycle: assemble, delegate, review, synthesize
     wiki/              # Wiki query and self-learning loop
     skill-builder/     # Skill authoring and validation
     spec-builder/      # Spec-driven workflow: durable behavior contracts
 
-# In your project workspace (after install + copy)
-AGENTS.md              # Live boot policy (copied from templates/AGENTS.md)
+# After install (global, per tool)
+~/.config/opencode/AGENTS.md   # OpenCode global rules (managed marker block)
+~/.claude/CLAUDE.md            # Claude Code user instructions (managed marker block)
+~/.gemini/GEMINI.md            # Antigravity / Gemini CLI global context (managed marker block)
+~/.copilot/instructions/...    # Copilot user instructions (dedicated file)
+
+# In your project workspace
 wiki/                  # Workspace knowledge — created on setup/first ingest, then maintained automatically
   index.md
   architecture.md
@@ -152,4 +161,5 @@ wiki/                  # Workspace knowledge — created on setup/first ingest, 
   decisions/
 specs/                 # Durable behavior contracts — when spec-builder is used
 .agents/skills/        # Workspace-local skills (explicit creation)
+# Optional: project-root AGENTS.md / CLAUDE.md for project-specific rules (layers with global)
 ```

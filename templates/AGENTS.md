@@ -1,5 +1,4 @@
-# AGENTS.md
-
+<!-- agents-workspace:start -->
 ## The One Rule
 
 **The main agent never does the work. It delegates every unit of work to a subagent.**
@@ -39,3 +38,4 @@ Be concise when speaking to the user. Say what matters, skip the rest. No preamb
 1. **User instructions** — highest.
 2. **Active skills** — mandatory when loaded; detail the workflow.
 3. **This file** — the operating mode. The One Rule is never overridden by skills, only by an explicit user instruction.
+<!-- agents-workspace:end -->

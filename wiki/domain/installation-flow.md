@@ -1,115 +1,92 @@
-# Installation Flow
+# Installation flow
 
-> What `install.sh` does, what it does **not** install, where artifacts land, how to update.
+> How consumers get skills and boot policy onto their machines. Source of truth is under `templates/` in the published archive.
 
-> **Agent rule:** Never run `install.sh` automatically. After template skill edits, only remind the user to run it manually.
+## Summary
 
-## Overview
+This repository is a **template distribution**. The installer installs **skills** and **boot policy** whose sources of truth are `templates/skills/` and `templates/AGENTS.md` (inside the published archive). It does **not** create a consumer `wiki/`.
 
-This repository is a **template distribution**. The installer installs **skills** whose source of truth is `templates/skills/` (inside the published archive). It does **not** install `AGENTS.md` or create a consumer `wiki/`.
+## Always from GitHub `main`
 
-1. **Installs agents-workspace skills** — `SKILL.md` from each entry under `templates/skills/` in **GitHub `main`**.
-2. **Optionally installs agency-agents** — specialists from [agency-agents](https://github.com/msitarzewski/agency-agents).
+```text
+curl/install.sh or ./tools/install.sh
+        │
+        ▼
+  download agents-workspace main.zip
+        │
+        ▼
+  templates/skills  ──►  global skill dirs per tool
+  templates/AGENTS.md ──► global instruction files (marker-upsert)
+        │
+        ▼
+  (optional) download agency-agents + their install
+```
 
-> **Always zip-from-main:** `install.sh` always downloads `main.zip` from GitHub. Running `./tools/install.sh` from a local clone does **not** install the working tree. Uncommitted / branch WIP: copy manually (see [Local WIP](#local-wip)).
+Even when run from a local clone, **local WIP is not installed**. For local testing, copy manually from `templates/`.
 
-## How to install
-
-**Via curl (recommended):**
+## Installer entry points
 
 ```bash
+# Remote one-liner
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
-```
 
-**Or clone and run the script** (still installs published `main`, not your tree):
-
-```bash
-git clone https://github.com/wcgomes/agents-workspace.git
-cd agents-workspace
+# From a clone (still installs published main, not the working tree)
 ./tools/install.sh
+./tools/install.sh --opencode
+./tools/install.sh --all --no-agency
+./tools/install.sh --list
 ```
 
-## What the installer does
+## What is installed
 
-```
-1. Download agents-workspace main.zip from GitHub (always — even from a clone)
-2. Extract; use path templates/skills inside the archive
-3. For each selected platform:
-   a. Create skills directory (e.g. ~/.config/opencode/skills/)
-   b. Copy each templates/skills/<name>/SKILL.md → <platform>/skills/<name>/SKILL.md
-4. (Optional) Download and install agency-agents (also via zip)
-5. Clean up temporary directory
-```
+| Source | Destination | Method |
+|---|---|---|
+| `templates/skills/*` | Per-tool global skills dirs | Copy `SKILL.md` trees |
+| `templates/AGENTS.md` | Per-tool global instruction file | Marker-upsert (or dedicated Copilot file) |
+| Repo root `AGENTS.md` | — | Distribution-only meta — not for consumers |
+| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh` |
 
-Archive path used by the script: `templates/skills` (not repo-root `skills/`).
+### Skills destinations
 
-## Local WIP
+| Tool | Skills path |
+|---|---|
+| OpenCode | `~/.config/opencode/skills/` |
+| Claude Code | `~/.claude/skills/` |
+| Copilot | `~/.copilot/skills/` |
+| Antigravity | `~/.gemini/antigravity/skills/` |
 
-To try skills from your working tree before they are on `main`:
+### Boot policy destinations
+
+| Tool | Boot policy path |
+|---|---|
+| OpenCode | `~/.config/opencode/AGENTS.md` |
+| Claude Code | `~/.claude/CLAUDE.md` |
+| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Antigravity | `~/.gemini/GEMINI.md` |
+
+Managed block markers: `<!-- agents-workspace:start -->` … `<!-- agents-workspace:end -->`.
+
+## Re-install / upgrade
+
+Run the installer again. Overwrites global skills from our template and upserts the managed boot-policy block.
+
+**Preserved:** consumer `wiki/`, `.agents/skills/`, project-root instruction files, content **outside** managed markers in global instruction files.
+
+**Overwritten:** global skills under platform paths; managed marker block; Copilot dedicated instructions file; global agents from agency-agents when installed.
+
+## Consumer first-time checklist
+
+1. Run `install.sh` (skills + global boot policy).
+2. Optionally install agency-agents divisions.
+3. Create/maintain workspace `wiki/` on first real work.
+4. Work — skills load on demand from the global install; boot policy loads from the tool global file.
+
+## Local WIP (developers of this distribution)
 
 ```bash
 cp -r templates/skills/* ~/.config/opencode/skills/
-# or the target platform path — only SKILL.md is required per skill
+# Boot policy: re-run a patched installer or manually upsert the marker block
+# into the destinations above.
 ```
 
-Do not expect `./tools/install.sh` to pick up local edits.
-
-## What is NOT installed
-
-| Artifact | How consumers get it |
-|---|---|
-| `templates/AGENTS.md` | Manual copy to project root |
-| Repo root `AGENTS.md` | Distribution-only meta — not for consumers |
-| `wiki/` | Created per workspace (setup / first ingest) |
-| Skill `references/`, `scripts/`, etc. | Not copied — only `SKILL.md` |
-
-## Installer options
-
-| Flag | Description |
-|---|---|
-| `--all` | All detected platforms (default) |
-| `--opencode` | OpenCode only |
-| `--claude` | Claude Code only |
-| `--copilot` | Copilot only |
-| `--no-agency` | Skip agency-agents |
-| `--division <list>` | Agency divisions (comma-separated) |
-| `--list` | List available skills |
-| `--help` | Help |
-
-## Installation paths
-
-| Platform | Skills | Agents |
-|---|---|---|
-| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` |
-| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
-| Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
-| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` (unified) |
-
-## How to update
-
-Run the installer again. Only global skills/agents are overwritten.
-
-```bash
-curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
-```
-
-**Preserved:** consumer `wiki/`, `.agents/skills/`, workspace `AGENTS.md` (never touched by install).
-
-**Overwritten:** global skills under platform paths; global agents from agency-agents when installed.
-
-## After installation
-
-1. Copy the boot-policy template into each project:
-
-   ```bash
-   cp templates/AGENTS.md /path/to/your-project/
-   ```
-
-   (From a clone; or download that file from the repo.)
-
-2. Create or let the agent create `wiki/` on first ingest.
-3. Work — skills load on demand from the global install.
-
-## Agency-Agents
-
-By default the installer also pulls specialists from [agency-agents](https://github.com/msitarzewski/agency-agents). Use `--no-agency` to skip. `orchestrate` discovers them for team assembly.
+Never treat the distribution repo's root `AGENTS.md` as consumer boot policy.

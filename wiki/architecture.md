@@ -7,28 +7,30 @@
 | Context | What is "live" |
 |---|---|
 | **Distribution repo** (agents-workspace) | Root meta `AGENTS.md`, this `wiki/`, source under `templates/` |
-| **Consumer workspace** | Copied `AGENTS.md`, local `wiki/`, skills loaded from global install |
+| **Consumer session** | Tool global boot policy (from install), local `wiki/`, skills from global install |
 
-`templates/` is source for install/copy — not the operational contract of a consumer until installed/copied.
+`templates/` is source for install — not the operational contract until installed.
 
 ## Layers
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Consumer Workspace                                 │
-│  ├── AGENTS.md          (boot policy — from template)│
 │  ├── wiki/              (local knowledge)           │
-│  └── .agents/skills/    (workspace-local skills)    │
+│  ├── .agents/skills/    (workspace-local skills)    │
+│  └── (optional project AGENTS.md / CLAUDE.md)       │
 └──────────────────────┬──────────────────────────────┘
-                       │ loads skills from
+                       │ loads skills + boot policy from
                        ▼
 ┌─────────────────────────────────────────────────────┐
-│  Global Installation (~/.config/opencode/skills/)   │
-│  ├── orchestrate/SKILL.md                           │
-│  ├── wiki/SKILL.md                                  │
-│  ├── skill-builder/SKILL.md                         │
-│  ├── spec-builder/SKILL.md                          │
-│  └── ... (agency-agents: 144+ specialists)          │
+│  Global Installation                                │
+│  ├── skills/ (per tool)                             │
+│  │   ├── orchestrate/, wiki/, skill-builder/, ...   │
+│  └── boot policy (per tool, marker-upsert)          │
+│      OpenCode ~/.config/opencode/AGENTS.md          │
+│      Claude   ~/.claude/CLAUDE.md                   │
+│      Copilot  ~/.copilot/instructions/...           │
+│      Gemini   ~/.gemini/GEMINI.md                   │
 └──────────────────────┬──────────────────────────────┘
                        │ install.sh copies from
                        ▼
@@ -38,19 +40,15 @@
 │  ├── wiki/                  (product knowledge)     │
 │  ├── tools/install.sh                               │
 │  └── templates/                                     │
-│      ├── AGENTS.md          (consumer boot template)│
+│      ├── AGENTS.md          (boot-policy template)  │
 │      └── skills/            (skill source of truth) │
-│          ├── orchestrate/                           │
-│          ├── wiki/                                  │
-│          ├── skill-builder/                         │
-│          └── spec-builder/                          │
 └─────────────────────────────────────────────────────┘
 ```
 
 ## Data flow (consumer session)
 
 1. **User** makes a request in a consumer workspace.
-2. **Main agent** reads workspace `AGENTS.md` → `wiki/index.md` → loads `orchestrate`.
+2. **Main agent** follows global boot policy → reads `wiki/index.md` → loads `orchestrate`.
 3. **Orchestrate** discovers specialists, assembles a team, delegates via handoffs.
 4. **Specialists** execute scope directly (marker `[HANDOFF FROM COORDINATOR]`).
 5. **Main agent** reviews, synthesizes, and ingests learnings into that workspace's `wiki/`.
@@ -60,8 +58,8 @@
 | Component | Location | Function | Editable? |
 |---|---|---|---|
 | Root `AGENTS.md` | Distribution repo root | Meta for developing the distribution | Yes — keep short |
-| `templates/AGENTS.md` | Distribution `templates/` | Consumer boot-policy template | Yes — source; remind re-copy |
-| Consumer `AGENTS.md` | Consumer workspace root | Live boot policy | Yes, when requested |
+| `templates/AGENTS.md` | Distribution `templates/` | Boot-policy template | Yes — source; remind re-install |
+| Installed boot policy | Per-tool global instruction file | Live boot policy | **No** managed block — re-run `install.sh` |
 | `templates/skills/` | Distribution | Versioned skill source | Yes — source of truth |
 | Installed skills | `~/.config/opencode/skills/` (etc.) | Runtime artifacts | **No** — re-run `install.sh` |
 | `wiki/` | Each workspace (incl. this repo) | Local knowledge | Yes — agent-maintained |

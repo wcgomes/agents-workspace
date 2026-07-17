@@ -15,9 +15,10 @@ When the user asks to modify, update, fix, or create a skill, they mean the sour
 |---|---|---|
 | `templates/skills/<name>/SKILL.md` | **Yes** | Source of truth; remind `install.sh` |
 | `~/.config/opencode/skills/` (installed) | **Never** | Edit template + re-install |
-| `templates/AGENTS.md` | **Yes, when requested** | Consumer boot template; remind re-copy |
+| `templates/AGENTS.md` | **Yes, when requested** | Boot-policy template; remind re-run `install.sh` |
 | Repo root `AGENTS.md` | **Yes, when requested** | Meta for this distribution only; keep short |
-| Consumer workspace `AGENTS.md` | **Yes, when requested** | Only with explicit user instruction in that project |
+| Installed global boot-policy files | **Never** (managed block) | Edit template + re-install |
+| Optional project-root AGENTS.md | **Yes, when requested** | Project-local layer only |
 | `wiki/` (any workspace) | **Yes** | Agent-maintained knowledge |
 | `.agents/skills/` (consumer) | **Yes** | Workspace-local skills |
 
@@ -52,18 +53,20 @@ After skill edits:
 After `templates/AGENTS.md` edits:
 
 ```bash
-cp templates/AGENTS.md /path/to/your-project/
+./tools/install.sh
 ```
 
-> The agent **never** runs `install.sh` or mass-copies `AGENTS.md` automatically.
+(Upserts the managed marker block into each tool's global instruction file.)
 
-### AGENTS.md — three files, three intents
+> The agent **never** runs `install.sh` automatically.
+
+### AGENTS.md — template, meta, and installed
 
 | Path | Intent |
 |---|---|
-| `templates/AGENTS.md` | Product boot policy for consumers |
+| `templates/AGENTS.md` | Product boot policy source for consumers |
 | Repo root `AGENTS.md` | Meta for agents working **in** agents-workspace |
-| Consumer project root | Live policy for that project |
+| Tool global files (after install) | Live boot policy across projects |
 
 Do not treat `templates/AGENTS.md` as the live session policy while developing this distribution. Do not edit any `AGENTS.md` unless the user asked (or the task clearly targets that file).
 
@@ -92,7 +95,7 @@ When changing the distribution repository:
 
 - [ ] Template skill changed in `templates/skills/`? → Remind user to run `install.sh`
 - [ ] New skill under `templates/skills/`? → Remind user `install.sh` discovers via `templates/skills/*/SKILL.md`
-- [ ] `templates/AGENTS.md` changed? → Notify re-copy to projects
+- [ ] `templates/AGENTS.md` changed? → Notify re-run `install.sh` (global marker-upsert)
 - [ ] Root meta `AGENTS.md` changed? → Keep short; no consumer install impact
 - [ ] Wiki page added/removed? → Update `wiki/index.md`
 - [ ] Breaking change? → Document in README.md

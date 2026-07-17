@@ -3,8 +3,12 @@
 # install.sh -- Install agents-workspace + agency-agents skills into your AI tools
 #
 # Always downloads GitHub main.zip (never installs from the local working tree).
-# Installs skills from templates/skills inside the archive to OpenCode, Claude Code,
-# Antigravity, and Copilot.
+# Installs skills from templates/skills and boot policy from templates/AGENTS.md
+# inside the archive to OpenCode, Claude Code, Antigravity, and Copilot.
+#
+# Boot policy is installed to each tool's global instruction file, upserted between
+# <!-- agents-workspace:start --> and <!-- agents-workspace:end --> markers so
+# existing user content outside the block is preserved.
 #
 # Usage:
 #   ./install.sh [--opencode|--claude|--copilot|--all] [--division <list>] [--list] [--help]
@@ -19,6 +23,8 @@ REPO_NAME="agents-workspace-main"
 AGENCY_REPO_URL="https://github.com/msitarzewski/agency-agents/archive/refs/heads/main.zip"
 AGENCY_REPO_NAME="agency-agents-main"
 ALL_TOOLS=(opencode claude copilot antigravity)
+MARKER_START="<!-- agents-workspace:start -->"
+MARKER_END="<!-- agents-workspace:end -->"
 
 if [[ -t 1 && -z "${NO_COLOR:-}" && "${TERM:-}" != "dumb" ]]; then
   C_GREEN='\033[0;32m'
@@ -49,6 +55,16 @@ Options:
   --no-agency         Skip agency-agents installation
   --list              List available skills without installing
   --help              Show this help
+
+Installs for each selected tool:
+  - Skills from templates/skills (global skill dirs)
+  - Boot policy from templates/AGENTS.md (global instruction files, marker-upsert)
+
+Global boot policy destinations:
+  OpenCode      ~/.config/opencode/AGENTS.md
+  Claude Code   ~/.claude/CLAUDE.md
+  Copilot       ~/.copilot/instructions/agents-workspace.instructions.md
+  Antigravity   ~/.gemini/GEMINI.md
 
 Examples:
   install.sh              # Interactive mode
@@ -86,6 +102,118 @@ tool_label() {
     copilot)     printf "%-12s  %s" "Copilot"     "~/.copilot/skills"            ;;
     antigravity) printf "%-12s  %s" "Antigravity"  "~/.gemini/antigravity/skills"   ;;
   esac
+}
+
+# Global boot-policy file per tool (docs-aligned).
+boot_policy_dest() {
+  case "$1" in
+    opencode)    echo "${HOME}/.config/opencode/AGENTS.md" ;;
+    claude)      echo "${HOME}/.claude/CLAUDE.md" ;;
+    copilot)     echo "${HOME}/.copilot/instructions/agents-workspace.instructions.md" ;;
+    antigravity) echo "${HOME}/.gemini/GEMINI.md" ;;
+    *)           return 1 ;;
+  esac
+}
+
+# Ensure template body is wrapped in managed markers.
+ensure_marked_block() {
+  local src="$1"
+  local out="$2"
+  local body
+  body="$(cat "$src")"
+
+  if grep -qF "$MARKER_START" <<<"$body" && grep -qF "$MARKER_END" <<<"$body"; then
+    printf '%s\n' "$body" > "$out"
+  else
+    {
+      printf '%s\n' "$MARKER_START"
+      printf '%s\n' "$body"
+      printf '%s\n' "$MARKER_END"
+    } > "$out"
+  fi
+}
+
+# Upsert managed block into dest. Returns: created | updated | appended | replaced
+upsert_marked_block() {
+  local dest="$1"
+  local block_file="$2"
+  local dest_dir
+  dest_dir="$(dirname "$dest")"
+  mkdir -p "$dest_dir"
+
+  if [[ ! -f "$dest" ]]; then
+    cp "$block_file" "$dest"
+    echo "created"
+    return 0
+  fi
+
+  if grep -qF "$MARKER_START" "$dest" && grep -qF "$MARKER_END" "$dest"; then
+    local tmp
+    tmp="$(mktemp)"
+    awk -v start="$MARKER_START" -v end="$MARKER_END" -v bf="$block_file" '
+      BEGIN {
+        while ((getline line < bf) > 0) {
+          block = block line ORS
+        }
+        close(bf)
+        mode = "before"
+      }
+      index($0, start) && mode == "before" {
+        printf "%s", block
+        mode = "skip"
+        next
+      }
+      index($0, end) && mode == "skip" {
+        mode = "after"
+        next
+      }
+      mode != "skip" { print }
+    ' "$dest" > "$tmp"
+    mv "$tmp" "$dest"
+    echo "updated"
+    return 0
+  fi
+
+  {
+    printf '\n'
+    cat "$block_file"
+  } >> "$dest"
+  echo "appended"
+}
+
+# Install boot policy for one tool. Prints "ok" or "skip".
+install_boot_policy() {
+  local tool="$1"
+  local template="$2"
+  local dest block_file status
+  dest="$(boot_policy_dest "$tool")" || return 1
+
+  block_file="$(mktemp)"
+  ensure_marked_block "$template" "$block_file"
+
+  # Copilot expects *.instructions.md with applyTo frontmatter.
+  if [[ "$tool" == "copilot" ]]; then
+    local copilot_block
+    copilot_block="$(mktemp)"
+    {
+      printf '%s\n' '---'
+      printf '%s\n' "name: 'agents-workspace'"
+      printf '%s\n' "description: 'Agents Workspace boot policy (managed by install.sh)'"
+      printf '%s\n' "applyTo: '**'"
+      printf '%s\n' '---'
+      cat "$block_file"
+    } > "$copilot_block"
+    # Dedicated managed file — full replace is safe.
+    mkdir -p "$(dirname "$dest")"
+    cp "$copilot_block" "$dest"
+    rm -f "$block_file" "$copilot_block"
+    echo "replaced"
+    return 0
+  fi
+
+  status="$(upsert_marked_block "$dest" "$block_file")"
+  rm -f "$block_file"
+  echo "$status"
 }
 
 install_opencode_ours() {
@@ -371,8 +499,13 @@ main() {
   fi
 
   local src="${tmp_dir}/${REPO_NAME}/templates/skills"
+  local agents_template="${tmp_dir}/${REPO_NAME}/templates/AGENTS.md"
   if [[ ! -d "$src" ]]; then
     err "Skills directory not found in agents-workspace archive."
+    exit 1
+  fi
+  if [[ ! -f "$agents_template" ]]; then
+    err "Boot policy template not found: templates/AGENTS.md"
     exit 1
   fi
 
@@ -417,6 +550,10 @@ main() {
   local our_count_claude=0
   local our_count_copilot=0
   local our_count_antigravity=0
+  local boot_status_opencode=""
+  local boot_status_claude=""
+  local boot_status_copilot=""
+  local boot_status_antigravity=""
 
   for t in "${selected_tools[@]}"; do
     case "$t" in
@@ -425,6 +562,25 @@ main() {
       copilot)    our_count_copilot=$(install_copilot_ours "$src")     ;;
       antigravity) our_count_antigravity=$(install_antigravity_ours "$src")   ;;
     esac
+  done
+
+  echo ""
+  echo "=============================================="
+  echo "  Installing boot policy (global)..."
+  echo "=============================================="
+  echo ""
+
+  for t in "${selected_tools[@]}"; do
+    local status dest_disp
+    status="$(install_boot_policy "$t" "$agents_template")"
+    case "$t" in
+      opencode)    boot_status_opencode="$status" ;;
+      claude)      boot_status_claude="$status" ;;
+      copilot)     boot_status_copilot="$status" ;;
+      antigravity) boot_status_antigravity="$status" ;;
+    esac
+    dest_disp="$(boot_policy_dest "$t" | sed "s|^${HOME}|~|")"
+    ok "boot policy ($status) -> $dest_disp"
   done
 
   local agency_tmp_zip="${tmp_dir}/agency.zip"
@@ -469,7 +625,7 @@ main() {
   echo "=============================================="
   echo ""
 
-  echo "  install.sh:"
+  echo "  skills:"
   for t in "${selected_tools[@]}"; do
     local count=0
     local dest=""
@@ -492,6 +648,20 @@ main() {
         ;;
     esac
     ok "$count skills -> $dest"
+  done
+
+  echo ""
+  echo "  boot policy (global, marker-upsert):"
+  for t in "${selected_tools[@]}"; do
+    local bdest bstatus="?"
+    bdest="$(boot_policy_dest "$t" | sed "s|^${HOME}|~|")"
+    case "$t" in
+      opencode)    bstatus="$boot_status_opencode" ;;
+      claude)      bstatus="$boot_status_claude" ;;
+      copilot)     bstatus="$boot_status_copilot" ;;
+      antigravity) bstatus="$boot_status_antigravity" ;;
+    esac
+    ok "${bstatus:-?} -> $bdest"
   done
 
   if $skip_agency; then
