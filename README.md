@@ -8,7 +8,9 @@ Designed to create a professional workflow with dynamic team assembly of special
 
 Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
-**This repository is a template distribution.** Installable source lives under `templates/` (`templates/skills/` for skills, `templates/AGENTS.md` for the boot-policy template). Those files become live operational contracts after you run the installer (skills + global boot policy). The root `AGENTS.md` in *this* repo is meta guidance for maintaining the distribution — not the consumer boot policy.
+Under the hood, its operating model brings together memory and OKF concepts, subagent-driven development, spec-driven workflows, and agent loops grounded in empirical verification.
+
+**This repository is a template distribution.** Installable source lives under `templates/` (`templates/skills/` for skills, `templates/AGENTS.md` for the boot-policy template). Those files become live operational contracts after you run the installer (skills + global boot policy).
 
 ## Quick Start
 
@@ -60,6 +62,11 @@ Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-
 | `--division <list>` | Install only specific divisions (comma-separated) |
 | `--list` | Show available skills |
 | `--help` | Show help |
+
+#### Using `--no-agency`
+
+You can skip installing the agents completely using `--no-agency` if you already have your own curated team!
+Only the skills and bootstrap contract will be installed.
 
 #### Using `--division`
 
