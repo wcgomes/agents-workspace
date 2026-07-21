@@ -216,6 +216,40 @@ install_boot_policy() {
   echo "$status"
 }
 
+# Ensure all agent .md files have "mode: subagent" in their frontmatter.
+ensure_subagent_mode() {
+  local agents_dir="$1"
+  [[ -d "$agents_dir" ]] || return 0
+  local count=0
+  for f in "$agents_dir"/*.md; do
+    [[ -f "$f" ]] || continue
+    head -1 "$f" | grep -q '^---$' || continue
+    if awk '
+      BEGIN { found=0 }
+      /^---$/ { n++; if(n==2) exit found }
+      n==1 && /^mode:/ { found=1 }
+      END { exit !found }
+    ' "$f" 2>/dev/null; then
+      continue
+    fi
+    awk '
+      BEGIN { n=0 }
+      /^---$/ {
+        n++
+        if (n == 2) {
+          print "mode: subagent"
+          print ""
+        }
+      }
+      { print }
+    ' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+    (( count++ )) || true
+  done
+  if (( count > 0 )); then
+    info "Added mode: subagent to $count agent(s)"
+  fi
+}
+
 install_opencode_ours() {
   local src="$1"
   local dest_base="${HOME}/.config/opencode/skills"
@@ -309,6 +343,7 @@ install_agency_tool() {
         [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
         "${install_cmd[@]}" 2>/dev/null || success=false
         if [[ -d ".opencode/agents" && -n "$(ls -A .opencode/agents 2>/dev/null)" ]]; then
+          ensure_subagent_mode ".opencode/agents"
           info "Moving agents to global location..."
           mkdir -p "${HOME}/.config/opencode/agents"
           mv .opencode/agents/*.md "${HOME}/.config/opencode/agents/" 2>/dev/null || true
