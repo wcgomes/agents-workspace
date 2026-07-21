@@ -18,6 +18,7 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 7. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan.
 8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
 9. **Dispatch rationale required** — every handoff must name the target agent and its match type (exact, adjacent, or fallback). Fallback handoffs must state why no exact or adjacent specialist was available.
+10. **Spec readiness before implementation** — applies only when a named change/spec path is in scope or an active `specs/changes/<id>/` is clearly in scope for the request; otherwise SDD is N/A and skip this gate. If in scope and `specs/changes/<id>/tasks.md` is missing, do not start implementation handoffs — load `spec-builder`, run plan, then resume orchestration from `tasks.md`. If in scope and `tasks.md` is present, proceed; implementation handoffs MUST include `Spec ref: specs/changes/<id>/`.
 
 ## Phase 1: Analyze Request
 
