@@ -14,7 +14,7 @@ Full coordination cycle: analyze → assemble → delegate → review → synthe
 3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
 4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
 5. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
-6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria.
+6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria. When the outcome has observable behavior and safe, proportionate execution is feasible, verification requires empirical validation through real execution or observation; static inspection alone is insufficient.
 7. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan.
 8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
 9. **Dispatch rationale required** — every handoff must name the target agent and its match type (exact, adjacent, or fallback). Fallback handoffs must state why no exact or adjacent specialist was available.
@@ -225,7 +225,7 @@ Return format: <status + concise summary>
 - Edits: change only files directly related to the task; no drive-by changes
 - Implementation: match existing style, even if you'd write it differently
 - Investigation/debugging: reproduce or verify the issue when feasible before fixing
-- Verification: test or inspect the requested behavior and note any gaps
+- Verification: state the check performed, the observed result, and any gaps
 - All handoffs: self-review before reporting the scope complete
 
 Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
@@ -257,6 +257,10 @@ If `Spec ref:` is present in the handoff, verify conformity against the persiste
 ### Stage 2: Quality
 
 Is it correct, maintainable, and usable for the current task? With multiple delegated outputs: compare against assigned scopes, resolve conflicts, and synthesize a single coherent result before returning upward. Do not pass through raw delegated output without review.
+
+### Stage 3: Evidence
+
+When a done criterion can be verified by exercising the deliverable or observing its effect—not merely by inspecting its content or implementation—and safe, proportionate execution is feasible, obtain delegated empirical evidence through real execution or observation; static inspection may support but does not replace it. Reuse an existing role when its scope and expertise fit. Add a separate verification role only when distinct expertise or independence is needed. `N/A`, `partial`, and `blocked` are evidence states, not statuses: `N/A` means no done criterion calls for empirical validation; `partial` means evidence was obtained for only some applicable criteria; `blocked` means an applicable check could not run. Use `DONE` when all done criteria are satisfied, `DONE_WITH_CONCERNS` for a non-blocking evidence gap, `NEEDS_CONTEXT` while specific, actionable information or access can reasonably be provided to unblock validation, and `BLOCKED` when the gap prevents completion and no actionable path to obtain context or access remains. Report `N/A`, `partial`, or `blocked` when applicable and explain every gap.
 
 ## Status Protocol
 
@@ -303,4 +307,4 @@ Use the format that matches the current phase:
 
 - **Internal assembly state**: discovered specialists (name + domain or sources checked), team roster (role, selected agent, scope, exact/adjacent/fallback rationale), execution plan (parallel groups, sequence, dependencies), and handoff summary. The team roster's match-type rationale is the dispatch authorization — a handoff to an agent not listed as exact or adjacent requires explicit fallback justification in the handoff itself.
 - **User-facing confirmation output**: team roster, execution plan, estimated complexity, and explicit request for approval when a confirmation trigger applies.
-- **Final synthesis**: status, concise summary of reviewed delegated results, files/artifacts changed when relevant, verification performed, and remaining concerns.
+- **Final synthesis**: status, concise summary of reviewed delegated results, files/artifacts changed when relevant, any verification evidence obtained (check and observed result), remaining verification gaps and their causes, the reason when empirical validation is `N/A`, the blocking condition for any check that could not run, and remaining concerns.

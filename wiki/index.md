@@ -18,5 +18,6 @@ Quick-reference index. Find files by keyword.
 ## decisions
 - [0001-adopt-spec-driven-development.md](decisions/0001-adopt-spec-driven-development.md) — adopt spec-builder skill for spec-driven development; specs/ + Spec ref handoff field
 - [0002-templates-layout.md](decisions/0002-templates-layout.md) — installable source under templates/; root AGENTS.md meta; install.sh always zip-from-main
+- [0003-empirical-validation.md](decisions/0003-empirical-validation.md) — empirical validation, delegated execution evidence, observable behavior; orchestrate workflow vs lean AGENTS.md boot policy
 
 > Pages not listed here are invisible to the agent. Update this index when adding wiki pages.
