@@ -255,11 +255,11 @@ install_opencode_ours() {
   local dest_base="${HOME}/.config/opencode/skills"
   local count=0
   mkdir -p "$dest_base"
-  for skill_dir in "$src"/*/SKILL.md; do
-    [[ -f "$skill_dir" ]] || continue
-    local name; name="$(basename "$(dirname "$skill_dir")")"
+  for skill_dir in "$src"/*/; do
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    local name; name="$(basename "$skill_dir")"
     mkdir -p "$dest_base/$name"
-    cp -f "$skill_dir" "$dest_base/$name/SKILL.md"
+    cp -rf "$skill_dir"* "$dest_base/$name/"
     (( count++ )) || true
   done
   echo "$count"
@@ -270,11 +270,11 @@ install_claude_ours() {
   local dest_base="${HOME}/.claude/skills"
   local count=0
   mkdir -p "$dest_base"
-  for skill_dir in "$src"/*/SKILL.md; do
-    [[ -f "$skill_dir" ]] || continue
-    local name; name="$(basename "$(dirname "$skill_dir")")"
+  for skill_dir in "$src"/*/; do
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    local name; name="$(basename "$skill_dir")"
     mkdir -p "$dest_base/$name"
-    cp -f "$skill_dir" "$dest_base/$name/SKILL.md"
+    cp -rf "$skill_dir"* "$dest_base/$name/"
     (( count++ )) || true
   done
   echo "$count"
@@ -285,11 +285,11 @@ install_copilot_ours() {
   local dest_base="${HOME}/.copilot/skills"
   local count=0
   mkdir -p "$dest_base"
-  for skill_dir in "$src"/*/SKILL.md; do
-    [[ -f "$skill_dir" ]] || continue
-    local name; name="$(basename "$(dirname "$skill_dir")")"
+  for skill_dir in "$src"/*/; do
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    local name; name="$(basename "$skill_dir")"
     mkdir -p "$dest_base/$name"
-    cp -f "$skill_dir" "$dest_base/$name/SKILL.md"
+    cp -rf "$skill_dir"* "$dest_base/$name/"
     (( count++ )) || true
   done
   echo "$count"
@@ -300,11 +300,11 @@ install_antigravity_ours() {
   local dest_base="${HOME}/.gemini/antigravity/skills"
   local count=0
   mkdir -p "$dest_base"
-  for skill_dir in "$src"/*/SKILL.md; do
-    [[ -f "$skill_dir" ]] || continue
-    local name; name="$(basename "$(dirname "$skill_dir")")"
+  for skill_dir in "$src"/*/; do
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    local name; name="$(basename "$skill_dir")"
     mkdir -p "$dest_base/$name"
-    cp -f "$skill_dir" "$dest_base/$name/SKILL.md"
+    cp -rf "$skill_dir"* "$dest_base/$name/"
     (( count++ )) || true
   done
   echo "$count"
