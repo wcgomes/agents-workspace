@@ -1,17 +1,17 @@
 ---
 name: wiki
-description: Use this skill when querying workspace knowledge before tasks or ingesting learnings after completing work. Self-learning loop for the workspace.
+description: Use this skill when querying workspace knowledge before tasks or running mandatory post-review ingest evaluation and conditional wiki ingestion. Self-learning loop for the workspace.
 ---
 
 # Wiki
 
-Workspace knowledge base and self-improvement loop. The coordinator queries wiki before broad exploration; ingest learnings after every task.
+Workspace knowledge base and self-improvement loop. The coordinator queries wiki before broad exploration and evaluates every reviewed task for uncaptured durable knowledge before responding.
 
-The wiki exists to eliminate unnecessary codebase exploration: with the right knowledge the agent goes straight to relevant code; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
+The wiki exists to eliminate unnecessary workspace exploration: with the right knowledge the agent goes straight to relevant context; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
 
 ## <HARD-GATE> Coordinator Context Before Any Task
 
-The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. Specialists use handoff context unless wiki lookup is explicitly needed for their scope.
+The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. Executors use handoff context and never inspect or edit `wiki/` unless wiki work is explicitly part of their scope.
 
 ## Design Principle
 
@@ -39,23 +39,29 @@ Keep it dense. Patterns, conventions, examples — all welcome if compact and ac
 
 **Query** — coordinator reads `wiki/index.md` first to route by descriptions and keywords. Choose the most relevant direct page or folder index, then load only relevant linked pages.
 
-**Ingest** — end of every task, the coordinator evaluates automatically if anything was learned.
+**Ingest** — after domain-appropriate review/verification of every task and before the final response, the coordinator evaluates whether durable workspace knowledge remains uncaptured. Evaluation is mandatory; ingestion dispatch is conditional.
 
-## <HARD-GATE> Auto-Evaluation at End of Task
+## <HARD-GATE> Post-Review Ingest Evaluation
 
-The coordinator runs this checklist at the end of EVERY task. Do NOT skip.
+The coordinator runs this evaluation after review/verification and before the final response for EVERY task, including software, writing, research, design, marketing, operations, and other deliverables. Do NOT skip it.
 
-1. Architectural decision made? → `wiki/decisions/<NNNN-decision-name>.md`
-2. New code pattern or convention? → `wiki/conventions/<pattern-name>.md`
-3. Domain rule clarified or corrected? → `wiki/domain/<rule-name>.md` (descriptive facts; prescriptive contracts go in specs/<domain>/spec.md — specs are the prescriptive source of truth; on spec archive, descriptive counterparts are ingested here — see spec-builder)
-4. System structure insight? → `wiki/architecture.md`
-5. User corrected a misunderstanding? → ingest where relevant
+A **durable discovery** is a workspace-specific fact, decision, constraint, correction, or reusable pattern stable enough to improve future work. Requested task artifacts, generic knowledge, raw logs, and transient evidence are not automatically wiki knowledge. Dispatch is needed only when qualifying knowledge is not already captured correctly in reviewed wiki deliverables.
 
-Any YES → ingest. All NO → skip (but each item must have been evaluated).
+Evaluate the reviewed artifacts and outcomes, verification evidence, user corrections, and any optional executor signal against these questions:
 
-**Wiki vs skill.** Wiki = declarative knowledge (what is true / decided / how the system is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when the content is clearly procedural AND clearly recurring — flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. Check existing skills first — adapt, don't duplicate. One-off or rare → wiki, stay silent. Decisions, architecture facts, domain rules, one-off conventions → always wiki, no signal. When in doubt → wiki, stay silent. Wiki pages may reference workspace skills when relevant; skills stay self-contained and never reference wiki.
+1. Does any workspace-specific decision, rule, constraint, correction, or stable reusable pattern remain uncaptured after reviewing the deliverables?
+2. Does existing wiki knowledge remain stale, duplicated, contradicted, or missing necessary context exposed by the task?
+3. Does a spec archive still require a descriptive counterpart or supersession update?
 
-If the coordinator is prohibited from editing wiki files directly, delegate the wiki edit as a handoff and review the result before final response.
+Any YES → ingest. All NO → skip additional ingestion dispatch, but the evaluation still occurred. The absence of an executor signal never permits the coordinator to skip evaluation.
+
+Executors do not read or edit the wiki unless their handoff explicitly scopes wiki work. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
+
+When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, wiki edits, navigation updates, and consistency lint, and must not alter the task's original deliverables. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
+
+Explicit wiki tasks and broad wiki setup/creation still run this mandatory evaluation. If their reviewed deliverables already captured the durable knowledge correctly, including navigation and consistency, skip redundant ingestion dispatch. Broad setup/creation remains the separate multi-role workflow under **Setup**; post-task ingestion does not replace it.
+
+**Wiki vs skill.** Wiki = durable declarative knowledge (what is true / decided / how the workspace is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when content is clearly procedural AND clearly recurring, flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. Check existing skills first — adapt, don't duplicate. Uncertainty alone is not a reason to ingest; declarative content must still pass the durability and future-use test. Wiki pages may reference workspace skills when relevant; skills stay self-contained and never reference wiki.
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
 
@@ -113,13 +119,13 @@ Do not leave the wiki internally inconsistent after editing it.
 
 | Excuse | Reality |
 |--------|---------|
-| "I didn't learn anything new" | Run the checklist. |
-| "This is too minor to document" | Minor insights compound. |
+| "I didn't learn anything new" | Run the evaluation. |
+| "This is too minor to document" | Size is irrelevant; dispatch only if it is durable and reusable. |
 | "I'll update it later" | You won't. |
-| "Too specific to track" | Track anyway. |
+| "Too specific to track" | Workspace specificity helps only when the knowledge is stable enough to improve future work. |
 | "The log proves it happened" | Distill the insight, not the raw data. |
 
 ## Gotchas
 
 - Pages not reachable from `wiki/index.md` are invisible. Keep root and folder indexes updated when pages are added, moved, or removed — but keep them lean: descriptions and keywords only.
-- Evaluate automatically — don't wait for the user to ask.
+- Evaluation is automatic and mandatory; ingestion is conditional on a durable discovery.

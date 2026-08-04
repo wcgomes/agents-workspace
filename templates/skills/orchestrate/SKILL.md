@@ -1,24 +1,25 @@
 ---
 name: orchestrate
-description: "Use when planning or executing delegated work, including execute-the-plan continuations. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review and synthesize."
+description: "Use when planning or executing delegated work, including execute-the-plan continuations. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review, learn, and synthesize."
 ---
 
 # Orchestrate
 
-Full coordination cycle: analyze → assemble → delegate → review → synthesize.
+Full coordination cycle: analyze → assemble → delegate → review → learn → synthesize.
 
 ## <HARD-GATES>
 
-1. **Coordinator context first** — the main agent obtains lean coordination context before orchestration (`wiki/index.md` first; optional compact knowledge-tool lookups). Specialists use handoff context unless wiki lookup is explicitly needed.
+1. **Coordinator context first** — the main agent obtains lean coordination context before orchestration (`wiki/index.md` first; optional compact knowledge-tool lookups). Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly in scope.
 2. **Roles are mandatory** — if no exact specialist is found, use the best adjacent specialist. Use a generic/default agent only when no exact or adjacent fit exists. Generic/default is the last resort, not a convenience. Never drop or collapse a role from the plan.
 3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
 4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
 5. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
 6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria. When the outcome has observable behavior and safe, proportionate execution is feasible, verification requires empirical validation through real execution or observation; static inspection alone is insufficient.
-7. **Confirm before multi-domain work** — when team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan.
+7. **Confirm before multi-domain work** — when the planned execution team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan. Do not count the conditional post-review ingestion role toward the 3+ threshold unless wiki work is an ordinary planned scope; this exclusion never waives ambiguity, destructive-work, or explicit-approval triggers.
 8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
 9. **Dispatch rationale required** — every handoff must name the target agent and its match type (exact, adjacent, or fallback). Fallback handoffs must state why no exact or adjacent specialist was available.
 10. **Spec readiness before implementation** — applies only when a named change/spec path is in scope or an active `specs/changes/<id>/` is clearly in scope for the request; otherwise SDD is N/A and skip this gate. If in scope and `specs/changes/<id>/tasks.md` is missing, do not start implementation handoffs — load `spec-builder`, run plan, then resume orchestration from `tasks.md`. If in scope and `tasks.md` is present, proceed; implementation handoffs MUST include `Spec ref: specs/changes/<id>/`.
+11. **Post-review wiki evaluation** — after domain-appropriate review/verification and before the final response, the coordinator loads `wiki` and evaluates every task for durable workspace knowledge that remains uncaptured. Evaluation is mandatory; ingestion dispatch is conditional. A positive evaluation opens one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist role; a negative evaluation opens no additional ingestion stream.
 
 ## Phase 1: Analyze Request
 
@@ -172,7 +173,7 @@ Before composing each handoff:
 ## Phase 4.5: User Confirmation (Conditional)
 
 **When to confirm:**
-- Team has 3+ specialists
+- Planned execution team has 3+ specialists, excluding the conditional post-review Wiki Ingestion Specialist role unless wiki work is an ordinary planned scope
 - Scope is ambiguous or has multiple valid interpretations
 - Work is destructive (large refactoring, migration, deletion)
 - User explicitly asked for approval
@@ -197,6 +198,8 @@ Estimated complexity: [single/multi-domain, coordination pattern]
 **Skip confirmation only when:**
 - No confirmation trigger applies
 - User already approved the current team and execution plan
+
+The conditional Stage 4 ingestion role does not independently trigger confirmation by increasing team size. It does not suppress confirmation when its own scope or the original task is ambiguous/destructive, when the user requested approval, or when 3+ ordinary planned specialists remain after the exclusion.
 
 ## Phase 5: Handoff
 
@@ -227,6 +230,7 @@ Return format: <status + concise summary>
 - Implementation: match existing style, even if you'd write it differently
 - Investigation/debugging: reproduce or verify the issue when feasible before fixing
 - Verification: state the check performed, the observed result, and any gaps
+- Wiki boundary: use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly in scope; optionally return at most one trailing `Durable discovery: ...` line for tacit, workspace-specific reusable knowledge not evident in the artifacts
 - All handoffs: self-review before reporting the scope complete
 
 Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
@@ -245,7 +249,7 @@ Good candidates:
 - independent validation or analysis
 - complementary specialists with distinct responsibilities
 
-## Phase 6: Review and Synthesize
+## Phase 6: Review, Learn, and Synthesize
 
 ### Stage 1: Conformance
 
@@ -262,6 +266,14 @@ Is it correct, maintainable, and usable for the current task? With multiple dele
 ### Stage 3: Evidence
 
 When a done criterion can be verified by exercising the deliverable or observing its effect—not merely by inspecting its content or implementation—and safe, proportionate execution is feasible, obtain delegated empirical evidence through real execution or observation; static inspection may support but does not replace it. Reuse an existing role when its scope and expertise fit. Add a separate verification role only when distinct expertise or independence is needed. `N/A`, `partial`, and `blocked` are evidence states, not statuses: `N/A` means no done criterion calls for empirical validation; `partial` means evidence was obtained for only some applicable criteria; `blocked` means an applicable check could not run. Use `DONE` when all done criteria are satisfied, `DONE_WITH_CONCERNS` for a non-blocking evidence gap, `NEEDS_CONTEXT` while specific, actionable information or access can reasonably be provided to unblock validation, and `BLOCKED` when the gap prevents completion and no actionable path to obtain context or access remains. Report `N/A`, `partial`, or `blocked` when applicable and explain every gap.
+
+### Stage 4: Wiki Ingest Evaluation
+
+After Stages 1–3, load `wiki` and run its mandatory ingest evaluation before final synthesis. Ask whether durable workspace knowledge remains uncaptured after the reviewed deliverables. Evaluate the artifacts and outcomes even when no executor supplied a `Durable discovery:` line; that optional signal is only a pointer to tacit knowledge and its absence has no workflow meaning.
+
+If the evaluation is positive, consolidate discoveries across all outputs into one serialized ingestion stream scoped only to the Wiki Ingestion Specialist role. This label defines a role profile, not a literal agent identifier: select the best discovered exact or adjacent specialist under Phase 3, and use generic/default fallback only when neither exists. Never dispatch parallel wiki writers. The owner classifies and deduplicates the knowledge, edits only wiki files, maintains navigation, runs consistency lint, and does not alter original deliverables. Review the result before responding. Retry or correct a failed dispatch, non-complete status, or failed review within the same stream under the normal status protocol; the two-cycle stuck rule remains in force. If the evaluation is negative, do not dispatch ingestion.
+
+Explicit wiki tasks and the multi-role **Wiki Setup / Creation** workflow still undergo evaluation, but skip a redundant post-task stream when their reviewed deliverables already captured all durable knowledge correctly. Post-task ingestion remains distinct from broad wiki construction.
 
 ## Status Protocol
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-06-18)
+Accepted (2026-06-18). Archive-time ingestion routing was superseded by [ADR 0004](0004-serialized-post-review-wiki-ingestion.md).
 
 ## Context
 
@@ -32,7 +32,7 @@ Add a `spec-builder` skill implementing spec-driven development (SDD).
 
 - **Full OpenSpec** (YAML schemas, 25+ commands) — rejected: complexity without return for this template.
 - **spec-kit constitution as a separate file** — rejected: duplicates `wiki/conventions/`. Gates inlined as skill rules instead.
-- **Store specs in `wiki/`** — rejected: wiki is distilled post-hoc knowledge; specs are in-flight contracts. `spec-builder` reads `wiki/conventions/` as guardrails and writes ADRs to `wiki/decisions/` on archive.
+- **Store specs in `wiki/`** — rejected: wiki is distilled post-hoc knowledge; specs are in-flight contracts. At adoption, `spec-builder` executors reported archive decisions without writing the wiki; the coordinator consolidated reports and delegated ingestion. [ADR 0004](0004-serialized-post-review-wiki-ingestion.md) supersedes that routing with mandatory coordinator evaluation and conditional serialized specialist ingestion.
 - **Move SDD logic into `orchestrate`** — rejected: keeps `orchestrate` lean; SDD is optional per task.
 
 ## Consequences

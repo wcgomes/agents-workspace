@@ -29,8 +29,8 @@ Skills are loaded in three progressive stages:
 
 | Skill | Trigger | Function | Source |
 |---|---|---|---|
-| `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, synthesize | `templates/skills/` |
-| `wiki` | Context before tasks, ingestion after | Workspace knowledge base, self-learning | `templates/skills/` |
+| `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, learn, synthesize | `templates/skills/` |
+| `wiki` | Context before tasks; mandatory post-review evaluation and conditional ingestion | Workspace knowledge base, self-learning | `templates/skills/` |
 | `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `templates/skills/` |
 | `spec-builder` | Work needs a durable outcome contract before execution | Specs, proposals, task plans for spec-driven development | `templates/skills/` |
 

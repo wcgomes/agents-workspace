@@ -49,9 +49,10 @@
 
 1. **User** makes a request in a consumer workspace.
 2. **Main agent** follows global boot policy → reads `wiki/index.md` → loads `orchestrate`.
-3. **Orchestrate** discovers specialists, assembles a team, delegates via handoffs.
-4. **Specialists** execute scope directly (marker `[HANDOFF FROM COORDINATOR]`).
-5. **Main agent** reviews, synthesizes, and ingests learnings into that workspace's `wiki/`.
+3. **Orchestrate** discovers specialists, assembles a team, and delegates via handoffs.
+4. **Specialists** execute scope directly (marker `[HANDOFF FROM COORDINATOR]`) and do not access `wiki/` unless wiki work is explicitly in scope.
+5. **Main agent** applies domain-appropriate review and verification, then evaluates every task for uncaptured durable workspace knowledge.
+6. A positive evaluation opens one serialized ingestion stream owned by a wiki-ingestion role; a negative evaluation opens none. The main agent reviews any ingest before final synthesis.
 
 ## Component relationships
 

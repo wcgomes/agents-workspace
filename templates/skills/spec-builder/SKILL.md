@@ -36,7 +36,7 @@ Skip confirmation only when the user explicitly requests a spec.
 - **`[NEEDS CLARIFICATION: ...]` markers are MANDATORY** when ambiguous — never guess. Resolve before `plan` (Lite) or before execution (Full).
 - **No speculative features** ("might need"). Simplicity gate.
 - **Fluid, not waterfall** — see "Evolving a spec mid-work" below.
-- **Wiki writes route through the coordinator:** subagents report learnings/decisions in their return summary; the coordinator consolidates parallel reports and delegates a single wiki update. Wiki reads (e.g. during `propose`) stay inline — no concurrency concern.
+- **Wiki access is explicit:** executors do not inspect or edit the wiki unless wiki work is part of their handoff. The required `propose` query below is explicit read scope. All wiki writes route through the coordinator's mandatory post-review evaluation and, when positive, the consolidated serialized Wiki Ingestion Specialist stream.
 
 ## Structure
 
@@ -115,7 +115,7 @@ Review execution against the **PERSISTED spec**, not just done criteria.
 
 ### `archive`
 Prerequisite: user confirmed archive (see HARD-GATE). If verification passed but no confirmation, ASK and wait — do not proceed.
-Merge delta sections into the source spec: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted. Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`. If a significant decision was involved (architecture for software, strategy for marketing, etc.), **REPORT it to the coordinator** (do not write to wiki directly) — the coordinator consolidates parallel reports and delegates wiki ingest via the `wiki` skill (ADRs go to `wiki/decisions/<NNNN-name>.md`).
+Merge delta sections into the source spec: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted. Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`. **REPORT all added, modified, and removed domain requirements, plus significant decisions, to the coordinator; do not inspect or edit the wiki.** The coordinator evaluates after review and routes any uncaptured required synchronization through the consolidated serialized Wiki Ingestion Specialist stream.
 - **Output:** updated source spec.
 
 ## Evolving a spec mid-work
@@ -149,11 +149,11 @@ If the user requests further changes instead, return to the fluid loop above —
 
 ## Wiki synchronization
 
-Specs (prescriptive, lifecycle-bound) and `wiki/domain/` (descriptive, append-only/stable) are distinct but must agree on what the system is. They are NOT redundant — see the wiki SKILL.md for the canonical distinction.
+Specs (prescriptive, lifecycle-bound) and `wiki/domain/` (descriptive, distilled/stable) are distinct but must agree on what the system is. They are NOT redundant — see the wiki SKILL.md for the canonical distinction.
 
 - **Read-side (`propose`):** `wiki/domain/` is the descriptive source (how the system IS); `specs/<domain>/spec.md` (plus active deltas) is the prescriptive source (how it MUST be). Read both before drafting a delta. If they conflict, flag it as drift to resolve — never silently pick one. Resolution: if the wiki reflects shipped behavior the spec never captured, the spec delta should formalize it; if the wiki is simply stale, queue a wiki update.
-- **Write-side (`archive`):** any domain rule NEW or MODIFIED in the delta MUST be reflected in `wiki/domain/` via the post-task wiki ingest (the coordinator delegates; spec-builder reports the decision, never writes wiki directly). Removed requirements → remove or annotate the corresponding wiki domain page as superseded. Both sources MUST agree post-archive.
-- **Boundary restatement:** specs hold the prescriptive contract and carry the lifecycle (WIP deltas, archived source). `wiki/domain/` holds the distilled descriptive fact and is append-only/stable. On archive, the descriptive counterpart is ingested here.
+- **Write-side (`archive`):** every NEW or MODIFIED domain rule in the delta MUST be reflected in `wiki/domain/`; removed requirements MUST remove or mark the corresponding descriptive fact as superseded. Archive reports these changes without reading or writing the wiki. The coordinator's mandatory post-review evaluation treats uncaptured synchronization as positive and routes it through the consolidated serialized Wiki Ingestion Specialist stream. If dispatch, execution, or review fails, retry/correct within that stream under `orchestrate`'s status protocol; never skip the synchronization silently. Both sources MUST agree before the archive workflow reports `DONE`; unresolved synchronization must be reported as a blocking or concern status, never as success.
+- **Boundary restatement:** specs hold the prescriptive contract and carry the lifecycle (WIP deltas, archived source). `wiki/domain/` holds distilled, stable descriptive facts. On archive, the descriptive counterpart is ingested here.
 
 ## Templates
 

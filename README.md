@@ -124,19 +124,19 @@ These are the installer target paths currently supported. They are not the norma
 3. **Spec-driven workflow (when needed)** — for work needing a durable behavior contract (new features, API/contract changes, migrations), load `spec-builder` before orchestration. Specs live in `specs/` (source spec per domain + `changes/<id>/` deltas); `orchestrate` consumes them via an optional `Spec ref` handoff field and checks conformity during review.
 4. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
 5. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
-6. **Automatic wiki maintenance** — main agent reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after every task. Self-learning loop — no need to ask.
-7. **Auto skill evaluation** — during wiki ingest, the agent evaluates whether content is better suited as a recurring procedural skill rather than declarative wiki knowledge. When clearly procedural and recurring, it flags the user to decide (create a skill with `skill-builder` or keep in wiki) — never auto-creates. High-confidence only; declarative knowledge stays in the wiki.
+6. **Mandatory wiki evaluation, conditional ingestion** — after domain-appropriate review/verification of every task and before the final response, the main agent evaluates whether durable workspace knowledge remains uncaptured. Positive findings enter one consolidated serialized ingestion stream owned by a wiki-ingestion role; negative findings open no additional stream. Explicit wiki tasks avoid redundant dispatch when their reviewed deliverables already captured the knowledge. Executors do not inspect or edit the wiki unless wiki work is explicitly in scope.
+7. **Auto skill evaluation** — during wiki ingest, the agent filling that role evaluates whether content is better suited as a recurring procedural skill rather than durable declarative wiki knowledge. When clearly procedural and recurring, it flags the user to decide (create a skill with `skill-builder` or keep in wiki) — never auto-creates.
 8. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
 9. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
 
 | Mechanism | Skill | What it does |
 |---|---|---|
-| **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review and synthesize. |
-| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration, then evaluates adds, updates, removals, and linting after tasks. |
+| **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review, learning, and synthesis. |
+| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration; mandates post-review evaluation for every task and conditionally opens a consolidated serialized ingestion stream. |
 | **Skill authoring** | `skill-builder` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
 | **Spec-driven workflow** | `spec-builder` | Creates, evolves, and archives durable behavior contracts (`specs/`) before implementation. `orchestrate` consumes via `Spec ref`. |
 
-Skills load **on-demand**: `wiki` for context first, then `orchestrate` for planning or executing delegated work. When work needs a durable behavior contract, `spec-builder` loads before `orchestrate`.
+Skills load **on-demand**: `wiki` first for coordinator context and again for post-review evaluation; `orchestrate` handles planning and execution of delegated work. When work needs a durable behavior contract, `spec-builder` loads before `orchestrate`.
 
 ## Structure
 
@@ -148,7 +148,7 @@ wiki/                  # Knowledge about this product (distribution maintainers 
 templates/             # SOURCE for install — not live until installed
   AGENTS.md            # Boot-policy TEMPLATE — installed globally (marker-upsert) via install.sh
   skills/              # Skill source of truth — install globally via install.sh
-    orchestrate/       # Full coordination cycle: assemble, delegate, review, synthesize
+    orchestrate/       # Full coordination cycle: assemble, delegate, review, learn, synthesize
     wiki/              # Wiki query and self-learning loop
     skill-builder/     # Skill authoring and validation
     spec-builder/      # Spec-driven workflow: durable behavior contracts

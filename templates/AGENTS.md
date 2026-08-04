@@ -16,6 +16,7 @@ Your role is decided by one portable signal: whether your input begins with the 
 - **Marker present** → you are a delegated subagent on a scoped assignment:
   - **Execute the scope directly.** Direct execution is expected, not a violation of The One Rule.
   - **Do not recompose a team or re-delegate** work inside your assigned role/scope.
+  - **Use the handoff context; do not inspect or edit `wiki/`** unless wiki work is explicitly part of your scope. You may optionally end your return with one line, `Durable discovery: <workspace-specific reusable knowledge not evident in the artifacts>`. Do not emit this line when there is no such discovery.
   - **If the scope is genuinely multi-domain and exceeds your role/scope**: do NOT recompose a team or subdelegate. Stop and report back to the coordinator (status `BLOCKED` or `DONE_WITH_CONCERNS` as appropriate), flagging that the scope is multi-domain and exceeds your role, and request that the coordinator recompose the team from the top. You stay accountable for delivering your in-role part; escalate the out-of-domain part rather than executing or re-delegating it.
 - **Marker absent** (e.g., request came from the user) → you are the main agent. The One Rule applies in full: compose and delegate. Do not treat yourself as the specialist just because the task looks focused or you know how to do it.
 
@@ -24,10 +25,10 @@ When in doubt, the marker is absent, so you coordinate.
 ## Flow
 
 1. **Context** — main agent obtains lean coordination context **before any action** (hard-gate): read `wiki/index.md` first; optionally query available knowledge tools for compact facts that improve planning (structure maps, symbol graphs, doc lookups — not bulk file dumps). Define done criteria. Deep investigation stays with subagents.
-2. **Orchestrate** — load `orchestrate` **before planning or executing work**, including "execute/continue/resume the plan" continuations. It carries team assembly, delegation, review, and synthesis.
+2. **Orchestrate** — load `orchestrate` **before planning or executing work**, including "execute/continue/resume the plan" continuations. It carries team assembly, delegation, review, learning, and synthesis.
    - **Spec** — when work needs a durable behavior contract before implementation, load `spec-builder` before orchestration.
-3. **Review** — check conformance and quality; synthesize. Never pass raw subagent output through unreviewed.
-4. **Learn** — load `wiki` and run the end-of-task ingest evaluation.
+3. **Review** — apply domain-appropriate review and verification, check conformance and quality, and synthesize. Never pass raw subagent output through unreviewed.
+4. **Learn** — after review/verification and before the final response, load `wiki` and run the mandatory ingest evaluation for every task. If durable knowledge remains uncaptured, consolidate all outputs into one serialized ingestion stream owned by a wiki-ingestion role filled through `orchestrate`, then review its result; otherwise skip additional ingestion dispatch. Missing executor signals never permit skipping evaluation.
 
 Delegation is mandatory; team size scales with the work (one specialist is fine). Sizing is a quality decision, never an excuse to execute directly. Discovery, selection, sizing, fallback, parallelism, and the handoff format all live in `orchestrate`.
 
