@@ -2,15 +2,116 @@
 
 **A lightweight AI Agent harness to handle any kind of task!**
 
-From software engineering to design, marketing, sales, finance, paid media, project management or whatever you need to be done.
-
 Designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle.
-
-Just portable skills and a single `AGENTS.md` file. No hooks, plugins, or platform-specific configuration.
 
 Under the hood, its operating model brings together memory and OKF concepts, subagent-driven development, spec-driven workflows, and agent loops grounded in empirical verification.
 
-**This repository is a template distribution.** Installable source lives under `templates/` (`templates/skills/` for skills, `templates/AGENTS.md` for the boot-policy template). Those files become live operational contracts after you run the installer (skills + global boot policy).
+## Harness Flow
+
+The user-facing main agent is the **coordinator**, not the executor. It gathers lean workspace context, assembles the right team, delegates scoped work, reviews the results, and synthesizes the final response. The parallel branches below illustrate the default pattern for independent scopes; orchestration can use a single-agent or sequential pattern when the task or its dependencies call for it.
+
+Review and verification are coordinator-controlled quality gates: when findings show that the done criteria are not met, the coordinator re-dispatches the affected subagent(s) with the findings, integrates the adjustments, and sends the result through review again. The cycle repeats under the normal status and escalation rules until the criteria pass; blocked or stuck work is stopped, escalated, or recomposed rather than retried without bound.
+
+```text
+User request
+     |
+     v
++--------------------------------------+
+| Main agent (coordinator)             |
+| Read wiki/index.md for context       |
+| Optional: use available knowledge    |
+| tools (e.g. code/symbol/dependency   |
+| graphs).                             |
++--------------------------------------+
+     |
+     +--> [when a durable behavior contract is needed]
+     |       spec-builder (after confirmation) -> specs/... -> Spec ref
+     |       (then continue to orchestration)
+     |
+     v
++--------------------------------------+
+| orchestrate: assemble team and plan  |
++--------------------------------------+
+     |
+     |  Illustrative/default pattern for independent scopes:
+     |  orchestration may use one agent or sequential handoffs instead.
+     |
+     +----------------+----------------+----------------+
+     v                v                v
++------------+   +------------+   +------------+
+| Specialist |   | Specialist |   | Specialist |
+| scoped work|   | scoped work|   | scoped work|
++------------+   +------------+   +------------+
+     \                |                /
+      \               |               /
+       +--------------+--------------+
+                      v
+             +----------------------+
+             | Merge deliverables   |
+             +----------------------+
+                      |
+                      v
+              +----------------------+
+              | Review / verification|
+              +----------------------+
+                       |
+              +--------+--------+
+              |                 |
+              | done criteria   | changes needed?
+              | met             |
+              v                 v
+              |        +----------------------+
+              |        | Coordinator sends    |
+              |        | findings to affected |
+              |        | specialist(s)        |
+              |        +----------------------+
+              |                 |
+              |                 v
+              |        +----------------------+
+              |        | Re-dispatch / revise |
+              |        +----------------------+
+              |                 |
+              |                 v
+              |        +----------------------+
+              |        | Integrate adjustments|
+              |        +----------------------+
+              |                 |
+              |                 +--> Review / verification again
+              v
+              +----------------------+
+              | wiki: post-review    |
+              | learning evaluation  |
+              +----------------------+
+                         |
+                         v
+              +----------------------+
+              | Uncaptured durable   |
+              | workspace knowledge  |
+              | remains?             |
+              +----------------------+
+                         |
+                +--------+------------+
+                |                     |
+                | no                  | yes
+                v                     v
+       +----------------+  +----------------------+
+       | No ingestion   |  | One consolidated     |
+       | dispatch       |  | serialized ingestion |
+       |                |  | stream               |
+       +----------------+  +----------------------+
+                |                     |
+                |          +----------------------+
+                |          | Coordinator reviews  |
+                |          | ingestion result     |
+                |          +----------------------+
+                |                     |
+                +----------+----------+
+                           v
+             +----------------------+
+             | Synthesis            |
+             | -> final response    |
+             +----------------------+
+```
 
 ## Quick Start
 
@@ -40,6 +141,7 @@ cd agents-workspace
 |---|---|---|
 | Skills | `templates/skills/` | Per-tool skill dirs (see table below) |
 | Boot policy | `templates/AGENTS.md` | Per-tool global instruction file (marker-upsert) |
+| The Agency agents (default) | [The Agency](https://github.com/msitarzewski/agency-agents) | Per-tool agent dirs; from software engineering to design, marketing, sales, finance, paid media, project management, and other task domains |
 
 Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-workspace:end -->` markers. Re-running the installer replaces only that block; content outside the markers is preserved. Copilot uses a dedicated instructions file (full replace is safe).
 
@@ -102,7 +204,7 @@ cp -r templates/skills/* ~/.config/opencode/skills/
 # (see destinations table above). Prefer re-running install.sh when possible.
 ```
 
-**Install agents from The Agency (optional, but recommended):**
+**The Agency agents are installed by default.**
 
 [Follow the instructions from their repository](https://github.com/msitarzewski/agency-agents)
 
@@ -119,24 +221,17 @@ These are the installer target paths currently supported. They are not the norma
 
 ## Workflow details
 
-1. **The One Rule** — the main agent never does the work. It delegates every unit to a subagent. Before any tool call, a self-check confirms the action is allowed: read wiki, talk to user, or dispatch subagent. Everything else is delegated — no size threshold.
-2. **Team-driven workflow** — main agent reads `wiki/index.md` for context, loads `orchestrate`, then composes the team: analyze domains, discover specialists, size the team, select coordination pattern, plan execution order. Generalist execution is fallback only.
-3. **Spec-driven workflow (when needed)** — for work needing a durable behavior contract (new features, API/contract changes, migrations), load `spec-builder` before orchestration. Specs live in `specs/` (source spec per domain + `changes/<id>/` deltas); `orchestrate` consumes them via an optional `Spec ref` handoff field and checks conformity during review.
-4. **Structured delegation** — each handoff uses a canonical shape: task, objective, scope, done criteria, constraints, deliverable, return format. Specialists execute the handed scope directly.
-5. **Parallel specialist teams** — independent scopes dispatched to multiple specialists simultaneously.
-6. **Mandatory wiki evaluation, conditional ingestion** — after domain-appropriate review/verification of every task and before the final response, the main agent evaluates whether durable workspace knowledge remains uncaptured. Positive findings enter one consolidated serialized ingestion stream owned by a wiki-ingestion role; negative findings open no additional stream. Explicit wiki tasks avoid redundant dispatch when their reviewed deliverables already captured the knowledge. Executors do not inspect or edit the wiki unless wiki work is explicitly in scope.
-7. **Auto skill evaluation** — during wiki ingest, the agent filling that role evaluates whether content is better suited as a recurring procedural skill rather than durable declarative wiki knowledge. When clearly procedural and recurring, it flags the user to decide (create a skill with `skill-builder` or keep in wiki) — never auto-creates.
-8. **Anti-rationalization tables** — every skill anticipates excuses agents use to skip steps and refutes them.
-9. **Role preservation** — roles from team composition are mandatory. Adjacent match or generic agent fills gaps. Roles are never dropped or collapsed into one handoff unless there's an explicit quality reason and verification is not reduced.
+- **The One Rule:** The coordinator delegates every unit to a subagent with no size threshold. Before tool calls, it self-checks that the action is allowed; direct actions are limited to user conversation, skill loading, dispatch/review, and lean context lookup.
+- **Team assembly:** Read `wiki/index.md` first, then load `orchestrate` to analyze domains, discover specialists, match exact/adjacent/fallback fits, and compose the team. Preserve separate roles and scopes; generic/default is the last resort, and no role is silently dropped or merged.
+- **Structured handoffs:** Every handoff starts with `[HANDOFF FROM COORDINATOR]` and carries `task`, `objective`, `scope`, `done criteria`, `constraints`, `target agent`, `match type`, `context`, `deliverable`, and `return format`, plus optional `Spec ref` and fallback justification when applicable.
+- **Specs:** When work needs a durable behavior contract, load `spec-builder` before `orchestrate`; after user confirmation, it creates or evolves `specs/` artifacts, and orchestration uses the optional `Spec ref` for conformity review.
+- **Executor boundary:** Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly scoped.
+- **Learning:** After review/verification and before the final response, `wiki` evaluates every task for uncaptured durable workspace knowledge. Positive findings enter one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist; negative findings open no additional stream. The coordinator reviews ingestion, and explicit wiki tasks skip only redundant post-task ingestion when reviewed deliverables already capture the knowledge correctly.
+- **Wiki versus skill:** If a discovery is clearly procedural and recurring, flag the user to choose `skill-builder` or wiki; never auto-create a skill.
+- **Guardrails:** The workflow/coordination skills use anti-rationalization guidance/tables. Statuses are `DONE` (ready for review), `DONE_WITH_CONCERNS` (read concerns), `NEEDS_CONTEXT` (re-dispatch with context), and `BLOCKED` (assess, break, or escalate); after two cycles without progress for repeated `NEEDS_CONTEXT`/`BLOCKED`, stop redispatching and escalate, recompose, or apply a justified fallback.
+- **On-demand loading:** `wiki` loads first for coordinator context and again for post-review evaluation; `orchestrate` handles planning and execution; `spec-builder` loads conditionally before `orchestrate` when a durable contract is needed.
 
-| Mechanism | Skill | What it does |
-|---|---|---|
-| **Orchestration** | `orchestrate` | Full coordination cycle: analyze domains, discover specialists, compose team, plan execution, handoff, review, learning, and synthesis. |
-| **Self-learning wiki** | `wiki` | Reads `wiki/index.md` before broad exploration; mandates post-review evaluation for every task and conditionally opens a consolidated serialized ingestion stream. |
-| **Skill authoring** | `skill-builder` | Creates, refines, and validates Agent Skills following the agentskills.io spec. |
-| **Spec-driven workflow** | `spec-builder` | Creates, evolves, and archives durable behavior contracts (`specs/`) before implementation. `orchestrate` consumes via `Spec ref`. |
-
-Skills load **on-demand**: `wiki` first for coordinator context and again for post-review evaluation; `orchestrate` handles planning and execution of delegated work. When work needs a durable behavior contract, `spec-builder` loads before `orchestrate`.
+Skill roles: `orchestrate` assembles, delegates, reviews, and synthesizes; `wiki` routes context and evaluates/ingests knowledge; `spec-builder` manages durable contracts; `skill-builder` creates, refines, and validates Agent Skills.
 
 ## Structure
 
