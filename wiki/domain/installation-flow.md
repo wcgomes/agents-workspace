@@ -37,6 +37,10 @@ curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/i
 ./tools/install.sh --list
 ```
 
+## Known limitation
+
+The interactive selector can abort when it renders an undetected or deselected tool: `install.sh` enables `set -u` but does not initialize the `C_DIM` color variable used for those rows. Documentation and testing should use an explicit tool flag such as `--opencode` instead of relying on the selector until this is fixed.
+
 ## What is installed
 
 | Source | Destination | Method |

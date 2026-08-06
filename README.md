@@ -4,7 +4,9 @@
 
 Designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle.
 
-Under the hood, its operating model brings together memory and OKF concepts, subagent-driven development, spec-driven workflows, and agent loops grounded in empirical verification.
+Under the hood, its operating model brings together memory, subagent-driven development, spec-driven workflows, and agent loops grounded in empirical verification.
+
+Installs [The Agency](https://github.com/msitarzewski/agency-agents), a complete AI-agent package covering software engineering, design, marketing, sales, finance, paid media, project management, and other task domains.
 
 ## Harness Flow
 
@@ -113,13 +115,25 @@ User request
              +----------------------+
 ```
 
+### Workflow details
+
+- **The One Rule:** The coordinator delegates every unit to a subagent with no size threshold. Before tool calls, it self-checks that the action is allowed; direct actions are limited to user conversation, skill loading, dispatch/review, and lean context lookup.
+- **Team assembly:** Read `wiki/index.md` first, then load `orchestrate` to analyze domains, discover specialists, match exact/adjacent/fallback fits, and compose the team. Preserve separate roles and scopes; generic/default is the last resort, and no role is silently dropped or merged.
+- **Structured handoffs:** Every handoff starts with `[HANDOFF FROM COORDINATOR]` and carries `task`, `objective`, `scope`, `done criteria`, `constraints`, `target agent`, `match type`, `context`, `deliverable`, and `return format`, plus optional `Spec ref` and fallback justification when applicable.
+- **Specs:** When work needs a durable behavior contract, load `spec-builder` before `orchestrate`; after user confirmation, it creates or evolves `specs/` artifacts, and orchestration uses the optional `Spec ref` for conformity review.
+- **Executor boundary:** Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly scoped.
+- **Learning:** After review/verification and before the final response, `wiki` evaluates every task for uncaptured durable workspace knowledge. Positive findings enter one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist; negative findings open no additional stream. The coordinator reviews ingestion, and explicit wiki tasks skip only redundant post-task ingestion when reviewed deliverables already capture the knowledge correctly.
+- **Wiki versus skill:** If a discovery is clearly procedural and recurring, flag the user to choose `skill-builder` or wiki; never auto-create a skill.
+- **Guardrails:** The workflow/coordination skills use anti-rationalization guidance/tables. Statuses are `DONE` (ready for review), `DONE_WITH_CONCERNS` (read concerns), `NEEDS_CONTEXT` (re-dispatch with context), and `BLOCKED` (assess, break, or escalate); after two cycles without progress for repeated `NEEDS_CONTEXT`/`BLOCKED`, stop redispatching and escalate, recompose, or apply a justified fallback.
+- **On-demand loading:** `wiki` loads first for coordinator context and again for post-review evaluation; `orchestrate` handles planning and execution; `spec-builder` loads conditionally before `orchestrate` when a durable contract is needed.
+
+Skill roles: `orchestrate` assembles, delegates, reviews, and synthesizes; `wiki` routes context and evaluates/ingests knowledge; `spec-builder` manages durable contracts; `skill-builder` creates, refines, and validates Agent Skills.
+
 ## Quick Start
 
 ### Use the installer (recommended)
 
 One-time setup. Installs **skills** and the **boot policy** globally for each selected tool. The agent loads only what each task needs.
-
-The installer **always downloads GitHub `main.zip`** and installs from `templates/` inside that archive. It does **not** install from your local working tree — even if you run `./tools/install.sh` from a clone. For local WIP, use the manual `cp` steps below.
 
 **Via curl:**
 
@@ -127,13 +141,7 @@ The installer **always downloads GitHub `main.zip`** and installs from `template
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 ```
 
-**Or clone and run the script** (still installs published `main`, not your tree):
-
-```bash
-git clone https://github.com/wcgomes/agents-workspace.git
-cd agents-workspace
-./tools/install.sh
-```
+*The current installer downloads the repository's GitHub `main` archive and installs from `templates/` inside it; it does not install from the local working tree. Because `main` is mutable, installed content can change over time. For a local checkout, use the manual skills steps below.*
 
 #### What gets installed
 
@@ -141,7 +149,7 @@ cd agents-workspace
 |---|---|---|
 | Skills | `templates/skills/` | Per-tool skill dirs (see table below) |
 | Boot policy | `templates/AGENTS.md` | Per-tool global instruction file (marker-upsert) |
-| The Agency agents (default) | [The Agency](https://github.com/msitarzewski/agency-agents) | Per-tool agent dirs; from software engineering to design, marketing, sales, finance, paid media, project management, and other task domains |
+| The Agency agents (default) | [The Agency](https://github.com/msitarzewski/agency-agents) | Per-tool agent dirs; Agency-managed destinations (see Supported tools) |
 
 Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-workspace:end -->` markers. Re-running the installer replaces only that block; content outside the markers is preserved. Copilot uses a dedicated instructions file (full replace is safe).
 
@@ -167,8 +175,8 @@ Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-
 
 #### Using `--no-agency`
 
-You can skip installing the agents completely using `--no-agency` if you already have your own curated team!
-Only the skills and bootstrap contract will be installed.
+You can skip installing The Agency agents with `--no-agency` if you already have a curated team or want to install The Agency agents yourself.
+Only the skills and boot policy will be installed.
 
 #### Using `--division`
 
@@ -178,67 +186,57 @@ Filter which agency-agents divisions to install using `--division` with a comma-
 # Via curl — install only engineering and security
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --division engineering,security
 
-# Local — install specific divisions
-./tools/install.sh --division engineering,security
-
 # Combine with --opencode
-./tools/install.sh --opencode --division design,marketing
+curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --opencode --division design,marketing
 
 # Combine with --all
-./tools/install.sh --all --division testing,support
+curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --all --division testing,support
 ```
 
 ##### Available divisions
 
-`academic`, `design`, `engineering`, `finance`, `game-development`, `gis`, `marketing`, `paid-media`, `product`, `project-management`, `sales`, `security`, `spatial-computing`, `specialized`, `support`, `testing`
+`academic`, `design`, `engineering`, `finance`, `game-development`, `gis`, `healthcare`, `marketing`, `paid-media`, `product`, `project-management`, `sales`, `security`, `spatial-computing`, `specialized`, `support`, `testing`
 
-See [🎭 The Agency](https://github.com/msitarzewski/agency-agents) for details on each division.
+See [🎭 The Agency](https://github.com/msitarzewski/agency-agents) for the current division catalog and details.
 
-### Manual install (local WIP)
+### Manual skills install (local checkout)
 
 ```bash
 # Skills (example: OpenCode)
+mkdir -p ~/.config/opencode/skills
 cp -r templates/skills/* ~/.config/opencode/skills/
 
-# Boot policy — append/replace the managed marker block in the tool's global file
-# (see destinations table above). Prefer re-running install.sh when possible.
+# Boot policy (OpenCode)
+# Use this cp for a clean/local WIP only. If the file already exists,
+# prefer install.sh to preserve content outside the managed markers.
+cp templates/AGENTS.md ~/.config/opencode/AGENTS.md
+
+# These local steps install skills and boot policy for OpenCode.
+# For a complete installation, use the recommended installer, which downloads
+# the current GitHub main archive instead of using this local checkout.
 ```
 
-**The Agency agents are installed by default.**
-
-[Follow the instructions from their repository](https://github.com/msitarzewski/agency-agents)
+For agents, follow [The Agency's installation instructions](https://github.com/msitarzewski/agency-agents) or copy the files to your tool's agents directory, such as `~/.config/opencode/agents/`.
 
 ### Supported tools
 
 These are the installer target paths currently supported. They are not the normative discovery contract; runtime discovery should remain source-based and platform-aware.
 
+For Antigravity and Copilot, the Agency agent paths below reflect the current upstream `main` installer and may change when the upstream repository changes.
+
 | Tool | Skills path | Agents path | Boot policy path |
 |---|---|---|---|
-| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` | `~/.gemini/GEMINI.md` |
+| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/config/skills/` | `~/.gemini/GEMINI.md` |
 | Claude Code | `~/.claude/skills/` | `~/.claude/agents/` | `~/.claude/CLAUDE.md` |
-| Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Copilot | `~/.copilot/skills/` | `~/.github/agents/` and `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` | `~/.config/opencode/AGENTS.md` |
-
-## Workflow details
-
-- **The One Rule:** The coordinator delegates every unit to a subagent with no size threshold. Before tool calls, it self-checks that the action is allowed; direct actions are limited to user conversation, skill loading, dispatch/review, and lean context lookup.
-- **Team assembly:** Read `wiki/index.md` first, then load `orchestrate` to analyze domains, discover specialists, match exact/adjacent/fallback fits, and compose the team. Preserve separate roles and scopes; generic/default is the last resort, and no role is silently dropped or merged.
-- **Structured handoffs:** Every handoff starts with `[HANDOFF FROM COORDINATOR]` and carries `task`, `objective`, `scope`, `done criteria`, `constraints`, `target agent`, `match type`, `context`, `deliverable`, and `return format`, plus optional `Spec ref` and fallback justification when applicable.
-- **Specs:** When work needs a durable behavior contract, load `spec-builder` before `orchestrate`; after user confirmation, it creates or evolves `specs/` artifacts, and orchestration uses the optional `Spec ref` for conformity review.
-- **Executor boundary:** Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly scoped.
-- **Learning:** After review/verification and before the final response, `wiki` evaluates every task for uncaptured durable workspace knowledge. Positive findings enter one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist; negative findings open no additional stream. The coordinator reviews ingestion, and explicit wiki tasks skip only redundant post-task ingestion when reviewed deliverables already capture the knowledge correctly.
-- **Wiki versus skill:** If a discovery is clearly procedural and recurring, flag the user to choose `skill-builder` or wiki; never auto-create a skill.
-- **Guardrails:** The workflow/coordination skills use anti-rationalization guidance/tables. Statuses are `DONE` (ready for review), `DONE_WITH_CONCERNS` (read concerns), `NEEDS_CONTEXT` (re-dispatch with context), and `BLOCKED` (assess, break, or escalate); after two cycles without progress for repeated `NEEDS_CONTEXT`/`BLOCKED`, stop redispatching and escalate, recompose, or apply a justified fallback.
-- **On-demand loading:** `wiki` loads first for coordinator context and again for post-review evaluation; `orchestrate` handles planning and execution; `spec-builder` loads conditionally before `orchestrate` when a durable contract is needed.
-
-Skill roles: `orchestrate` assembles, delegates, reviews, and synthesizes; `wiki` routes context and evaluates/ingests knowledge; `spec-builder` manages durable contracts; `skill-builder` creates, refines, and validates Agent Skills.
 
 ## Structure
 
 ```
 # This repository (template distribution)
 AGENTS.md              # Meta only — guidance for working ON this distribution (not consumer boot policy)
-tools/install.sh       # Downloads main.zip; installs skills + global boot policy from archive
+tools/install.sh       # Installs skills + global boot policy from the current GitHub main archive
 wiki/                  # Knowledge about this product (distribution maintainers / agents here)
 templates/             # SOURCE for install — not live until installed
   AGENTS.md            # Boot-policy TEMPLATE — installed globally (marker-upsert) via install.sh
@@ -255,7 +253,7 @@ templates/             # SOURCE for install — not live until installed
 ~/.copilot/instructions/...    # Copilot user instructions (dedicated file)
 
 # In your project workspace
-wiki/                  # Workspace knowledge — created on setup/first ingest, then maintained automatically
+wiki/                  # Workspace knowledge — not created by the installer; created on setup/first ingest, then maintained automatically
   index.md
   architecture.md
   conventions/
