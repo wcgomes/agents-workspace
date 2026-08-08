@@ -17,7 +17,7 @@ Full coordination cycle: analyze → assemble → delegate → review → learn 
 6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria. When the outcome has observable behavior and safe, proportionate execution is feasible, verification requires empirical validation through real execution or observation; static inspection alone is insufficient.
 7. **Confirm before multi-domain work** — when the planned execution team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan. Do not count the conditional post-review ingestion role toward the 3+ threshold unless wiki work is an ordinary planned scope; this exclusion never waives ambiguity, destructive-work, or explicit-approval triggers.
 8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
-9. **Dispatch rationale required** — every handoff must name the target agent and its match type (exact, adjacent, or fallback). Fallback handoffs must state why no exact or adjacent specialist was available.
+9. **Dispatch rationale required** — In the coordinator roster, record each role's selected agent, match type (exact, adjacent, or fallback), and match rationale. Keep all selection metadata, including fallback rationale, out of the handoff. Include `Role: <expected role>` only for adjacent or fallback matches; omit it for exact matches. `Role` names the expected role, not the selected agent identifier.
 10. **Spec readiness before implementation** — applies only when a named change/spec path is in scope or an active `specs/changes/<id>/` is clearly in scope for the request; otherwise SDD is N/A and skip this gate. If in scope and `specs/changes/<id>/tasks.md` is missing, do not start implementation handoffs — load `spec-builder`, run plan, then resume orchestration from `tasks.md`. If in scope and `tasks.md` is present, proceed; implementation handoffs MUST include `Spec ref: specs/changes/<id>/`.
 11. **Post-review wiki evaluation** — after domain-appropriate review/verification and before the final response, the coordinator loads `wiki` and evaluates every task for durable workspace knowledge that remains uncaptured. Evaluation is mandatory; ingestion dispatch is conditional. A positive evaluation opens one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist role; a negative evaluation opens no additional ingestion stream.
 
@@ -36,20 +36,20 @@ Assemble a professional team for the job:
 
 Map each domain + phase to a specialist role; apply the templates below for common patterns. For multi-domain work, ensure each domain has representation; each phase needing distinct expertise needs a responsible role. For coding/refactoring, define at least an implementation role and a review role unless the user opts out of review or the task is trivial.
 
-Role preservation means preserving separate role *scopes*, not just labels. With multiple roles, plan one handoff per role/scope unless there is an explicit reason to merge and merging does not reduce expertise, independence, or verification.
+Role preservation means preserving separate role *scopes*, not just labels. Plan one handoff per role/scope; do not merge roles.
 
 ## Phase 3: Discover Specialists
 
 Before selecting, discover what specialists exist in the current environment: use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator may not read it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to a generic/default agent.
 
-**Produce an explicit list** of specialists found (name + domain). For each role, state the selected agent and why the match is exact, adjacent, or fallback. This list is required output.
+**Record coordinator-internal assembly output**: discovered specialists (name + domain, or sources checked if none), and for each role the selected agent plus exact/adjacent/fallback rationale. These records are assembly output, not handoff content.
 
 **Matching rules:**
 
 - **Semantic match**: domain + work-type, NOT tech stack. A "Frontend Developer" covers React, Vue, or any stack.
-- **Adjacent match** acceptable when exact unavailable: the specialist's primary domain overlaps the role's domain (e.g., backend dev for a database task), or their workflow phase matches the role's phase (e.g., implementation specialist covering testing in the same codebase). If the connection needs more than one inferential step, it is fallback, not adjacent.
+- **Adjacent match** acceptable when exact unavailable: the specialist directly overlaps the role in domain (e.g., backend developer for a database task) or work type/phase. A connection needing more than one inferential step is not adjacent.
 - **Select the best discovered fit**: dispatch each role to the best exact or adjacent specialist found. Never use generic/default when an exact or adjacent specialist is available.
-- **Generic/default is last resort**: selecting it requires that discovery found no specialist or adjacent fit — state that explicitly in the handoff, not just internal notes.
+- **Generic/default fallback is last resort**: use it, acting in the planned role, only when no exact or adjacent fit exists or remains — record that rationale only on the coordinator-internal roster, not in the handoff body.
 - **Generic/default still has a role**: never dispatch an unscoped generalist. Assign the generic/default agent to the defined role and scope.
 - **Same generic/default, separate scopes**: if generic/default fallback covers multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the agent type is the same.
 - If the user specified agents, incorporate them and apply semantic matching for the remaining roles.
@@ -165,8 +165,8 @@ Coordination: Sequential with Quality Gates. Review/Consistency is required when
 ## Pre-Dispatch Verification
 
 Before composing each handoff:
-- Confirm the target agent appears in Phase 3's discovered specialists list as exact or adjacent.
-- If the target is generic/default, state why no exact or adjacent specialist was available.
+- Confirm the target agent appears in Phase 3's discovered specialists list as exact or adjacent (or is justified fallback).
+- Roster record and handoff body fields by match: hard-gate 9.
 - Verify the agent name matches the exact format exposed by the dispatch interface (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use the exact identifier as discovered, not a reformatted version like "Software Architect" or "software_architect".
 - Do not proceed to handoff without this confirmation.
 
@@ -214,14 +214,14 @@ Objective: <why this work is needed>
 Scope: <what is in and out>
 Done criteria: <measurable acceptance criteria>
 Constraints: <task-specific rules + execution guardrails>
-Target agent: <agent name or identifier>
-Match type: exact | adjacent | fallback
-Fallback justification: <required only when match type is fallback — why no exact or adjacent fit>
+Role: <expected role — adjacent and fallback only; omit on exact>
 Context: <paths, snippets, facts>
 Spec ref: <path to specs/changes/<id>/ — optional, present only when a spec-builder artifact exists>
 Deliverable: <artifact or decision>
 Return format: <status + concise summary>
 ```
+
+Body fields by match: hard-gate 9.
 
 **Policy inheritance:** the `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it. The marker authorizes execution but does not make the recipient the selected specialist — specialist selection still follows the discovery and matching rules above.
 
@@ -235,7 +235,7 @@ Return format: <status + concise summary>
 
 Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
 
-**Dispatch failure recovery:** if a dispatch fails and the agent was a valid discovered specialist, do not abandon the role or fall back to generic/default yet. First verify the dispatched name exactly matches the discovery-phase identifier — format mismatches (hyphen vs. space, case, separators) are a common cause. Retry with the exact identifier before concluding the agent is unavailable or escalating to fallback.
+**Dispatch failure recovery:** if a dispatch fails and the agent was a valid discovered specialist, do not abandon the role or fall back to generic/default yet. First verify the dispatched name exactly matches the discovery-phase identifier — format mismatches (hyphen vs. space, case, separators) are a common cause. Retry with the exact identifier. If that retry fails, re-select the best remaining exact or adjacent specialist for the role; use generic/default only when none remains.
 
 **Return format rule:** return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
 
@@ -311,13 +311,13 @@ This protocol applies across the delegation tree, including work the coordinator
 | "Sequential is safer" | Parallel is default for independent work. Sequential needs explicit dependency. |
 | "Context is sufficient, so skip confirmation" | Confirmation depends on triggers, not context volume. |
 | "Continuation means the same team no matter what" | Preserve roles and specialists by default, but replace when unavailable, wrong, or user-directed. |
-| "Generic is fine, no one will notice" | Every generic dispatch must be justified in the handoff. Undispatched specialists from discovery invalidate the handoff. |
+| "Generic is fine, no one will notice" | Every generic dispatch must be justified on the roster (coordinator-internal). A generic/default fallback is invalid when a discovered exact or adjacent fit for that role is available. |
 | "Dispatch failed, agent must be unavailable" | First verify the agent name format matches the exact discovered identifier. Format mismatches (case, separators) are a common cause of failure — retry with the correct format before falling back. |
 
 ## Return Format
 
 Use the format that matches the current phase:
 
-- **Internal assembly state**: discovered specialists (name + domain or sources checked), team roster (role, selected agent, scope, exact/adjacent/fallback rationale), execution plan (parallel groups, sequence, dependencies), and handoff summary. The team roster's match-type rationale is the dispatch authorization — a handoff to an agent not listed as exact or adjacent requires explicit fallback justification in the handoff itself.
+- **Internal assembly state**: discovered specialists (name + domain or sources checked), team roster (role, selected agent, scope, exact/adjacent/fallback rationale), execution plan (parallel groups, sequence, dependencies), and handoff summary. The team roster's match-type rationale is the dispatch authorization (coordinator-internal).
 - **User-facing confirmation output**: team roster, execution plan, estimated complexity, and explicit request for approval when a confirmation trigger applies.
 - **Final synthesis**: status, concise summary of reviewed delegated results, files/artifacts changed when relevant, any verification evidence obtained (check and observed result), remaining verification gaps and their causes, the reason when empirical validation is `N/A`, the blocking condition for any check that could not run, and remaining concerns.
