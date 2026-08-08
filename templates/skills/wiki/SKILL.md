@@ -74,7 +74,7 @@ wiki/
 ├── conventions/          # One file per convention
 │   ├── index.md          # Optional folder index for larger/topic-rich wikis
 │   └── <pattern-name>.md
-├── domain/               # One file per business rule — descriptive, post-hoc distilled facts (prescriptive behavior contracts go in specs/<domain>/spec.md; specs are the prescriptive source of truth, and on spec archive their descriptive counterparts are ingested here — see spec-builder)
+├── domain/               # One file per business rule — descriptive, post-hoc distilled facts (prescriptive behavior contracts go in specs/<domain>.md; specs are the prescriptive source of truth, and on spec archive their descriptive counterparts are ingested here — see spec-builder)
 │   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR

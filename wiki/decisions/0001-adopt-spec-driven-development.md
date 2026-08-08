@@ -12,7 +12,7 @@ The workspace template had a wiki knowledge base + `orchestrate` skill for deleg
 
 Add a `spec-builder` skill implementing spec-driven development (SDD).
 
-- **Artifacts** live in `specs/`: a source spec per domain plus `changes/<id>/` deltas with `ADDED`/`MODIFIED`/`REMOVED` sections, archive-merged on completion.
+- **Artifacts** live in `specs/`: each realized domain has one flat source spec at `specs/<domain>.md`, where `<domain>` is a kebab-case identifier and `changes` is reserved. Active change bundles live at `specs/changes/<id>/`; archived bundles move to `specs/changes/archive/<YYYYMMDD>-<id>/`. Bundles contain `ADDED`/`MODIFIED`/`REMOVED` deltas that merge into source specs on completion.
 - **Workflow:** `propose` → (`clarify`, Full) → `plan` → `verify` → `archive`.
 - **Rigor:** Lite (default) vs Full (cross-team, API/contract, migration, security/privacy, ambiguity-prone).
 - **Integration:** `orchestrate` consumes artifacts via an optional `Spec ref:` handoff field; Phase 6 review checks spec conformity when a Spec ref is present.
