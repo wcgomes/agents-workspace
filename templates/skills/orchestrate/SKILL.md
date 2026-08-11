@@ -17,7 +17,7 @@ Full coordination cycle: analyze → assemble → delegate → review → learn 
 6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria. When the outcome has observable behavior and safe, proportionate execution is feasible, verification requires empirical validation through real execution or observation; static inspection alone is insufficient.
 7. **Confirm before multi-domain work** — when the planned execution team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan. Do not count the conditional post-review ingestion role toward the 3+ threshold unless wiki work is an ordinary planned scope; this exclusion never waives ambiguity, destructive-work, or explicit-approval triggers.
 8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
-9. **Dispatch rationale required** — In the coordinator roster, record each role's selected agent, match type (exact, adjacent, or fallback), and match rationale. Keep all selection metadata, including fallback rationale, out of the handoff. Include `Role: <expected role>` only for adjacent or fallback matches; omit it for exact matches. `Role` names the expected role, not the selected agent identifier.
+9. **Dispatch rationale and persona required** - In the coordinator roster, record each role's selected agent, match type (exact, adjacent, or fallback), and match rationale. Keep that metadata out of the handoff. For adjacent or generic/fallback matches, include nonempty `Act as: <expected task persona>`; omit it for exact matches.
 10. **Spec readiness before implementation** — applies only when a named change/spec path is in scope or an active `specs/changes/<id>/` is clearly in scope for the request; otherwise SDD is N/A and skip this gate. If in scope and `specs/changes/<id>/tasks.md` is missing, do not start implementation handoffs — load `spec-builder`, run plan, then resume orchestration from `tasks.md`. If in scope and `tasks.md` is present, proceed; implementation handoffs MUST include `Spec ref: specs/changes/<id>/`.
 11. **Post-review wiki evaluation** — after domain-appropriate review/verification and before the final response, the coordinator loads `wiki` and evaluates every task for durable workspace knowledge that remains uncaptured. Evaluation is mandatory; ingestion dispatch is conditional. A positive evaluation opens one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist role; a negative evaluation opens no additional ingestion stream.
 
@@ -166,7 +166,7 @@ Coordination: Sequential with Quality Gates. Review/Consistency is required when
 
 Before composing each handoff:
 - Confirm the target agent appears in Phase 3's discovered specialists list as exact or adjacent (or is justified fallback).
-- Roster record and handoff body fields by match: hard-gate 9.
+- Verify the roster record and conditional `Act as:` field against hard-gate 9.
 - Verify the agent name matches the exact format exposed by the dispatch interface (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use the exact identifier as discovered, not a reformatted version like "Software Architect" or "software_architect".
 - Do not proceed to handoff without this confirmation.
 
@@ -208,23 +208,18 @@ The conditional Stage 4 ingestion role does not independently trigger confirmati
 Use this canonical handoff only as the initial task of a fresh delegated conversation. Its first line and required execution fields MUST be exact as shown.
 
 ```
-Session role: DELEGATED_SUBAGENT
+Session type: DELEGATED
 Task: <what to do>
-Objective: <why this work is needed>
 Scope: <what is in and out>
 Done criteria: <measurable acceptance criteria>
-Constraints: <task-specific rules + execution guardrails>
-Role: <expected specialist role - adjacent and fallback only; omit on exact>
-Context: <paths, snippets, facts>
+Constraints: <task-specific rules, guardrails, and required output shape>
+Act as: <expected task persona - required for adjacent or generic/fallback; omit for exact>
+Context: <concise task-critical facts, paths, dependencies, or unresolved decisions - omit if none>
 Spec ref: <path to specs/changes/<id>/ - optional, present only when a spec-builder artifact exists>
-Deliverable: <artifact or decision>
-Compaction rule: Preserve exact labels `Session role:`, `Task:`, `Scope:`, `Done criteria:`, `Current status:`, and `Next step:` in every continuation summary.
-Return format: <status + concise summary>
+Compaction rule: Preserve exact `Session type: DELEGATED` and exact-labeled `Task:`, `Scope:`, `Done criteria:`, `Constraints:`, `Current status:`, and `Next step:`. Preserve `Act as:`, `Context:`, and `Spec ref:` whenever present; keep unresolved decisions and task-critical context concise.
 ```
 
-Body fields by match: hard-gate 9.
-
-**Boundary:** `Session role` controls session classification under `AGENTS.md` -> "Session Contract". Optional specialist `Role` only names the expected role for adjacent or fallback matches and never replaces `Session role`.
+`Act as:` is a task-scoped persona instruction. Its absence is valid only for exact matches; once present, recovery must retain it. Put purpose in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:`; do not add separate `Objective:`, `Deliverable:`, or `Return format:` fields.
 
 **Constraints should include task-relevant execution guardrails:**
 - Edits: change only files directly related to the task; no drive-by changes
@@ -256,7 +251,7 @@ Good candidates:
 
 Did it deliver what was requested — nothing more, nothing less?
 
-A delegated subagent executing its handed scope directly is conformant; that is expected (see `AGENTS.md` -> "Session Contract"). Flag a problem if the subagent hit genuinely multi-domain out-of-scope work and neither flagged it back to the coordinator nor stayed within its role, specifically if it silently absorbed out-of-scope work or attempted uncontrolled subdelegation. Subagents do not compose sub-teams; when scope exceeds their role they escalate to the coordinator, which then recomposes the team from the top.
+A delegated subagent executing its handed scope directly is conformant; that is expected (see `AGENTS.md` -> "Session Contract"). For adjacent or generic/fallback matches, verify that output follows `Act as:`; exact matches omit it. Flag silent absorption of out-of-scope work or uncontrolled subdelegation. Subagents escalate out-of-scope work to the coordinator for recomposition.
 
 If `Spec ref:` is present in the handoff, verify conformity against the persisted spec (load `spec-builder` `verify`) in addition to the done criteria.
 

@@ -24,4 +24,4 @@
 
 This distribution repo maintains its own `wiki/` for knowledge about the product itself. Prefer coordination via `orchestrate` for multi-step or multi-domain work on the distribution (same convention as consumers), but **load consumer boot semantics from `templates/AGENTS.md` only when editing that template** — not as your default policy for every task here.
 
-Full consumer operating mode (The One Rule, sticky session roles, flow): [`templates/AGENTS.md`](templates/AGENTS.md).
+Full consumer operating mode (The One Rule, sticky session types, flow): [`templates/AGENTS.md`](templates/AGENTS.md).
