@@ -205,25 +205,26 @@ The conditional Stage 4 ingestion role does not independently trigger confirmati
 
 ### Canonical Handoff Shape
 
-Every handoff MUST start with the coordinator marker on its own first line. This marker is the portable signal that tells the receiving agent it is a delegated subagent on a scoped assignment — not the main agent talking to the user.
+Use this canonical handoff only as the initial task of a fresh delegated conversation. Its first line and required execution fields MUST be exact as shown.
 
 ```
-[HANDOFF FROM COORDINATOR]
+Session role: DELEGATED_SUBAGENT
 Task: <what to do>
 Objective: <why this work is needed>
 Scope: <what is in and out>
 Done criteria: <measurable acceptance criteria>
 Constraints: <task-specific rules + execution guardrails>
-Role: <expected role — adjacent and fallback only; omit on exact>
+Role: <expected specialist role - adjacent and fallback only; omit on exact>
 Context: <paths, snippets, facts>
-Spec ref: <path to specs/changes/<id>/ — optional, present only when a spec-builder artifact exists>
+Spec ref: <path to specs/changes/<id>/ - optional, present only when a spec-builder artifact exists>
 Deliverable: <artifact or decision>
+Compaction rule: Preserve exact labels `Session role:`, `Task:`, `Scope:`, `Done criteria:`, `Current status:`, and `Next step:` in every continuation summary.
 Return format: <status + concise summary>
 ```
 
 Body fields by match: hard-gate 9.
 
-**Policy inheritance:** the `[HANDOFF FROM COORDINATOR]` marker authorizes the subagent to execute directly under `AGENTS.md` → "If You Received a Handoff"; never omit it. The marker authorizes execution but does not make the recipient the selected specialist — specialist selection still follows the discovery and matching rules above.
+**Boundary:** `Session role` controls session classification under `AGENTS.md` -> "Session Contract". Optional specialist `Role` only names the expected role for adjacent or fallback matches and never replaces `Session role`.
 
 **Constraints should include task-relevant execution guardrails:**
 - Edits: change only files directly related to the task; no drive-by changes
@@ -255,7 +256,7 @@ Good candidates:
 
 Did it deliver what was requested — nothing more, nothing less?
 
-A delegated subagent executing its handed scope directly is conformant — that is expected (see `AGENTS.md` → "If You Received a Handoff"). Flag a problem if the subagent hit genuinely multi-domain out-of-scope work and neither flagged it back to the coordinator nor stayed within its role — specifically, if it silently absorbed out-of-scope work or attempted uncontrolled subdelegation. Subagents do not compose sub-teams; when scope exceeds their role they escalate to the coordinator, which then recomposes the team from the top.
+A delegated subagent executing its handed scope directly is conformant; that is expected (see `AGENTS.md` -> "Session Contract"). Flag a problem if the subagent hit genuinely multi-domain out-of-scope work and neither flagged it back to the coordinator nor stayed within its role, specifically if it silently absorbed out-of-scope work or attempted uncontrolled subdelegation. Subagents do not compose sub-teams; when scope exceeds their role they escalate to the coordinator, which then recomposes the team from the top.
 
 If `Spec ref:` is present in the handoff, verify conformity against the persisted spec (load `spec-builder` `verify`) in addition to the done criteria.
 

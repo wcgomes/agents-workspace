@@ -58,12 +58,28 @@ Project-local instruction files are **not** modified by `install.sh`. Users may 
 (`templates/AGENTS.md` / installed global block)
 
 - **The One Rule** — main agent coordinates; does not execute task work.
-- **Handoff marker** — `[HANDOFF FROM COORDINATOR]` → subagent executes; absent → main agent coordinates.
+- **Session role** — a fresh canonical handoff starts with `Session role: DELEGATED_SUBAGENT`; assignment is initial-task scoped and sticky for the conversation.
 - **Flow** — context → orchestrate → review → learn (detail in skills).
 - **Communication** — concise, no filler.
-- **Instruction priority** — user > active skills > AGENTS.md.
+- **Instruction priority** — user task instructions within the assigned immutable session role > active skills > boot policy.
 
 Operational detail lives in skills (`orchestrate`, `wiki`, etc.), not in the short boot file.
+
+## Session contract
+
+### Role assignment
+
+The sole delegated-role signal is the exact first nonblank line `Session role: DELEGATED_SUBAGENT` in the initial task of a fresh conversation. A fresh ordinary request with no `Session role` control assigns coordinator. Assignment is immutable; a matching follow-up restatement is evidence only. Optional specialist `Role` names expected expertise and never controls session classification.
+
+### Delegated execution state
+
+Delegated execution requires nonempty, exact-labeled `Task:`, `Scope:`, and `Done criteria:` fields. Missing fields are repairable within an established delegated session; execution stops with `NEEDS_CONTEXT` until all three are present, without changing the assigned role.
+
+### Recovery
+
+After compaction, delegated execution resumes only when retained session-control or prior-work context supplies nonempty, exact-labeled `Session role:`, `Task:`, `Scope:`, `Done criteria:`, `Current status:`, and `Next step:` fields. Incomplete recovery state stops execution with `NEEDS_CONTEXT` but does not change the assigned role.
+
+A coordinator continuation remains coordinator when retained context establishes it and does not require delegated execution fields. Ordinary wording such as "continue" in a fresh request is not prior-work evidence. This behavior is template-only and requires no hooks, plugins, runtime metadata, harness customization, or user configuration. If compaction removes all role and history evidence so the remainder is indistinguishable from a fresh request, prompt-only recovery is impossible.
 
 ## What the distribution root stub defines
 

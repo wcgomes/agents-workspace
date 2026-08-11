@@ -7,7 +7,7 @@ Quick-reference index. Find files by keyword.
 
 ## domain
 - [template-vs-installed.md](domain/template-vs-installed.md) — templates/ source vs installed skills + global boot policy; distribution meta vs consumer live contracts
-- [agents-md.md](domain/agents-md.md) — template, meta root, and per-tool global boot policy paths; marker upsert
+- [agents-md.md](domain/agents-md.md) — template, meta root, global boot policy paths; marker upsert; session role, delegated execution state, compaction recovery
 - [skill-system.md](domain/skill-system.md) — skill discovery, progressive loading, lifecycle
 - [installation-flow.md](domain/installation-flow.md) — install.sh always downloads main.zip; skills + global boot policy; local WIP via cp
 
