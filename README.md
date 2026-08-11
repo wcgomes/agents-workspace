@@ -27,12 +27,15 @@ User request
 +--------------------------------------+
      |
      +--> [when a durable behavior contract is needed]
-     |       spec-builder (after confirmation) -> specs/... -> Spec ref
-     |       (then continue to orchestration)
+     |       Load spec-builder; confirm spec workflow
      |
      v
 +--------------------------------------+
-| orchestrate: assemble team and plan  |
+| Load orchestrate; assemble and plan  |
+| Optional: delegate spec drafting and |
+| planning -> specs/... -> Spec ref    |
+| Delegate execution using Spec ref    |
+| when present                         |
 +--------------------------------------+
      |
      |  Illustrative/default pattern for independent scopes:
@@ -120,7 +123,7 @@ User request
 - **The One Rule:** The coordinator delegates every unit to a subagent with no size threshold. Before tool calls, it self-checks that the action is allowed; direct actions are limited to user conversation, skill loading, dispatch/review, and lean context lookup.
 - **Team assembly:** Read `wiki/index.md` first, then load `orchestrate` to analyze domains, discover specialists, match exact/adjacent/fallback fits, and compose the team. Preserve separate roles and scopes; generic/default is the last resort, and no role is silently dropped or merged.
 - **Structured handoffs:** Every initial delegated handoff starts with `Session type: DELEGATED` and requires `Task`, `Scope`, `Done criteria`, and `Constraints`. Adjacent or generic/fallback matches also require `Act as`; exact matches omit it. Concise `Context` and `Spec ref` are conditional. Purpose, artifact, and return requirements live in the core fields; selected agent, match type, and rationale stay coordinator-internal. The compaction capsule requires preserving the session type, core contract, conditional fields, current status, next step, unresolved decisions, and task-critical facts.
-- **Specs:** When work needs a durable behavior contract, load `spec-builder` before `orchestrate`; after user confirmation, it creates or evolves `specs/` artifacts, and orchestration uses the optional `Spec ref` for conformity review.
+- **Specs:** When work needs a durable behavior contract, load `spec-builder` before `orchestrate`; after user confirmation, orchestration delegates creation or evolution of `specs/` artifacts, then uses the optional `Spec ref` for scoped execution and conformity review.
 - **Executor boundary:** Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly scoped.
 - **Learning:** After review/verification and before the final response, `wiki` evaluates every task for uncaptured durable workspace knowledge. Positive findings enter one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist; negative findings open no additional stream. The coordinator reviews ingestion, and explicit wiki tasks skip only redundant post-task ingestion when reviewed deliverables already capture the knowledge correctly.
 - **Wiki versus skill:** If a discovery is clearly procedural and recurring, flag the user to choose `skill-builder` or wiki; never auto-create a skill.
