@@ -310,6 +310,470 @@ install_antigravity_ours() {
   echo "$count"
 }
 
+# Quote plain, single-line YAML description scalars without interpreting their contents.
+# Block scalars and continued plain/quoted scalars are deliberately preserved:
+# changing their style without a YAML parser can change folding or chomping.
+normalize_yaml_description() {
+  local file="$1"
+  local tmp final_newline=true
+  [[ -f "$file" ]] || return 0
+
+  if [[ -s "$file" ]] &&
+     [[ "$(tail -c 1 "$file" | od -An -t x1 | tr -d '[:space:]')" != "0a" ]]; then
+    final_newline=false
+  fi
+
+  tmp="$(mktemp "${file}.tmp.XXXXXX")"
+  if ! awk '
+    function trim(s) {
+      sub(/^[[:space:]]+/, "", s)
+      sub(/[[:space:]]+$/, "", s)
+      return s
+    }
+    function indent_width(s,    i, c) {
+      i = 1
+      while (i <= length(s)) {
+        c = substr(s, i, 1)
+        if (c != " " && c != "\t") break
+        i++
+      }
+      return i - 1
+    }
+    function quote_close_pos(s, q,    i, n, c) {
+      s = trim(s)
+      if (q == "") q = substr(s, 1, 1)
+      if (substr(s, 1, 1) != q) return 0
+      n = length(s)
+      for (i = 2; i <= n; i++) {
+        c = substr(s, i, 1)
+        if (q == "\"" && c == "\\") {
+          i++
+          continue
+        }
+        if (q == "\047" && c == "\047" && substr(s, i + 1, 1) == "\047") {
+          i++
+          continue
+        }
+        if (c == q) return i
+      }
+      return 0
+    }
+    function quote_close_any(s, q,    i, n, c) {
+      n = length(s)
+      for (i = 1; i <= n; i++) {
+        c = substr(s, i, 1)
+        if (q == "\"" && c == "\\") {
+          i++
+          continue
+        }
+        if (q == "\047" && c == "\047" && substr(s, i + 1, 1) == "\047") {
+          i++
+          continue
+        }
+        if (c == q) return i
+      }
+      return 0
+    }
+    function block_scalar_header(s) {
+      s = trim(s)
+      return (s ~ /^[|>][+-]?[0-9]?[[:space:]]*(#.*)?$/ ||
+              s ~ /^[|>][0-9]?[+-]?[[:space:]]*(#.*)?$/)
+    }
+    function decorated_rest(s,    p, first) {
+      s = trim(s)
+      first = substr(s, 1, 1)
+      if (first != "&" && first != "!") return ""
+      while (substr(s, 1, 1) == "&" || substr(s, 1, 1) == "!") {
+        p = match(s, /[[:space:]]/)
+        if (p == 0) return ""
+        s = trim(substr(s, p + 1))
+      }
+      return s
+    }
+    function decorated_block_header(s,    rest) {
+      rest = decorated_rest(s)
+      return (rest != "" && block_scalar_header(rest))
+    }
+    function flow_value_start(s,    first, rest) {
+      s = trim(s)
+      first = substr(s, 1, 1)
+      if (first == "[" || first == "{") return 1
+      if (first == "&" || first == "!") {
+        rest = decorated_rest(s)
+        return (substr(rest, 1, 1) == "[" || substr(rest, 1, 1) == "{")
+      }
+      return 0
+    }
+    function flow_collection(s,    stack, q, i, n, c, top, first) {
+      s = trim(s)
+      first = substr(s, 1, 1)
+      if (first != "[" && first != "{") return 0
+
+      stack = ""
+      q = ""
+      n = length(s)
+      for (i = 1; i <= n; i++) {
+        c = substr(s, i, 1)
+        if (q != "") {
+          if (q == "\"" && c == "\\") {
+            i++
+            continue
+          }
+          if (q == "\047" && c == "\047" && substr(s, i + 1, 1) == "\047") {
+            i++
+            continue
+          }
+          if (c == q) q = ""
+          continue
+        }
+        if (c == "\"" || c == "\047") {
+          q = c
+        } else if (c == "[" || c == "{") {
+          stack = stack c
+        } else if (c == "]" || c == "}") {
+          if (stack == "") return 0
+          top = substr(stack, length(stack), 1)
+          if ((c == "]" && top != "[") || (c == "}" && top != "{")) return 0
+          stack = substr(stack, 1, length(stack) - 1)
+          if (stack == "") return (i == n)
+        }
+      }
+      return 0
+    }
+    function flow_closes_later(s, start_line, end_line,
+                               stack, q, j, i, n, c, top, previous, text) {
+      stack = ""
+      q = ""
+      for (j = start_line; j < end_line; j++) {
+        text = (j == start_line ? s : lines[j])
+        n = length(text)
+        for (i = 1; i <= n; i++) {
+          c = substr(text, i, 1)
+          if (q != "") {
+            if (q == "\"" && c == "\\") {
+              i++
+              continue
+            }
+            if (q == "\047" && c == "\047" && substr(text, i + 1, 1) == "\047") {
+              i++
+              continue
+            }
+            if (c == q) q = ""
+            continue
+          }
+          previous = (i > 1 ? substr(text, i - 1, 1) : "")
+          if (c == "#" && (i == 1 || previous ~ /[[:space:]]/)) break
+          if (c == "\"" || c == "\047") {
+            q = c
+          } else if (c == "[" || c == "{") {
+            stack = stack c
+          } else if (c == "]" || c == "}") {
+            if (stack == "") return 0
+            top = substr(stack, length(stack), 1)
+            if ((c == "]" && top != "[") || (c == "}" && top != "{")) return 0
+            stack = substr(stack, 1, length(stack) - 1)
+            if (stack == "" && q == "") return 1
+          }
+        }
+      }
+      return 0
+    }
+    function scan_flow_line(s,    i, n, c, previous) {
+      n = length(s)
+      for (i = 1; i <= n; i++) {
+        c = substr(s, i, 1)
+        if (flow_quote != "") {
+          if (flow_quote == "\"" && c == "\\") {
+            i++
+            continue
+          }
+          if (flow_quote == "\047" && c == "\047" && substr(s, i + 1, 1) == "\047") {
+            i++
+            continue
+          }
+          if (c == flow_quote) flow_quote = ""
+          continue
+        }
+        previous = (i > 1 ? substr(s, i - 1, 1) : "")
+        if (c == "#" && (i == 1 || previous ~ /[[:space:]]/)) return
+        if (c == "\"" || c == "\047") {
+          flow_quote = c
+        } else if (c == "[" || c == "{") {
+          flow_depth++
+        } else if ((c == "]" || c == "}") && flow_depth > 0) {
+          flow_depth--
+        }
+      }
+    }
+    function preserve_yaml_value(s,    first) {
+      s = trim(s)
+      first = substr(s, 1, 1)
+      if (flow_collection(s)) return 1
+      if (first == "*" && s ~ /^\*[A-Za-z0-9_.\/-]+$/) return 1
+      if (first == "&" && s ~ /^&[A-Za-z0-9_.-]+([[:space:]]+.*)?$/) return 1
+      if (first == "!" &&
+          s ~ /^!([A-Za-z0-9_!:\/.?-]+|<[^>]+>)([[:space:]]+.*)?$/) return 1
+      return 0
+    }
+    function parse_mapping(line,    n, i, start, c, q, closed) {
+      map_indent = -1
+      map_key = ""
+      map_value = ""
+      map_prefix_len = 0
+
+      n = length(line)
+      i = 1
+      while (i <= n && substr(line, i, 1) ~ /[ \t]/) i++
+      map_indent = i - 1
+      if (i > n) return 0
+
+      c = substr(line, i, 1)
+      if (c == "\"" || c == "\047") {
+        q = c
+        start = i + 1
+        i++
+        closed = 0
+        while (i <= n) {
+          c = substr(line, i, 1)
+          if (q == "\"" && c == "\\") {
+            i++
+            continue
+          }
+          if (q == "\047" && c == "\047" && substr(line, i + 1, 1) == "\047") {
+            i++
+            continue
+          }
+          if (c == q) {
+            closed = 1
+            break
+          }
+          i++
+        }
+        if (!closed) return 0
+        map_key = substr(line, start, i - start)
+        i++
+        while (i <= n && substr(line, i, 1) ~ /[ \t]/) i++
+        if (i > n || substr(line, i, 1) != ":") return 0
+      } else {
+        start = i
+        while (i <= n && substr(line, i, 1) != ":") i++
+        if (i > n) return 0
+        map_key = trim(substr(line, start, i - start))
+        if (map_key == "") return 0
+      }
+
+      i++
+      if (i <= n && substr(line, i, 1) !~ /[[:space:]]/) return 0
+      while (i <= n && substr(line, i, 1) ~ /[ \t]/) i++
+      map_prefix_len = i - 1
+      map_value = substr(line, i)
+      return 1
+    }
+    function comment_pos(s, flow_mode,    i, c, q, flow_depth, previous) {
+      q = ""
+      flow_depth = 0
+      for (i = 1; i <= length(s); i++) {
+        c = substr(s, i, 1)
+        if (q != "") {
+          if (q == "\"" && c == "\\") {
+            i++
+            continue
+          }
+          if (q == "\047" && c == "\047" && substr(s, i + 1, 1) == "\047") {
+            i++
+            continue
+          }
+          if (c == q) q = ""
+          continue
+        }
+        if (flow_mode && (c == "[" || c == "{")) {
+          flow_depth++
+          continue
+        }
+        if (flow_mode && (c == "]" || c == "}")) {
+          if (flow_depth > 0) flow_depth--
+          continue
+        }
+        previous = (i > 1 ? substr(s, i - 1, 1) : "")
+        if (flow_mode && (c == "\"" || c == "\047") &&
+            (i == 1 || previous ~ /[[:space:][:punct:]]/)) {
+          q = c
+          continue
+        }
+        if (c == "#" &&
+            (i == 1 || substr(s, i - 1, 1) ~ /[[:space:]]/)) return i
+      }
+      return 0
+    }
+    {
+      lines[NR] = $0
+    }
+    END {
+      total = NR
+      first = lines[1]
+      sub(/\r$/, "", first)
+      frontmatter_end = 0
+      if (first == "---") {
+        for (i = 2; i <= total; i++) {
+          candidate = lines[i]
+          sub(/\r$/, "", candidate)
+          if (candidate ~ /^---[[:space:]]*$/) {
+            frontmatter_end = i
+            break
+          }
+        }
+      }
+
+      # Do not touch files without a complete frontmatter block.
+      if (frontmatter_end == 0) {
+        for (i = 1; i <= total; i++) print lines[i]
+        exit
+      }
+
+      block_parent_indent = -1
+      quoted_char = ""
+      flow_parent_indent = -1
+      plain_parent_indent = -1
+      for (i = 1; i <= total; i++) {
+        line = lines[i]
+
+        # Block scalar content ends only when a nonblank line returns to the
+        # parent indentation. This also covers quoted keys such as "prompt": |.
+        if (block_parent_indent >= 0) {
+          if (line ~ /^[[:space:]]*$/ || indent_width(line) > block_parent_indent) {
+            print line
+            continue
+          }
+          block_parent_indent = -1
+        }
+
+        # Quoted scalars close by quote syntax, not by indentation. Preserve
+        # every line until the matching YAML quote is found.
+        if (quoted_char != "") {
+          print line
+          if (quote_close_any(line, quoted_char) > 0) quoted_char = ""
+          continue
+        }
+
+        # Flow collections may continue without indentation. Keep their
+        # delimiters and quoted members opaque until the collection closes.
+        if (flow_parent_indent >= 0) {
+          print line
+          scan_flow_line(line)
+          if (flow_depth == 0 && flow_quote == "") flow_parent_indent = -1
+          continue
+        }
+
+        # Plain multiline scalars and empty mapping values with indented
+        # collections use indentation to find continuation.
+        if (plain_parent_indent >= 0) {
+          if (line ~ /^[[:space:]]*$/ || line ~ /^[[:space:]]*#/ ||
+              indent_width(line) > plain_parent_indent) {
+            print line
+            continue
+          }
+          plain_parent_indent = -1
+        }
+
+        if (i > 1 && i < frontmatter_end && parse_mapping(line)) {
+          value_no_cr = map_value
+          cr = ""
+          if (value_no_cr ~ /\r$/) {
+            cr = "\r"
+            sub(/\r$/, "", value_no_cr)
+          }
+          stripped = trim(value_no_cr)
+
+          if (block_scalar_header(stripped) || decorated_block_header(stripped)) {
+            block_parent_indent = map_indent
+            print line
+            continue
+          }
+
+          first_value_char = substr(stripped, 1, 1)
+          decorated_value = decorated_rest(stripped)
+          decorated_quote_char = substr(decorated_value, 1, 1)
+          if (((first_value_char == "\"" || first_value_char == "\047") &&
+               quote_close_pos(stripped, first_value_char) == 0) ||
+              ((decorated_quote_char == "\"" || decorated_quote_char == "\047") &&
+               quote_close_pos(decorated_value, decorated_quote_char) == 0)) {
+            if (first_value_char == "\"" || first_value_char == "\047") {
+              quoted_char = first_value_char
+            } else {
+              quoted_char = decorated_quote_char
+            }
+            print line
+            continue
+          }
+
+          if (flow_value_start(stripped)) {
+            flow_depth = 0
+            flow_quote = ""
+            scan_flow_line(value_no_cr)
+            if ((flow_depth > 0 || flow_quote != "") &&
+                flow_closes_later(value_no_cr, i, frontmatter_end)) {
+              flow_parent_indent = map_indent
+              print line
+              continue
+            }
+          }
+
+          j = i + 1
+          while (j < frontmatter_end &&
+                 (lines[j] ~ /^[[:space:]]*$/ || lines[j] ~ /^[[:space:]]*#/)) j++
+          if (j < frontmatter_end &&
+              indent_width(lines[j]) > map_indent) {
+            plain_parent_indent = map_indent
+            print line
+            continue
+          }
+
+          if (map_key == "description" &&
+              first_value_char != "\"" && first_value_char != "\047") {
+            comment = ""
+            raw = value_no_cr
+            p = comment_pos(value_no_cr, flow_value_start(value_no_cr))
+            if (p > 0) {
+              raw = substr(value_no_cr, 1, p - 1)
+              comment = substr(value_no_cr, p)
+            }
+            scalar = trim(raw)
+            separator = substr(raw, length(scalar) + 1)
+            if (comment != "" && separator == "") separator = " "
+            if (!preserve_yaml_value(scalar)) {
+              prefix = substr(line, 1, map_prefix_len)
+              if (prefix !~ /[[:space:]]$/) prefix = prefix " "
+              gsub(/\047/, "\047\047", scalar)
+              line = prefix "\047" scalar "\047" separator comment cr
+            }
+          }
+        }
+        print line
+      }
+    }
+  ' "$file" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+
+  $final_newline || truncate -s -1 "$tmp"
+
+  if ! cmp -s "$file" "$tmp"; then
+    mv "$tmp" "$file"
+  else
+    rm -f "$tmp"
+  fi
+}
+
+normalize_yaml_descriptions() {
+  local root="$1"
+  local file
+  [[ -d "$root" ]] || return 0
+  while IFS= read -r -d '' file; do
+    normalize_yaml_description "$file" || return 1
+  done < <(find "$root" -type f -name '*.md' -print0)
+}
+
 install_agency_tool() {
   local tool="$1"
   local agency_dir="$2"
@@ -326,10 +790,14 @@ install_agency_tool() {
       if [[ -d "$agency_dir/integrations/antigravity" ]]; then
         info "Running convert.sh for $tool..."
         if "$agency_dir/scripts/convert.sh" --tool antigravity 2>/dev/null; then
-          info "Running install.sh for $tool..."
-          install_cmd=("$agency_dir/scripts/install.sh" --tool antigravity --no-interactive)
-          [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
-          "${install_cmd[@]}" 2>/dev/null || success=false
+          if normalize_yaml_descriptions "$agency_dir/integrations/antigravity"; then
+            info "Running install.sh for $tool..."
+            install_cmd=("$agency_dir/scripts/install.sh" --tool antigravity --no-interactive)
+            [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+            "${install_cmd[@]}" 2>/dev/null || success=false
+          else
+            success=false
+          fi
         else
           success=false
         fi
@@ -338,17 +806,25 @@ install_agency_tool() {
     opencode)
       info "Running convert.sh for $tool..."
       if "$agency_dir/scripts/convert.sh" --tool opencode 2>&1 | grep -v "^$" > /dev/null; then
-        info "Running install.sh for $tool..."
-        install_cmd=("$agency_dir/scripts/install.sh" --tool opencode --no-interactive)
-        [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
-        "${install_cmd[@]}" 2>/dev/null || success=false
-        if [[ -d ".opencode/agents" && -n "$(ls -A .opencode/agents 2>/dev/null)" ]]; then
-          ensure_subagent_mode ".opencode/agents"
-          info "Moving agents to global location..."
-          mkdir -p "${HOME}/.config/opencode/agents"
-          mv .opencode/agents/*.md "${HOME}/.config/opencode/agents/" 2>/dev/null || true
-          rm -rf .opencode/agents
-          rmdir .opencode 2>/dev/null || true
+        if normalize_yaml_descriptions "$agency_dir/integrations/opencode"; then
+          info "Running install.sh for $tool..."
+          install_cmd=("$agency_dir/scripts/install.sh" --tool opencode --no-interactive)
+          [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+          "${install_cmd[@]}" 2>/dev/null || success=false
+          if [[ -d ".opencode/agents" && -n "$(ls -A .opencode/agents 2>/dev/null)" ]]; then
+            if normalize_yaml_descriptions ".opencode/agents"; then
+              ensure_subagent_mode ".opencode/agents"
+              info "Moving agents to global location..."
+              mkdir -p "${HOME}/.config/opencode/agents"
+              mv .opencode/agents/*.md "${HOME}/.config/opencode/agents/" 2>/dev/null || true
+              rm -rf .opencode/agents
+              rmdir .opencode 2>/dev/null || true
+            else
+              success=false
+            fi
+          fi
+        else
+          success=false
         fi
       else
         warn "convert.sh failed for $tool"
@@ -357,15 +833,23 @@ install_agency_tool() {
       ;;
     copilot)
       info "Running install.sh for $tool..."
-      install_cmd=("$agency_dir/scripts/install.sh" --tool copilot --no-interactive)
-      [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
-      "${install_cmd[@]}" 2>/dev/null || success=false
+      if normalize_yaml_descriptions "$agency_dir"; then
+        install_cmd=("$agency_dir/scripts/install.sh" --tool copilot --no-interactive)
+        [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+        "${install_cmd[@]}" 2>/dev/null || success=false
+      else
+        success=false
+      fi
       ;;
     claude)
       info "Running install.sh for $tool..."
-      install_cmd=("$agency_dir/scripts/install.sh" --tool claude-code --no-interactive)
-      [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
-      "${install_cmd[@]}" 2>/dev/null || success=false
+      if normalize_yaml_descriptions "$agency_dir"; then
+        install_cmd=("$agency_dir/scripts/install.sh" --tool claude-code --no-interactive)
+        [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+        "${install_cmd[@]}" 2>/dev/null || success=false
+      else
+        success=false
+      fi
       ;;
   esac
 

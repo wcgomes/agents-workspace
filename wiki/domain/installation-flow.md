@@ -24,6 +24,10 @@ curl/install.sh or ./tools/install.sh
 
 Even when run from a local clone, **local WIP is not installed**. For local testing, copy manually from `templates/`.
 
+## Agency-agent frontmatter normalization
+
+In the `agency-agents` flow, the installer normalizes agent-file frontmatter before the final copies or moves to OpenCode, Claude, Copilot, and Antigravity. Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent.
+
 ## Installer entry points
 
 ```bash
