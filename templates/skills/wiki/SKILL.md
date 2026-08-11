@@ -29,35 +29,37 @@ Wiki files are loaded into agent context. Every line costs tokens.
 
 Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
+Treat future context and maintenance cost as part of every ingest decision. Wiki maintenance is worthwhile only when its durable retrieval value materially exceeds the added context, navigation, duplication, and upkeep cost. Evaluation is required; writing is not.
+
 **Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
 
 **Date-bound artifacts go in `wiki/records/`.** Material from a specific event worth keeping — e.g., incidents, research, audits, meetings, reviews. Use a `YYYYMMDD-` filename prefix (e.g., `wiki/records/incidents/20260110-pg-outage.md`).
 
 ## Three Operations
 
-**Setup** — create `wiki/` when new knowledge must be persisted and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
+**Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
 **Query** — coordinator reads `wiki/index.md` first to route by descriptions and keywords. Choose the most relevant direct page or folder index, then load only relevant linked pages.
 
-**Ingest** — after domain-appropriate review/verification of every task and before the final response, the coordinator evaluates whether durable workspace knowledge remains uncaptured. Evaluation is mandatory; ingestion dispatch is conditional.
+**Ingest** — after domain-appropriate review/verification of every task and before the final response, the coordinator evaluates whether optional wiki maintenance would materially improve durable workspace knowledge. Evaluation is mandatory; ingestion dispatch and wiki writing are conditional.
 
 ## <HARD-GATE> Post-Review Ingest Evaluation
 
 The coordinator runs this evaluation after review/verification and before the final response for EVERY task, including software, writing, research, design, marketing, operations, and other deliverables. Do NOT skip it.
 
-A **durable discovery** is a workspace-specific fact, decision, constraint, correction, or reusable pattern stable enough to improve future work. Requested task artifacts, generic knowledge, raw logs, and transient evidence are not automatically wiki knowledge. Dispatch is needed only when qualifying knowledge is not already captured correctly in reviewed wiki deliverables.
+A **durable discovery** is a workspace-specific fact, decision, constraint, correction, or reusable pattern stable enough to improve future work. Durability alone is insufficient: a wiki change must produce material net value after compact organization, future context cost, maintenance burden, ambiguity, and duplication are considered. Requested task artifacts and generic, low-value, ambiguous, redundant, transient, or already-captured information do not qualify for addition.
 
 Evaluate the reviewed artifacts and outcomes, verification evidence, user corrections, and any optional executor signal against these questions:
 
-1. Does any workspace-specific decision, rule, constraint, correction, or stable reusable pattern remain uncaptured after reviewing the deliverables?
-2. Does existing wiki knowledge remain stale, duplicated, contradicted, or missing necessary context exposed by the task?
-3. Does a spec archive still require a descriptive counterpart or supersession update?
+1. Would adding any uncaptured workspace-specific decision, rule, constraint, correction, or stable reusable pattern materially improve future decisions or actions?
+2. Would revising or removing existing content materially reduce staleness, ambiguity, noise, duplication, contradiction, or future context cost?
+3. Would a descriptive counterpart or supersession update from a spec archive add durable value not already captured?
 
-Any YES → ingest. All NO → skip additional ingestion dispatch, but the evaluation still occurred. The absence of an executor signal never permits the coordinator to skip evaluation.
+Any clear YES → open the conditional ingestion stream. All NO, uncertain, or marginal → skip additional ingestion dispatch, but the evaluation still occurred. No wiki write is required merely to complete the workflow. The absence of an executor signal never permits the coordinator to skip evaluation.
 
 Executors do not read or edit the wiki unless their handoff explicitly scopes wiki work. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
 
-When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, wiki edits, navigation updates, and consistency lint, and must not alter the task's original deliverables. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
+When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
 
 Explicit wiki tasks and broad wiki setup/creation still run this mandatory evaluation. If their reviewed deliverables already captured the durable knowledge correctly, including navigation and consistency, skip redundant ingestion dispatch. Broad setup/creation remains the separate multi-role workflow under **Setup**; post-task ingestion does not replace it.
 
@@ -74,7 +76,7 @@ wiki/
 ├── conventions/          # One file per convention
 │   ├── index.md          # Optional folder index for larger/topic-rich wikis
 │   └── <pattern-name>.md
-├── domain/               # One file per business rule — descriptive, post-hoc distilled facts (prescriptive behavior contracts go in specs/<domain>.md; specs are the prescriptive source of truth, and on spec archive their descriptive counterparts are ingested here — see spec-builder)
+├── domain/               # One file per business rule — descriptive, post-hoc distilled facts (prescriptive behavior contracts go in specs/<domain>.md; specs are the prescriptive source of truth, and after spec archive their descriptive counterparts are eligible for ingestion here only when mandatory post-review evaluation finds material durable value after compact organization and future context cost — see spec-builder)
 │   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR
@@ -100,9 +102,10 @@ As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic g
 
 When the wiki changes, maintain it deliberately.
 
-- **Add** — create a page when the knowledge is new, stable enough to reuse, and not already covered.
-- **Update** — when the knowledge already belongs on a page, a rule was clarified, or a page became incomplete or misleading.
-- **Remove** — when a page/section is obsolete, contradicted, duplicated elsewhere, or no longer useful. Also update or remove references from `wiki/index.md` and related pages.
+- **Add** — create a page only when the knowledge is new, unambiguous, stable enough to reuse, not already covered, and worth its future context and maintenance cost.
+- **Update** — revise content when doing so materially clarifies durable knowledge, completes a useful rule, or reduces misleading or stale guidance.
+- **Reorganize** — merge files/pages, rename or move them, or split oversized or mixed-topic content when doing so materially improves compactness or retrieval, or reduces future context cost. Update all affected navigation and references.
+- **Remove** — delete or consolidate a page/section when doing so materially reduces ambiguity, noise, context cost, contradiction, duplication, or obsolete content. Also update or remove references from `wiki/index.md` and related pages.
 
 ### Lint
 
@@ -120,12 +123,12 @@ Do not leave the wiki internally inconsistent after editing it.
 | Excuse | Reality |
 |--------|---------|
 | "I didn't learn anything new" | Run the evaluation. |
-| "This is too minor to document" | Size is irrelevant; dispatch only if it is durable and reusable. |
-| "I'll update it later" | You won't. |
+| "This is too minor to document" | Size alone is irrelevant; dispatch only for material net durable value. |
+| "The workflow needs a wiki edit" | No. It needs an evaluation; write only for material durable value. |
 | "Too specific to track" | Workspace specificity helps only when the knowledge is stable enough to improve future work. |
 | "The log proves it happened" | Distill the insight, not the raw data. |
 
 ## Gotchas
 
 - Pages not reachable from `wiki/index.md` are invisible. Keep root and folder indexes updated when pages are added, moved, or removed — but keep them lean: descriptions and keywords only.
-- Evaluation is automatic and mandatory; ingestion is conditional on a durable discovery.
+- Evaluation is automatic and mandatory; ingestion and writing are optional, conditional on material durable value after future context cost.
