@@ -17,10 +17,13 @@ Canonical section structures for each artifact. Copy verbatim; fill in. Use RFC 
 <Explicitly out of scope — prevents scope creep.>
 
 ## Approach
-<Brief approach. Full detail goes in design.md (Full mode).>
+<Brief approach summary. Expanded non-normative detail goes in design.md only when the overflow rule requires it.>
+
+## Decision index
+- **<Decision>:** <conclusion + concise rationale; link to design.md section when expanded detail is needed>
 
 ## Clarifications
-<!-- Full mode only — Q&A resolved during clarify. Remove section in Lite. -->
+<!-- Include only material Q&A resolved during clarify; omit when there was no ambiguity. -->
 - **Q:** <question>
   **A:** <answer + decision>
 ```
@@ -38,7 +41,7 @@ Only include sections that apply to this change. Source spec uses the same Requi
 <Outcome statement. RFC 2119 keywords as needed.>
 
 #### Scenario: <name>
-<!-- Software: Given/When/Then. Non-software: one-line acceptance condition (e.g., "X delivered and stakeholder Y approves"). -->
+<!-- Choose one form. Software: keep the Given/When/Then lines below. Non-software: replace them with one acceptance-condition line, e.g., "X delivered and stakeholder Y approves." -->
 - Given <initial state>
 - When <action>
 - Then <observable outcome>
@@ -49,7 +52,7 @@ Only include sections that apply to this change. Source spec uses the same Requi
 <Updated outcome statement.>
 
 #### Scenario: <name>
-<!-- Software: Given/When/Then. Non-software: one-line acceptance condition (e.g., "X delivered and stakeholder Y approves"). -->
+<!-- Choose one form. Software: keep the Given/When/Then lines below. Non-software: replace them with one acceptance-condition line, e.g., "X delivered and stakeholder Y approves." -->
 - Given <initial state>
 - When <action>
 - Then <observable outcome>
@@ -81,9 +84,9 @@ The executable "how" — consumed by `orchestrate` via handoffs. Dependency-orde
 - [ ] verify <scenario from spec.md>
 ```
 
-## 4. design.md (Full mode only)
+## 4. design.md (conditional)
 
-Keep lean — only what `tasks.md` cannot carry. Omit sections that add no value. **Software:** cover data model and API contracts under Approach or Significant decisions.
+Create only when a material design decision cannot remain understandable and actionable as a concise proposal decision plus task instructions without overloading either artifact or duplicating substantial context. Evidence may include meaningful alternatives and trade-offs, an interacting multi-step flow, or substantial migration, rollback, security, or cross-component reasoning; work category alone is insufficient. Keep it non-normative and omit it when concise entries suffice. Guarantees always belong in `spec.md`. Omit sections that add no value.
 
 ```markdown
 # Design: <change-id>
@@ -92,11 +95,17 @@ Keep lean — only what `tasks.md` cannot carry. Omit sections that add no value
 <Chosen approach and rationale. Alternatives considered.>
 
 ## Significant decisions
-<Decisions affecting structure, with trade-offs.>
+<Expanded rationale, alternatives, and trade-offs. Link each decision from proposal.md.>
 
 ## Flow
 <Inputs → transformations → outputs. Diagram if useful.>
 
-## Artifact changes
-<Anticipated files/modules and the nature of each change.>
+## Architectural boundaries
+<Components, boundaries, and responsibilities when they need explanation. Keep actionable file/path inventory in tasks.md.>
+
+## Migration and rollback
+<Only when substantial sequencing, compatibility, or recovery reasoning needs expansion.>
+
+## Security considerations
+<Only when threat boundaries or mitigations need expanded reasoning. Normative guarantees remain in spec.md.>
 ```

@@ -2,13 +2,13 @@
 
 ## Status
 
-Accepted (2026-06-18). Archive-time ingestion routing was superseded by [ADR 0004](0004-serialized-post-review-wiki-ingestion.md).
+Accepted (2026-06-18), amended (2026-08-13). Archive-time ingestion routing was superseded by [ADR 0004](0004-serialized-post-review-wiki-ingestion.md).
 
 ## Context
 
 The workspace template had a wiki knowledge base + `orchestrate` skill for delegation, but no durable outcome-contract layer. Plans were ephemeral (in-context handoffs); review checked against handoff done-criteria only, with no persistent spec to detect drift. The `wiki/decisions/` ADR slot was reserved in `wiki/SKILL.md` but dormant.
 
-## Decision
+## Original Decision
 
 Add a `spec-builder` skill implementing spec-driven development (SDD).
 
@@ -21,14 +21,22 @@ Add a `spec-builder` skill implementing spec-driven development (SDD).
 - **Fluid, not waterfall:** specs evolve mid-work. Refine the current change in place vs. start a new change; loop spec ↔ execution ↔ verify. `verify` (`converge`) catches drift.
 - **Domain-agnostic vocabulary:** outcome/execution (not behavior/implementation). Software-specific precision (Given/When/Then scenarios, TDD task ordering, scenarios→tests mapping, data model & API contracts) carried as `Software:` notes.
 
-## Rationale
+## Amendment: Unified Workflow and Readiness Gate
+
+The initial Lite/Full split is superseded by one proportional workflow: `propose` → `clarify` → `plan` → `analyze` → execution → `verify` → `archive`. `proposal.md`, `spec.md`, and `tasks.md` are required; artifact depth scales with the work rather than selecting a rigor mode.
+
+`design.md` is conditional, non-normative overflow. Create it only when a material design decision needs expanded rationale, alternatives and trade-offs, interacting flows, or substantial migration, rollback, security, or cross-component reasoning that would overload the proposal or tasks. Work category alone never requires it. Observable guarantees remain in `spec.md`; concise decisions stay indexed in `proposal.md`; executable actions and validation stay in `tasks.md`.
+
+`clarify` must resolve every ambiguity marker before planning. After planning, `analyze` is a mandatory readiness gate that checks cross-artifact routing, consistency, requirement and scenario coverage, and scope before implementation dispatch. `orchestrate` enforces this gate whenever an active named spec change is in scope, requires `Spec ref:` on its implementation handoffs, and requires readiness analysis again after material artifact changes.
+
+## Original Rationale
 
 - Merges OpenSpec's delta-based change model (strongest evolution mechanism; spec-kit has no equivalent) with spec-kit's WHAT/HOW artifact split and verify richness (analyze pre-impl, converge post-impl).
 - Keeps SDD logic in a **skill** (not wiki — wiki is distilled post-hoc knowledge; specs are in-flight contracts).
 - `orchestrate` stays lean: SDD is optional per task.
 - Templates-as-LLM-constraints pattern from spec-kit (`[NEEDS CLARIFICATION]` markers, simplicity gate).
 
-## Alternatives Considered
+## Original Alternatives Considered
 
 - **Full OpenSpec** (YAML schemas, 25+ commands) — rejected: complexity without return for this template.
 - **spec-kit constitution as a separate file** — rejected: duplicates `wiki/conventions/`. Gates inlined as skill rules instead.
@@ -38,6 +46,8 @@ Add a `spec-builder` skill implementing spec-driven development (SDD).
 ## Consequences
 
 - New `specs/` directory at workspace root when SDD is used.
-- `orchestrate` handoffs gain optional `Spec ref:` field.
+- The original integration made `Spec ref:` optional; the amendment makes it mandatory for every in-scope implementation handoff.
 - `wiki/decisions/` activated (was dormant).
 - Users run `./tools/install.sh` to install the new skill.
+- Spec-backed implementation cannot dispatch merely because `tasks.md` exists; readiness analysis must pass first.
+- Conditional design overflow avoids both mandatory design-document overhead and loss of substantial design reasoning while preserving clear artifact responsibilities.
