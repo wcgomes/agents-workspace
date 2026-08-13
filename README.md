@@ -6,7 +6,7 @@ Designed to create a professional workflow with dynamic team assembly of special
 
 Under the hood, its operating model brings together memory, subagent-driven development, spec-driven workflows, and agent loops grounded in empirical verification.
 
-Installs [The Agency](https://github.com/msitarzewski/agency-agents), a complete AI-agent package covering software engineering, design, marketing, sales, finance, paid media, project management, and other task domains.
+> Installs [The Agency](https://github.com/msitarzewski/agency-agents), a complete AI-agent package covering software engineering, design, marketing, sales, finance, paid media, project management, and other task domains.
 
 ## Harness Flow
 
