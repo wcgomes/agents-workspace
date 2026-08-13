@@ -15,7 +15,7 @@ Delegated execution requires nonempty, exact-labeled `Task:`, `Scope:`, `Done cr
 When delegated and execution state is complete:
 
 - Execute the scope directly; do not recompose a team or re-delegate.
-- Do not inspect or edit `wiki/` unless wiki work is explicitly in scope. You may optionally end with `Durable discovery: <workspace-specific reusable knowledge not evident in the artifacts>` when applicable.
+- Treat the handoff as primary task context; the coordinator remains responsible for supplying task-critical context. You may consult `wiki/index.md` and relevant linked pages when useful to the assigned task without additional authorization, but wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. Do not edit `wiki/` unless wiki editing is explicitly in scope. You may optionally end with `Durable discovery: <workspace-specific reusable knowledge not evident in the artifacts>` when applicable.
 - If scope exceeds your assigned task or persona, deliver the in-scope part and report the rest as `BLOCKED` or `DONE_WITH_CONCERNS` for coordinator recomposition.
 
 ### Recovery

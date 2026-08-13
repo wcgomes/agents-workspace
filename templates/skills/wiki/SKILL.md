@@ -11,7 +11,7 @@ The wiki exists to eliminate unnecessary workspace exploration: with the right k
 
 ## <HARD-GATE> Coordinator Context Before Any Task
 
-The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. Executors use handoff context and never inspect or edit `wiki/` unless wiki work is explicitly part of their scope.
+The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. The handoff remains executors' primary task context, and the coordinator remains responsible for supplying task-critical context. Executors may consult `wiki/index.md` and relevant linked pages when useful to their assigned task without additional authorization; wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. Wiki editing must be explicitly part of their handoff.
 
 ## Design Principle
 
@@ -57,13 +57,13 @@ Evaluate the reviewed artifacts and outcomes, verification evidence, user correc
 
 Any clear YES → open the conditional ingestion stream. All NO, uncertain, or marginal → skip additional ingestion dispatch, but the evaluation still occurred. No wiki write is required merely to complete the workflow. The absence of an executor signal never permits the coordinator to skip evaluation.
 
-Executors do not read or edit the wiki unless their handoff explicitly scopes wiki work. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
+Executors may consult the wiki under the read boundary above; they do not edit it unless wiki editing is explicitly part of their handoff. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
 
 When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
 
 Explicit wiki tasks and broad wiki setup/creation still run this mandatory evaluation. If their reviewed deliverables already captured the durable knowledge correctly, including navigation and consistency, skip redundant ingestion dispatch. Broad setup/creation remains the separate multi-role workflow under **Setup**; post-task ingestion does not replace it.
 
-**Wiki vs skill.** Wiki = durable declarative knowledge (what is true / decided / how the workspace is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when content is clearly procedural AND clearly recurring, flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. Check existing skills first — adapt, don't duplicate. Uncertainty alone is not a reason to ingest; declarative content must still pass the durability and future-use test. Wiki pages may reference workspace skills when relevant; skills stay self-contained and never reference wiki.
+**Wiki vs skill.** Wiki = durable declarative knowledge (what is true / decided / how the workspace is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when content is clearly procedural AND clearly recurring, flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. Check existing skills first — adapt, don't duplicate. Uncertainty alone is not a reason to ingest; declarative content must still pass the durability and future-use test. Wiki pages may reference workspace skills when relevant; skills keep their procedures self-contained and may direct runtime wiki consultation for workspace context, but must not depend on wiki pages for procedural instructions.
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
 

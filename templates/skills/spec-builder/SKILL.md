@@ -36,7 +36,6 @@ Skip confirmation only when the user explicitly requests a spec.
 - **`[NEEDS CLARIFICATION: ...]` markers are MANDATORY** when ambiguous — never guess. Resolve before `plan` (Lite) or before execution (Full).
 - **No speculative features** ("might need"). Simplicity gate.
 - **Fluid, not waterfall** — see "Evolving a spec mid-work" below.
-- **Wiki access is explicit:** executors do not inspect or edit the wiki unless wiki work is part of their handoff. The required `propose` query below is explicit read scope. All wiki writes route through the coordinator's mandatory post-review evaluation and, when positive, the consolidated serialized Wiki Ingestion Specialist stream.
 
 ## Structure
 
@@ -52,7 +51,7 @@ specs/
     └── archive/<YYYYMMDD>-<id>/  # archived, immutable change bundle
 ```
 
-**Source spec format:** `# <Domain> Specification` / `## Purpose` / `## Requirements` / `### Requirement: <name>` / `#### Scenario: <name>` (Given/When/Then for software; one-line acceptance condition for non-software). Organized by domain (feature area, work stream, or bounded context). Prescriptive contract here; descriptive domain facts live in `wiki/domain/` — load via `propose`.
+**Source spec format:** `# <Domain> Specification` / `## Purpose` / `## Requirements` / `### Requirement: <name>` / `#### Scenario: <name>` (Given/When/Then for software; one-line acceptance condition for non-software). Organized by domain (feature area, work stream, or bounded context).
 
 **Domain id:** flat kebab-case matching `[a-z0-9]+(?:-[a-z0-9]+)*` (for example, `order-fulfillment`). It MUST NOT contain `/` or create nested paths. `changes` is reserved and MUST NOT be used as a domain id.
 
@@ -98,7 +97,7 @@ For each: what it does, output, and handoff to orchestrate.
 Prerequisite: user confirmed spec creation (see HARD-GATE). If not confirmed, RECOMMEND and wait — do not proceed.
 
 **Before proposing a new change:** scan `specs/changes/` (top-level entries, excluding `changes/archive/`) for an ACTIVE change folder in the same domain or overlapping scope. If one exists and the new intent refines it (defect in current behavior, requirement clarification, improvement within the same scope), edit that change's `spec.md` (delta) in place per "Evolving a spec mid-work" — do NOT open a new change. Only open a new `changes/<new-id>/` when scope genuinely expands (new requirement, different bounded context, behavior outside this change).
-Create `changes/<id>/proposal.md` + `spec.md` (delta). **Load the `wiki` skill and query the workspace wiki (`index.md` first, then relevant pages) for context relevant to the spec — conventions, architecture, domain rules, prior decisions (ADRs). Use findings as proactive guardrails before drafting.**
+Create `changes/<id>/proposal.md` + `spec.md` (delta). Before drafting, load the `wiki` skill, start from `wiki/index.md`, and consult relevant descriptive knowledge. Compare relevant descriptive facts with the realized source spec (if any) and every active delta in the same domain or overlapping scope; these form the relevant prescriptive live contract. Flag every conflict; never silently choose a source or expand scope.
 - **Output:** change folder with proposal + delta spec.
 - **Handoff:** none yet — awaits `plan`.
 
@@ -121,7 +120,7 @@ Review execution against the **PERSISTED spec**, not just done criteria.
 
 ### `archive`
 Prerequisite: user confirmed archive (see HARD-GATE). If verification passed but no confirmation, ASK and wait — do not proceed.
-Merge delta sections into the source spec `specs/<domain>.md`: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted. Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`. **REPORT all added, modified, and removed domain requirements, plus significant decisions, to the coordinator; do not inspect or edit the wiki.** The coordinator always evaluates after review and routes only qualifying wiki maintenance through the consolidated serialized Wiki Ingestion Specialist stream.
+Merge delta sections into the source spec `specs/<domain>.md`: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted. Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`. Report all added, modified, and removed requirements and significant decisions to the coordinator; do not edit the wiki as part of `archive`.
 - **Output:** updated `specs/<domain>.md`.
 
 ## Evolving a spec mid-work
@@ -152,14 +151,6 @@ If the user requests further changes instead, return to the fluid loop above —
 - After `plan`, the coordinator loads `orchestrate` and dispatches handoffs from `tasks.md`. Each handoff SHOULD carry `Spec ref: specs/changes/<id>/` so review can check against the spec.
 - `verify` runs AS PART OF orchestrate's Phase 6 review (Stage 1 Conformance) when a Spec ref exists — it checks spec conformity in addition to done-criteria conformance.
 - `orchestrate` is **NOT modified** by this skill; it only consumes the `Spec ref`.
-
-## Wiki synchronization
-
-Specs (prescriptive, lifecycle-bound) and `wiki/domain/` (descriptive, distilled/stable) are distinct but must agree on what the system is. They are NOT redundant — see the wiki SKILL.md for the canonical distinction.
-
-- **Read-side (`propose`):** `wiki/domain/` is the descriptive source (how the system IS); `specs/<domain>.md` (plus active deltas) is the prescriptive source (how it MUST be). Read both before drafting a delta. If they conflict, flag it as drift to resolve — never silently pick one. Resolution: if the wiki reflects shipped behavior the spec never captured, the spec delta should formalize it; if the wiki is simply stale, expose it to the mandatory evaluation and queue an update only when maintenance qualifies.
-- **Write-side (`archive`):** merge the delta into `specs/<domain>.md` and report all domain-rule changes without reading or writing the wiki. The coordinator always runs the mandatory post-review evaluation, but archive completion alone never requires a wiki write. Add, revise, or remove `wiki/domain/` content only when doing so materially improves durable descriptive knowledge after accounting for compact organization and future context cost; do not add low-value, ambiguous, redundant, transient, or already-captured information. When existing wiki content becomes contradictory, stale, or noisy, the evaluation may qualify revision or removal. Route qualifying maintenance through the consolidated serialized Wiki Ingestion Specialist stream; unresolved qualifying maintenance is reported under `orchestrate`'s status protocol rather than silently dropped.
-- **Boundary restatement:** specs hold the prescriptive contract and carry the lifecycle (WIP deltas, archived source). `wiki/domain/` holds only distilled, stable descriptive facts with material future value. An archive may produce a descriptive wiki add/update/remove, but evaluation may correctly produce no wiki change.
 
 ## Templates
 

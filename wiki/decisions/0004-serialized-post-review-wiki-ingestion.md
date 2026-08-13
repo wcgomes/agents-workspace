@@ -2,15 +2,15 @@
 
 ## Status
 
-Accepted (2026-08-04)
+Accepted (2026-08-04); amended (2026-08-13) to permit relevant, in-scope executor consultation while preserving the original write and ingestion decisions.
 
 ## Context
 
-Allowing each task executor to inspect or update the wiki as incidental scope duplicates research, mixes delivery with knowledge maintenance, and risks conflicting writes from parallel work. Skipping wiki work entirely unless an executor reports a learning also misses durable knowledge evident only after deliverables and verification results are reviewed together. The lifecycle must apply consistently across all deliverable domains without creating unnecessary specialist dispatches.
+Treating wiki inspection or updates as open-ended incidental executor scope duplicates research, mixes delivery with knowledge maintenance, and risks conflicting writes from parallel work. Relevant read-only consultation is different: it can supply durable workspace context without moving responsibility for task-critical handoff context away from the coordinator. Skipping wiki work entirely unless an executor reports a learning also misses durable knowledge evident only after deliverables and verification results are reviewed together. The lifecycle must apply consistently across all deliverable domains without creating unnecessary specialist dispatches.
 
 ## Decision
 
-Task executors use their handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly in scope. They may optionally return one trailing `Durable discovery: ...` line for workspace-specific reusable knowledge not evident in their artifacts; this signal is only a pointer, and its absence has no workflow meaning.
+Task executors use handoff context as their primary context, and the coordinator remains responsible for including task-critical context in the handoff. Executors may consult relevant wiki content when it helps execute the assigned scope, but consultation cannot expand that scope or override the handoff, applicable specs, or current artifacts. They edit `wiki/` only when wiki editing is explicitly in scope. They may optionally return one trailing `Durable discovery: ...` line for workspace-specific reusable knowledge not evident in their artifacts; this signal is only a pointer, and its absence has no workflow meaning.
 
 After domain-appropriate review and verification of every task, and before the final response, the coordinator evaluates the reviewed artifacts, outcomes, corrections, and optional signals for uncaptured durable workspace knowledge. Evaluation is mandatory for every deliverable domain; ingestion is conditional.
 
@@ -30,6 +30,6 @@ After domain-appropriate review and verification of every task, and before the f
 
 ## Consequences
 
-- Handoffs exclude wiki access by default and may carry only the minimal optional discovery signal.
+- Handoffs remain primary, the coordinator retains responsibility for task-critical context, and relevant consultation grants neither broader scope nor wiki edit authority.
 - Orchestration completes as analyze → assemble → delegate → review → evaluate/conditionally ingest → synthesize.
 - Post-task ingestion remains distinct from broad wiki setup or explicit wiki delivery work.

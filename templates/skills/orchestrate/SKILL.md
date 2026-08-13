@@ -9,7 +9,7 @@ Full coordination cycle: analyze → assemble → delegate → review → learn 
 
 ## <HARD-GATES>
 
-1. **Coordinator context first** — the main agent obtains lean coordination context before orchestration (`wiki/index.md` first; optional compact knowledge-tool lookups). Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly in scope.
+1. **Coordinator context first** — the main agent obtains lean coordination context before orchestration (`wiki/index.md` first; optional compact knowledge-tool lookups). The handoff remains executors' primary task context, and the coordinator remains responsible for supplying task-critical context. Executors may consult `wiki/index.md` and relevant linked pages when useful to their assigned task without additional authorization; wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts, and executors do not edit `wiki/` unless wiki editing is explicitly in scope.
 2. **Roles are mandatory** — if no exact specialist is found, use the best adjacent specialist. Use a generic/default agent only when no exact or adjacent fit exists. Generic/default is the last resort, not a convenience. Never drop or collapse a role from the plan.
 3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
 4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
@@ -226,7 +226,7 @@ Compaction rule: Preserve exact `Session type: DELEGATED` and exact-labeled `Tas
 - Implementation: match existing style, even if you'd write it differently
 - Investigation/debugging: reproduce or verify the issue when feasible before fixing
 - Verification: state the check performed, the observed result, and any gaps
-- Wiki boundary: use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly in scope; optionally return at most one trailing `Durable discovery: ...` line for tacit, workspace-specific reusable knowledge not evident in the artifacts
+- Wiki boundary: use the handoff as primary context; `wiki/index.md` and relevant linked pages may be consulted when useful to the assigned task without additional authorization, but cannot expand scope or override the handoff, applicable specs, or current source artifacts; do not edit `wiki/` unless wiki editing is explicitly in scope; optionally return at most one trailing `Durable discovery: ...` line for tacit, workspace-specific reusable knowledge not evident in the artifacts
 - All handoffs: self-review before reporting the scope complete
 
 Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
