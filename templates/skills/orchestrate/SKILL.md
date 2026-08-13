@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: "Use when planning or executing delegated work, including execute-the-plan continuations. Covers the full coordination cycle: analyze request, define roles, discover specialists, plan execution, handoff, review, learn, and synthesize."
+description: "Use only in coordinator sessions to orchestrate planning or execution of work, including execute, continue, or resume-plan requests. Covers role definition, specialist discovery, dispatch, review, learning, and synthesis. Never use in Session type: DELEGATED executor sessions; those agents perform their handed scope directly without orchestration."
 ---
 
 # Orchestrate
