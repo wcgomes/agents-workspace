@@ -25,7 +25,7 @@ Wiki files are loaded into agent context. Every line costs tokens.
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to `.md` files only (page or subfolder's `index.md`, never the folder itself); every root and folder index must obey the Index Entry Contract below
+- **index.md is the routing map** — required entrypoint; `.md` links followed by brief descriptions with useful retrieval terms (page or subfolder's `index.md`, never the folder itself); every root and folder index must obey the Index Entry Contract below
 
 Keep substantive pages dense. Patterns, conventions, examples — all welcome there if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
@@ -35,9 +35,9 @@ Treat future context and maintenance cost as part of every ingest decision. Wiki
 
 An `index.md` may contain only its title, optional short group headings, and entries in this exact one-line shape:
 
-`- [Page title](relative/path.md) — keywords: keyword-1, keyword-2 — Description of 12 words or fewer.`
+`- [Authentication](architecture/authentication.md) — OAuth token refresh, session boundaries, and authorization flow.`
 
-Each entry is one physical Markdown bullet with exactly one `.md` link, 2–5 short retrieval keywords, and a description of at most 12 words. Route; do not summarize. Index entries must not contain architectural details, exhaustive behavior, changelog or spec inventories, test or run instructions, rationale, examples, or content duplicated from the linked page. Move qualifying detail to the linked page; otherwise omit it.
+Each entry is one physical Markdown bullet with exactly one `.md` link followed by a natural routing description of at most 12 words. Integrate 2–5 short retrieval terms into that description; do not append a separate keyword field or label. Route; do not summarize. Index entries must not contain architectural details, exhaustive behavior, changelog or spec inventories, test or run instructions, rationale, examples, or content duplicated from the linked page. Move qualifying detail to the linked page; otherwise omit it.
 
 **Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
 
@@ -47,7 +47,7 @@ Each entry is one physical Markdown bullet with exactly one `.md` link, 2–5 sh
 
 **Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. Any root or folder index created during setup must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
-**Query** — coordinator reads `wiki/index.md` first to route by descriptions and keywords. Choose the most relevant direct page or folder index, then load only relevant linked pages.
+**Query** — coordinator reads `wiki/index.md` first to route by descriptions and retrieval terms. Choose the most relevant direct page or folder index, then load only relevant linked pages.
 
 **Ingest** — after domain-appropriate review/verification of every task and before the final response, the coordinator evaluates whether optional wiki maintenance would materially improve durable workspace knowledge. Evaluation is mandatory; ingestion dispatch and wiki writing are conditional.
 
@@ -79,7 +79,7 @@ Do NOT ask "should I update the wiki?" — evaluate automatically.
 
 ```
 wiki/
-├── index.md              # Required routing map — compact descriptions + keywords
+├── index.md              # Required routing map — compact descriptions with retrieval terms
 ├── architecture.md       # System structure overview (single file)
 ├── conventions/          # One file per convention
 │   ├── index.md          # Optional folder index for larger/topic-rich wikis
@@ -95,7 +95,7 @@ wiki/
 
 This is a starting point. Create additional folders/subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder; keep it navigable.
 
-Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from root; larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough keywords to choose the right path.
+Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from root; larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough retrieval terms to choose the right path.
 
 Creation, ingestion, and maintenance must preserve the Index Entry Contract; never expand an index entry to capture page content.
 
@@ -104,7 +104,7 @@ As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic g
 ### Navigation
 
 1. Read `wiki/index.md` first.
-2. Pick the most relevant direct page or folder index from the keywords.
+2. Pick the most relevant direct page or folder index from its description and retrieval terms.
 3. If you open a folder index, read only the linked pages that match the task.
 4. Don't open broad or unrelated wiki areas just because they exist.
 
