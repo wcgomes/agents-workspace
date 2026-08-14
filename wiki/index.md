@@ -1,24 +1,20 @@
 # Wiki Index
 
-Quick-reference index. Find files by keyword.
+## Architecture
+- [Architecture](architecture.md) — architecture, structure, workflow — Repository contexts and component relationships.
 
-## architecture
-- [architecture.md](architecture.md) — directory structure, data flow, component relationships
+## Domain
+- [Template vs Installed](domain/template-vs-installed.md) — templates, installation, runtime — Distinguishes distribution sources from installed runtime artifacts.
+- [AGENTS Template vs Installed Policy](domain/agents-md.md) — agents, boot-policy, sessions — Explains instruction-file roles and delegated session semantics.
+- [Skill System](domain/skill-system.md) — skills, discovery, lifecycle — Describes skill structure, loading, and activation.
+- [Installation Flow](domain/installation-flow.md) — installer, distribution, platforms — Documents installer sources, destinations, and limitations.
 
-## domain
-- [template-vs-installed.md](domain/template-vs-installed.md) — templates/ source vs installed skills + global boot policy; distribution meta vs consumer live contracts
-- [agents-md.md](domain/agents-md.md) — template, meta root, global boot policy paths; marker upsert; session type, delegated execution state, compaction capsule
-- [skill-system.md](domain/skill-system.md) — skill discovery, progressive loading, lifecycle
-- [installation-flow.md](domain/installation-flow.md) — install.sh always downloads main.zip; skills + global boot policy; local WIP via cp
+## Conventions
+- [Editing Rules](conventions/editing-rules.md) — editing, templates, installation — Identifies editable sources and protected runtime artifacts.
+- [Language Convention](conventions/language.md) — language, English, communication — Defines default language expectations for workspace content.
 
-## conventions
-- [editing-rules.md](conventions/editing-rules.md) — edit templates/ not installed copies; which AGENTS.md to touch
-- [language.md](conventions/language.md) — language convention for files and communication
-
-## decisions
-- [0001-adopt-spec-driven-development.md](decisions/0001-adopt-spec-driven-development.md) — spec-builder SDD; unified workflow, conditional design overflow, and analyze-before-dispatch readiness
-- [0002-templates-layout.md](decisions/0002-templates-layout.md) — installable source under templates/; root AGENTS.md meta; install.sh always zip-from-main
-- [0003-empirical-validation.md](decisions/0003-empirical-validation.md) — empirical validation, delegated execution evidence, observable behavior; orchestrate workflow vs lean AGENTS.md boot policy
-- [0004-serialized-post-review-wiki-ingestion.md](decisions/0004-serialized-post-review-wiki-ingestion.md) — mandatory post-review evaluation; conditional serialized ingestion; executor consultation and write boundary; confirmation exemption
-
-> Pages not listed here are invisible to the agent. Update this index when adding wiki pages.
+## Decisions
+- [ADR 0001: Adopt Spec-Driven Development](decisions/0001-adopt-spec-driven-development.md) — specs, workflow, readiness — Records the workspace’s specification-driven development decision.
+- [ADR 0002: Installable Source Under Templates](decisions/0002-templates-layout.md) — templates, layout, installer — Records the separation between distribution sources and consumer artifacts.
+- [ADR 0003: Keep Empirical Validation in Orchestrate](decisions/0003-empirical-validation.md) — validation, evidence, behavior — Defines evidence requirements for observable outcomes.
+- [ADR 0004: Serialize Post-Review Wiki Ingestion](decisions/0004-serialized-post-review-wiki-ingestion.md) — wiki, ingestion, review — Defines conditional serialized knowledge ingestion after task review.
