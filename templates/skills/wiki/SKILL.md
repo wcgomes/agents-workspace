@@ -25,11 +25,19 @@ Wiki files are loaded into agent context. Every line costs tokens.
 - **Precise** — only information that matters for future tasks
 - **Scannable** — clear headings, one topic per file, easy to locate
 - **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to `.md` files only (page or subfolder's `index.md`, never the folder itself); no instructions, rules, or detailed content
+- **index.md is the routing map** — required entrypoint; compact, keyword-rich links to `.md` files only (page or subfolder's `index.md`, never the folder itself); every root and folder index must obey the Index Entry Contract below
 
-Keep it dense. Patterns, conventions, examples — all welcome if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
+Keep substantive pages dense. Patterns, conventions, examples — all welcome there if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
 
 Treat future context and maintenance cost as part of every ingest decision. Wiki maintenance is worthwhile only when its durable retrieval value materially exceeds the added context, navigation, duplication, and upkeep cost. Evaluation is required; writing is not.
+
+### Index Entry Contract
+
+An `index.md` may contain only its title, optional short group headings, and entries in this exact one-line shape:
+
+`- [Page title](relative/path.md) — keywords: keyword-1, keyword-2 — Description of 12 words or fewer.`
+
+Each entry is one physical Markdown bullet with exactly one `.md` link, 2–5 short retrieval keywords, and a description of at most 12 words. Route; do not summarize. Index entries must not contain architectural details, exhaustive behavior, changelog or spec inventories, test or run instructions, rationale, examples, or content duplicated from the linked page. Move qualifying detail to the linked page; otherwise omit it.
 
 **Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
 
@@ -37,7 +45,7 @@ Treat future context and maintenance cost as part of every ingest decision. Wiki
 
 ## Three Operations
 
-**Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
+**Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. Any root or folder index created during setup must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
 **Query** — coordinator reads `wiki/index.md` first to route by descriptions and keywords. Choose the most relevant direct page or folder index, then load only relevant linked pages.
 
@@ -59,7 +67,7 @@ Any clear YES → open the conditional ingestion stream. All NO, uncertain, or m
 
 Executors may consult the wiki under the read boundary above; they do not edit it unless wiki editing is explicitly part of their handoff. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
 
-When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
+When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates under the Index Entry Contract, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
 
 Explicit wiki tasks and broad wiki setup/creation still run this mandatory evaluation. If their reviewed deliverables already captured the durable knowledge correctly, including navigation and consistency, skip redundant ingestion dispatch. Broad setup/creation remains the separate multi-role workflow under **Setup**; post-task ingestion does not replace it.
 
@@ -89,6 +97,8 @@ This is a starting point. Create additional folders/subfolders as needed — for
 
 Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from root; larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough keywords to choose the right path.
 
+Creation, ingestion, and maintenance must preserve the Index Entry Contract; never expand an index entry to capture page content.
+
 As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic group exceeds ~10 entries: move that group into a folder-level `index.md` and link the folder index from root instead of the individual pages. Guidance, not law — apply judgment, but they're easy to check by counting.
 
 ### Navigation
@@ -112,6 +122,7 @@ When the wiki changes, maintain it deliberately.
 When the wiki changes, check for:
 - stale references
 - index links point to `.md` files, not folders
+- root and folder indexes contain only a title, optional short group headings, and entries that satisfy the Index Entry Contract
 - pages not reachable (orphaned) from `wiki/index.md` directly or through folder indexes
 - root index past the split heuristic (~50 lines, or a group over ~10 entries) that should move to a folder index
 - contradictory guidance across pages
@@ -130,5 +141,5 @@ Do not leave the wiki internally inconsistent after editing it.
 
 ## Gotchas
 
-- Pages not reachable from `wiki/index.md` are invisible. Keep root and folder indexes updated when pages are added, moved, or removed — but keep them lean: descriptions and keywords only.
+- Pages not reachable from `wiki/index.md` are invisible. Keep root and folder indexes updated when pages are added, moved, or removed, and enforce the Index Entry Contract.
 - Evaluation is automatic and mandatory; ingestion and writing are optional, conditional on material durable value after future context cost.
