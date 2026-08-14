@@ -1,6 +1,6 @@
 # Agents Workspace
 
-**A lightweight AI Agent harness to handle any kind of task!**
+**A lightweight agents and skills set to handle any kind of task!**
 
 Designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle.
 
