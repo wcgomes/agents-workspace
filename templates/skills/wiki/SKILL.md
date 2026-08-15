@@ -61,7 +61,7 @@ Evaluate the reviewed artifacts and outcomes, verification evidence, user correc
 
 1. Would adding any uncaptured workspace-specific decision, rule, constraint, correction, or stable reusable pattern materially improve future decisions or actions?
 2. Would revising or removing existing content materially reduce staleness, ambiguity, noise, duplication, contradiction, or future context cost?
-3. Would a descriptive counterpart or supersession update from a spec archive add durable value not already captured?
+3. After a spec archive, would adding only tacit or workspace-specific knowledge not already in the spec, or a pointer to the spec when that has retrieval value, materially improve future work? Restating or syncing the archived contract does not qualify.
 
 Any clear YES → open the conditional ingestion stream. All NO, uncertain, or marginal → skip additional ingestion dispatch, but the evaluation still occurred. No wiki write is required merely to complete the workflow. The absence of an executor signal never permits the coordinator to skip evaluation.
 
@@ -70,6 +70,8 @@ Executors may consult the wiki under the read boundary above; they do not edit i
 When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates under the Index Entry Contract, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
 
 Explicit wiki tasks and broad wiki setup/creation still run this mandatory evaluation. If their reviewed deliverables already captured the durable knowledge correctly, including navigation and consistency, skip redundant ingestion dispatch. Broad setup/creation remains the separate multi-role workflow under **Setup**; post-task ingestion does not replace it.
+
+**Wiki vs spec.** Specs own the prescriptive live contract — requirements, scenarios, acceptance. Wiki owns durable descriptive knowledge that is not that contract, and may reference specs. Skills stay procedural. If content lives in a spec, point at `specs/<domain>.md` or the relevant change path; do not copy or paraphrase requirements, scenarios, or acceptance. On conflict, the spec wins: delete or shrink the wiki restatement — do not keep a mirror in sync.
 
 **Wiki vs skill.** Wiki = durable declarative knowledge (what is true / decided / how the workspace is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when content is clearly procedural AND clearly recurring, flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. Check existing skills first — adapt, don't duplicate. Uncertainty alone is not a reason to ingest; declarative content must still pass the durability and future-use test. Wiki pages may reference workspace skills when relevant; skills keep their procedures self-contained and may direct runtime wiki consultation for workspace context, but must not depend on wiki pages for procedural instructions.
 
@@ -84,7 +86,7 @@ wiki/
 ├── conventions/          # One file per convention
 │   ├── index.md          # Optional folder index for larger/topic-rich wikis
 │   └── <pattern-name>.md
-├── domain/               # One file per business rule — descriptive, post-hoc distilled facts (prescriptive behavior contracts go in specs/<domain>.md; specs are the prescriptive source of truth, and after spec archive their descriptive counterparts are eligible for ingestion here only when mandatory post-review evaluation finds material durable value after compact organization and future context cost — see spec-builder)
+├── domain/               # One file per business rule — descriptive facts, not spec contracts
 │   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR

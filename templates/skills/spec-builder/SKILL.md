@@ -103,7 +103,7 @@ For each: what it does, output, and handoff to orchestrate.
 Prerequisite: user confirmed spec creation (see HARD-GATE). If not confirmed, RECOMMEND and wait — do not proceed.
 
 **Before proposing a new change:** scan `specs/changes/` (top-level entries, excluding `changes/archive/`) for an ACTIVE change folder in the same domain or overlapping scope. If one exists and the new intent refines it (defect in current behavior, requirement clarification, improvement within the same scope), edit that change's `spec.md` (delta) in place per "Evolving a spec mid-work" — do NOT open a new change. Only open a new `changes/<new-id>/` when scope genuinely expands (new requirement, different bounded context, behavior outside this change).
-Create `changes/<id>/proposal.md` + `spec.md` (delta), and create `design.md` only if the design overflow rule is already met. Keep the proposal bounded and record decisions in its concise decision index. Before drafting, load the `wiki` skill, start from `wiki/index.md`, and consult relevant descriptive knowledge. Compare relevant descriptive facts with the realized source spec (if any) and every active delta in the same domain or overlapping scope; these form the relevant prescriptive live contract. Flag every conflict; never silently choose a source or expand scope.
+Create `changes/<id>/proposal.md` + `spec.md` (delta), and create `design.md` only if the design overflow rule is already met. Keep the proposal bounded and record decisions in its concise decision index. Before drafting, load the `wiki` skill, start from `wiki/index.md`, and consult relevant descriptive knowledge. Compare relevant descriptive facts with the realized source spec (if any) and every active delta in the same domain or overlapping scope; these form the relevant prescriptive live contract. Flag every conflict; never silently choose a source, expand scope, or dump the live contract into the wiki.
 - **Output:** change folder with proposal + delta spec, plus design only when the overflow rule is met.
 - **Handoff:** none yet — awaits `plan`.
 
@@ -130,7 +130,7 @@ Review execution against the **PERSISTED spec**, not just done criteria.
 
 ### `archive`
 Prerequisite: user confirmed archive (see HARD-GATE). If verification passed but no confirmation, ASK and wait — do not proceed.
-Merge delta sections into the source spec `specs/<domain>.md`: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted. Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`. Report all added, modified, and removed requirements and significant decisions to the coordinator; do not edit the wiki as part of `archive`.
+Merge delta sections into the source spec `specs/<domain>.md`: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted. Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`. Report all added, modified, and removed requirements and significant decisions to the coordinator; do not edit the wiki as part of `archive`, and do not ask the coordinator to ingest a descriptive counterpart of the archived contract. Optional tacit `Durable discovery` or a report of knowledge not already in the spec remains ok.
 - **Output:** updated `specs/<domain>.md`.
 
 ## Evolving a spec mid-work
