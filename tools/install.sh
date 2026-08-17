@@ -224,7 +224,7 @@ ensure_subagent_mode() {
   for f in "$agents_dir"/*.md; do
     [[ -f "$f" ]] || continue
     head -1 "$f" | grep -q '^---$' || continue
-    if awk '
+    if LC_ALL=C awk '
       BEGIN { found=0 }
       /^---$/ { n++; if(n==2) exit found }
       n==1 && /^mode:/ { found=1 }
@@ -232,7 +232,7 @@ ensure_subagent_mode() {
     ' "$f" 2>/dev/null; then
       continue
     fi
-    awk '
+    LC_ALL=C awk '
       BEGIN { n=0 }
       /^---$/ {
         n++
@@ -324,7 +324,7 @@ normalize_yaml_description() {
   fi
 
   tmp="$(mktemp "${file}.tmp.XXXXXX")"
-  if ! awk '
+  if ! LC_ALL=C awk '
     function trim(s) {
       sub(/^[[:space:]]+/, "", s)
       sub(/[[:space:]]+$/, "", s)
