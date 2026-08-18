@@ -76,11 +76,7 @@ The sole delegated signal is the exact first nonblank line `Session type: DELEGA
 
 Initial delegated execution requires nonempty, exact-labeled `Task:`, `Scope:`, `Done criteria:`, and `Constraints:` fields. Missing state may be supplied later in an established delegated session; execution stops with `NEEDS_CONTEXT` until complete. `Act as:` is a task-scoped persona required for adjacent or generic/fallback specialist matches and omitted for exact matches; selected-agent and match metadata remain coordinator-internal. Purpose belongs in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:` rather than separate `Objective:`, `Deliverable:`, or `Return format:` fields.
 
-### Compaction capsule and recovery
-
-The compaction capsule requires exact `Session type: DELEGATED` and nonempty, exact-labeled `Task:`, `Scope:`, `Done criteria:`, `Constraints:`, `Current status:`, and `Next step:` state. It also preserves any originally present `Act as:`, `Context:`, and `Spec ref:`; task-critical context and unresolved decisions stay concise. Incomplete recovery state stops execution with `NEEDS_CONTEXT` but does not change the assigned session type.
-
-A coordinator continuation remains coordinator when retained context establishes it and does not require delegated execution fields. Ordinary wording such as "continue" in a fresh request is not prior-work evidence. This behavior is template-only and requires no hooks, plugins, runtime metadata, harness customization, or user configuration. Prompt-only recovery cannot detect evidence-free loss of an originally present `Act as:`, `Context:`, `Spec ref:`, or individual task-critical fact and does not guarantee complete recovery; if all prior-session evidence is erased, the remainder may be indistinguishable from a fresh request.
+Do not re-add prompt-only compaction recovery; it is not current behavior.
 
 ## What the distribution root stub defines
 

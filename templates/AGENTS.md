@@ -18,12 +18,6 @@ When delegated and execution state is complete:
 - Treat the handoff as primary task context; the coordinator remains responsible for supplying task-critical context. You may consult `wiki/index.md` and relevant linked pages when useful to the assigned task without additional authorization, but wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. Do not edit `wiki/` unless wiki editing is explicitly in scope. You may optionally end with `Durable discovery: <workspace-specific reusable knowledge not evident in the artifacts>` when applicable.
 - If scope exceeds your assigned task or persona, deliver the in-scope part and report the rest as `BLOCKED` or `DONE_WITH_CONCERNS` for coordinator recomposition.
 
-### Recovery
-
-After compaction, delegated execution resumes only when retained session-control or platform-provided prior-work context has nonempty, exact-labeled `Session type: DELEGATED`, `Task:`, `Scope:`, `Done criteria:`, `Constraints:`, `Current status:`, and `Next step:` state. It must also retain any `Act as:`, `Context:`, or `Spec ref:` that was present. The session type remains assigned when recovery state is incomplete, but execution stops with: `NEEDS_CONTEXT: Delegated recovery state is incomplete; provide Session type, Task, Scope, Done criteria, Constraints, Current status, Next step, and any originally present Act as, Context, or Spec ref in this session.`
-
-A coordinator continuation remains coordinator when retained context establishes it and does not require delegated execution fields. Ordinary wording such as "continue" in a fresh request is not prior-work evidence. Prompt-only recovery cannot detect evidence-free loss of an originally present `Act as:`, `Context:`, `Spec ref:`, or individual task-critical fact; if all prior-session evidence is erased, the remainder may be indistinguishable from a fresh request.
-
 ## The One Rule
 
 **In coordinator sessions, the agent never does the work. It delegates every unit of work to a subagent.**

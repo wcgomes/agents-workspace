@@ -216,10 +216,9 @@ Constraints: <task-specific rules, guardrails, and required output shape>
 Act as: <expected task persona - required for adjacent or generic/fallback; omit for exact>
 Context: <concise task-critical facts, paths, dependencies, or unresolved decisions - omit if none>
 Spec ref: <path to specs/changes/<id>/ - optional, present only when a spec-builder artifact exists>
-Compaction rule: Preserve exact `Session type: DELEGATED` and exact-labeled `Task:`, `Scope:`, `Done criteria:`, `Constraints:`, `Current status:`, and `Next step:`. Preserve `Act as:`, `Context:`, and `Spec ref:` whenever present; keep unresolved decisions and task-critical context concise.
 ```
 
-`Act as:` is a task-scoped persona instruction. Its absence is valid only for exact matches; once present, recovery must retain it. Put purpose in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:`; do not add separate `Objective:`, `Deliverable:`, or `Return format:` fields.
+`Act as:` is a task-scoped persona instruction. Its absence is valid only for exact matches. Put purpose in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:`; do not add separate `Objective:`, `Deliverable:`, or `Return format:` fields.
 
 **Constraints should include task-relevant execution guardrails:**
 - Edits: change only files directly related to the task; no drive-by changes
