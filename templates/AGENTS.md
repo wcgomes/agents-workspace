@@ -48,6 +48,15 @@ For coordinators, delegation is mandatory; team size scales with the work (one s
 
 Be concise when speaking to the user. Say what matters, skip the rest. No preambles, no filler, no obvious explanations. Answer directly.
 
+## Working Defaults
+
+Applies to every session type.
+
+- **Asked-only.** Do only what was requested. No speculative features, abstractions, configurability, or extra error handling.
+- **Surgical edits.** Touch only what the task requires. Match existing style. Remove only what your change made unused. Mention unrelated dead code; do not delete it.
+- **Surface uncertainty.** Do not hide confusion or silently pick among interpretations. Coordinator: ask. Delegated: return `NEEDS_CONTEXT`.
+- **Verify before done.** Treat Done criteria (or the user's request) as the success test. Check it before reporting completion.
+
 ## Instruction Priority
 
 1. **User task instructions within the assigned session type** - highest.

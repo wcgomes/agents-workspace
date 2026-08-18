@@ -61,9 +61,10 @@ Project-local instruction files are **not** modified by `install.sh`. Users may 
 - **Session type** — a fresh canonical handoff starts with `Session type: DELEGATED`; classification is initial-task scoped and immutable for the conversation.
 - **Flow** — context → orchestrate → review → learn (detail in skills).
 - **Communication** — concise, no filler.
+- **Working Defaults** — always-on session discipline; belongs in boot policy because delegated sessions do not load `orchestrate`.
 - **Instruction priority** — user task instructions within the assigned immutable session type > active skills > boot policy.
 
-Operational detail lives in skills (`orchestrate`, `wiki`, etc.), not in the short boot file.
+Workflow procedure lives in skills (`orchestrate`, `wiki`, etc.). Discipline that must bind without a loaded skill stays in the boot file.
 
 ## Session contract
 
