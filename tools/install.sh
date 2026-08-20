@@ -216,6 +216,68 @@ install_boot_policy() {
   echo "$status"
 }
 
+# Upsert the delegated-specialist marker block into agency agent .md files.
+ensure_delegated_specialist_block() {
+  local agents_dir="$1"
+  local include_skill_md="${2:-}"
+  [[ -d "$agents_dir" ]] || return 0
+  local count=0
+  local f name tmp
+  local start="<!-- agents-workspace-specialist:start -->"
+  local end="<!-- agents-workspace-specialist:end -->"
+  local block_file
+  block_file="$(mktemp)"
+  {
+    printf '%s\n' "$start"
+    printf '%s\n' "## Delegated specialist (agents-workspace)"
+    printf '%s\n' ""
+    printf '%s\n' "You are a delegated specialist, not the user-facing coordinator. Execute the handed scope directly. Do not load \`orchestrate\`. Do not spawn subagents or recompose a team. The One Rule does not apply to you."
+    printf '%s\n' "$end"
+  } > "$block_file"
+
+  while IFS= read -r -d '' f; do
+    [[ -f "$f" ]] || continue
+    name="$(basename "$f")"
+    [[ "$name" == "SKILL.md" && "$include_skill_md" != "skill_md" ]] && continue
+    head -1 "$f" | grep -q '^---$' || continue
+
+    if grep -qF "$start" "$f" && grep -qF "$end" "$f"; then
+      tmp="$(mktemp)"
+      awk -v start="$start" -v end="$end" -v bf="$block_file" '
+        BEGIN {
+          while ((getline line < bf) > 0) {
+            block = block line ORS
+          }
+          close(bf)
+          mode = "before"
+        }
+        index($0, start) && mode == "before" {
+          printf "%s", block
+          mode = "skip"
+          next
+        }
+        index($0, end) && mode == "skip" {
+          mode = "after"
+          next
+        }
+        mode != "skip" { print }
+      ' "$f" > "$tmp"
+      mv "$tmp" "$f"
+    else
+      {
+        printf '\n'
+        cat "$block_file"
+      } >> "$f"
+    fi
+    (( count++ )) || true
+  done < <(find "$agents_dir" -type f -name '*.md' -print0)
+
+  rm -f "$block_file"
+  if (( count > 0 )); then
+    info "Added delegated specialist block to $count agent(s)"
+  fi
+}
+
 # Ensure all agent .md files have "mode: subagent" in their frontmatter.
 ensure_subagent_mode() {
   local agents_dir="$1"
@@ -791,6 +853,7 @@ install_agency_tool() {
         info "Running convert.sh for $tool..."
         if "$agency_dir/scripts/convert.sh" --tool antigravity 2>/dev/null; then
           if normalize_yaml_descriptions "$agency_dir/integrations/antigravity"; then
+            ensure_delegated_specialist_block "$agency_dir/integrations/antigravity" "skill_md"
             info "Running install.sh for $tool..."
             install_cmd=("$agency_dir/scripts/install.sh" --tool antigravity --no-interactive)
             [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
@@ -807,6 +870,7 @@ install_agency_tool() {
       info "Running convert.sh for $tool..."
       if "$agency_dir/scripts/convert.sh" --tool opencode 2>&1 | grep -v "^$" > /dev/null; then
         if normalize_yaml_descriptions "$agency_dir/integrations/opencode"; then
+          ensure_delegated_specialist_block "$agency_dir/integrations/opencode"
           info "Running install.sh for $tool..."
           install_cmd=("$agency_dir/scripts/install.sh" --tool opencode --no-interactive)
           [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
@@ -834,6 +898,7 @@ install_agency_tool() {
     copilot)
       info "Running install.sh for $tool..."
       if normalize_yaml_descriptions "$agency_dir"; then
+        ensure_delegated_specialist_block "$agency_dir"
         install_cmd=("$agency_dir/scripts/install.sh" --tool copilot --no-interactive)
         [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
         "${install_cmd[@]}" 2>/dev/null || success=false
@@ -844,6 +909,7 @@ install_agency_tool() {
     claude)
       info "Running install.sh for $tool..."
       if normalize_yaml_descriptions "$agency_dir"; then
+        ensure_delegated_specialist_block "$agency_dir"
         install_cmd=("$agency_dir/scripts/install.sh" --tool claude-code --no-interactive)
         [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
         "${install_cmd[@]}" 2>/dev/null || success=false
@@ -1126,7 +1192,9 @@ main() {
 
           local agency_failed=()
           for t in "${selected_tools[@]}"; do
-            install_agency_tool "$t" "$agency_dir" "$divisions" || agency_failed+=("$t")
+            if ! install_agency_tool "$t" "$agency_dir" "$divisions"; then
+              agency_failed+=("$t")
+            fi
           done
 
           if [[ ${#agency_failed[@]} -gt 0 ]]; then

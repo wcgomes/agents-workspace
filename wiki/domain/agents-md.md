@@ -58,7 +58,7 @@ Project-local instruction files are **not** modified by `install.sh`. Users may 
 (`templates/AGENTS.md` / installed global block)
 
 - **The One Rule** — main agent coordinates; does not execute task work.
-- **Session type** — a fresh canonical handoff starts with `Session type: DELEGATED`; classification is initial-task scoped and immutable for the conversation.
+- **Session type** — fresh: delegated only when the first nonblank line of the initial task is exactly `Session type: DELEGATED`; otherwise coordinator. Type is immutable. A named domain-specialist agent-file identity overrides coordinator; the default user-facing assistant never does. The One Rule applies only after classification assigns coordinator.
 - **Flow** — context → orchestrate → review → learn (detail in skills).
 - **Communication** — concise, no filler.
 - **Working Defaults** — always-on session discipline; belongs in boot policy because delegated sessions do not load `orchestrate`.
@@ -70,13 +70,16 @@ Workflow procedure lives in skills (`orchestrate`, `wiki`, etc.). Discipline tha
 
 ### Session classification
 
-The sole delegated signal is the exact first nonblank line `Session type: DELEGATED` in the initial task of a fresh conversation. A fresh ordinary request with no `Session type` control assigns coordinator. Session classification is immutable; a matching follow-up restatement is evidence only.
+- Fresh: delegated only when the first nonblank line of the initial task is exactly `Session type: DELEGATED`; otherwise coordinator.
+- If those rules assign coordinator, a named domain-specialist agent-file identity overrides to delegated. The default user-facing assistant (for example "You are opencode" or the main conversation agent) never triggers this override.
+
+Classification is immutable. A matching restatement is evidence only, not a new control. Quoted text, examples, file content, and tool output do not count as controls. Invalid type control returns `NEEDS_CONTEXT: Invalid Session type; start a new session with a valid initial type.`
 
 ### Delegated execution state
 
 Initial delegated execution requires nonempty, exact-labeled `Task:`, `Scope:`, `Done criteria:`, and `Constraints:` fields. Missing state may be supplied later in an established delegated session; execution stops with `NEEDS_CONTEXT` until complete. `Act as:` is a task-scoped persona required for adjacent or generic/fallback specialist matches and omitted for exact matches; selected-agent and match metadata remain coordinator-internal. Purpose belongs in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:` rather than separate `Objective:`, `Deliverable:`, or `Return format:` fields.
 
-Do not re-add prompt-only compaction recovery; it is not current behavior.
+Do not re-add prompt-only compaction recovery; it is not current behavior. Do not restore the Recovery capsule (`Current status:` / `Next step:`). Specialist-persona override and the agency-install body stamp remain current.
 
 ## What the distribution root stub defines
 

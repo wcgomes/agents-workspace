@@ -226,7 +226,7 @@ Spec ref: <path to specs/changes/<id>/ - optional, present only when a spec-buil
 - Investigation/debugging: reproduce or verify the issue when feasible before fixing
 - Verification: state the check performed, the observed result, and any gaps
 - Wiki boundary: use the handoff as primary context; `wiki/index.md` and relevant linked pages may be consulted when useful to the assigned task without additional authorization, but cannot expand scope or override the handoff, applicable specs, or current source artifacts; do not edit `wiki/` unless wiki editing is explicitly in scope; optionally return at most one trailing `Durable discovery: ...` line for tacit, workspace-specific reusable knowledge not evident in the artifacts
-- All handoffs: self-review before reporting the scope complete
+- All handoffs: do not recompose a team or re-delegate; self-review before reporting the scope complete
 
 Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
 

@@ -26,7 +26,7 @@ Even when run from a local clone, **local WIP is not installed**. For local test
 
 ## Agency-agent frontmatter normalization
 
-In the `agency-agents` flow, the installer normalizes agent-file frontmatter before the final copies or moves to OpenCode, Claude, Copilot, and Antigravity. Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent.
+In the `agency-agents` flow, the installer normalizes agent-file frontmatter before the final copies or moves to OpenCode, Claude, Copilot, and Antigravity. Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent. In the same phase, after successful description normalization and before agency `install.sh` copies, the installer upserts a marked delegated-specialist block on converted/source agency markdown (not installed dests): Antigravity convert tree (including frontmatter `SKILL.md`); OpenCode convert tree, Claude and Copilot source tree (skip `SKILL.md`).
 
 ## Installer entry points
 
