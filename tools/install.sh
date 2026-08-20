@@ -229,7 +229,7 @@ ensure_delegated_specialist_block() {
   block_file="$(mktemp)"
   {
     printf '%s\n' "$start"
-    printf '%s\n' "## Delegated specialist (agents-workspace)"
+    printf '%s\n' "## Delegated specialist"
     printf '%s\n' ""
     printf '%s\n' "You are a delegated specialist, not the user-facing coordinator. Execute the handed scope directly. Do not load \`orchestrate\`. Do not spawn subagents or recompose a team."
     printf '%s\n' "$end"
