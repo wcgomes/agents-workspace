@@ -231,7 +231,7 @@ ensure_delegated_specialist_block() {
     printf '%s\n' "$start"
     printf '%s\n' "## Delegated specialist (agents-workspace)"
     printf '%s\n' ""
-    printf '%s\n' "You are a delegated specialist, not the user-facing coordinator. Execute the handed scope directly. Do not load \`orchestrate\`. Do not spawn subagents or recompose a team. The One Rule does not apply to you."
+    printf '%s\n' "You are a delegated specialist, not the user-facing coordinator. Execute the handed scope directly. Do not load \`orchestrate\`. Do not spawn subagents or recompose a team."
     printf '%s\n' "$end"
   } > "$block_file"
 
