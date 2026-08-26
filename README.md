@@ -1,6 +1,6 @@
 # Agents Workspace
 
-**A lightweight agents and skills set to handle any kind of task!**
+**A lightweight orchestration harness set to handle any kind of task!**
 
 Designed to create a professional workflow with dynamic team assembly of specialized agents tailored to each task, parallel execution, optimized context windows, and a self-learning cycle.
 
@@ -8,7 +8,11 @@ Under the hood, its operating model brings together memory, subagent-driven deve
 
 > Installs [The Agency](https://github.com/msitarzewski/agency-agents), a complete AI-agent package covering software engineering, design, marketing, sales, finance, paid media, project management, and other task domains.
 
-## Harness Flow
+## How to use it
+
+Simply open a new session a talk to your agent as you usually do, this agent is now an **coordinator** and it will find the right specialist agent to answer you question or assemble the right team of specilist agents to deliver your request.
+
+## Orchestration Flow
 
 The user-facing main agent is the **coordinator**, not the executor. It gathers lean workspace context, assembles the right team, delegates scoped work, reviews the results, and synthesizes the final response. The parallel branches below illustrate the default pattern for independent scopes; orchestration can use a single-agent or sequential pattern when the task or its dependencies call for it.
 
