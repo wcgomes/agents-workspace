@@ -30,21 +30,18 @@ Skills are loaded in three progressive stages:
 | Skill | Trigger | Function | Source |
 |---|---|---|---|
 | `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, learn, synthesize | `templates/skills/` |
-| `wiki` | Context before tasks; mandatory post-review evaluation and conditional ingestion | Workspace knowledge base, self-learning | `templates/skills/` |
+| `wiki-query` | Read-only wiki consultation before coordinator planning or exploration; optional scoped executor consultation | Lightweight knowledge lookup without loading the full `wiki` skill | `templates/skills/` |
+| `wiki` | Wiki setup and maintenance; mandatory post-review evaluation and conditional ingestion | Full workspace knowledge maintenance and self-learning workflow | `templates/skills/` |
 | `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `templates/skills/` |
 | `spec-builder` | Work needs a durable outcome contract before execution | Specs, proposals, task plans for spec-driven development | `templates/skills/` |
 
 > **Note:** Platform built-in skills are not documented in this workspace — each platform may have its own integrated skills. The focus is on skills in `templates/skills/` (source code).
 
-## Skill Lifecycle
+## Wiki versus Skill
 
-```
-1. Detection    — agent detects recurring pattern
-2. Tracking     — candidate registered in wiki/skill-candidates/
-3. Proposal     — 3+ encounters → proposal to user
-4. Promotion    — approved → created in .agents/skills/
-5. Usage        — workspace-local skill
-```
+Wiki captures durable declarative knowledge: what is true or decided about the workspace. Skills carry recurring procedural workflows. Only when content is clearly procedural and clearly recurring does the agent flag it for you to choose: use `skill-builder`, or keep it in the wiki. You decide; the agent never automatically creates a skill. Check existing skills first to adapt rather than duplicate.
+
+Keeping content in the wiki still requires material net durable value after context, maintenance, and duplication costs. See the [wiki skill](../../templates/skills/wiki/SKILL.md) for the evaluation and maintenance procedure.
 
 ## Loading by Platform
 

@@ -16,7 +16,7 @@ Delegated execution requires nonempty, exact-labeled `Task:`, `Scope:`, `Done cr
 When delegated and execution state is complete:
 
 - Execute the scope directly; do not recompose a team or re-delegate.
-- Treat the handoff as primary task context; the coordinator remains responsible for supplying task-critical context. You may consult `wiki/index.md` and relevant linked pages when useful to the assigned task without additional authorization, but wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. Do not edit `wiki/` unless wiki editing is explicitly in scope. You may optionally end with `Durable discovery: <workspace-specific reusable knowledge not evident in the artifacts>` when applicable.
+- Treat the handoff as primary task context; the coordinator remains responsible for supplying task-critical context. You may load `wiki-query` to consult workspace knowledge when useful to the assigned task without additional authorization, but wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. Do not edit `wiki/` unless wiki editing is explicitly in scope. You may optionally end with `Durable discovery: <workspace-specific reusable knowledge not evident in the artifacts>` when applicable.
 - If scope exceeds your assigned task or persona, deliver the in-scope part and report the rest as `BLOCKED` or `DONE_WITH_CONCERNS` for coordinator recomposition.
 
 ## The One Rule
@@ -35,7 +35,7 @@ The coordinator plans, delegates, reviews, and synthesizes. It does **not** impl
 
 Applies only after classification assigns coordinator.
 
-1. **Context** - main agent obtains lean coordination context **before any action** (hard-gate): read `wiki/index.md` first; optionally query available knowledge tools for compact facts that improve planning (structure maps, symbol graphs, doc lookups - not bulk file dumps). Define done criteria. Deep investigation stays with subagents.
+1. **Context** - main agent obtains lean coordination context **before any action** (hard-gate): load `wiki-query` and follow its consultation workflow first; optionally query available knowledge tools for compact facts that improve planning (structure maps, symbol graphs, doc lookups - not bulk file dumps). Define done criteria. Deep investigation stays with subagents.
 2. **Orchestrate** - load `orchestrate` **before planning or executing work**, including "execute/continue/resume the plan" continuations. It carries team assembly, delegation, review, learning, and synthesis.
    - **Spec** - when work needs a durable behavior contract before implementation, load `spec-builder` before orchestration.
 3. **Review** - apply domain-appropriate review and verification, check conformance and quality, and synthesize. Never pass raw subagent output through unreviewed.

@@ -24,7 +24,7 @@ User request
      v
 +--------------------------------------+
 | Main agent (coordinator)             |
-| Read wiki/index.md for context       |
+| Load wiki-query for context          |
 | Optional: use available knowledge    |
 | tools (e.g. code/symbol/dependency   |
 | graphs).                             |
@@ -89,24 +89,27 @@ User request
               v
               +----------------------+
               | wiki: post-review    |
-              | learning evaluation  |
+              | mandatory evaluation |
               +----------------------+
                          |
                          v
               +----------------------+
-              | Uncaptured durable   |
-              | workspace knowledge  |
-              | remains?             |
+              | Add / revise / remove|
+              | yields material net  |
+              | durable value after  |
+              | context, upkeep, and |
+              | duplication costs?   |
               +----------------------+
                          |
                 +--------+------------+
                 |                     |
-                | no                  | yes
+                | no / uncertain      | clear yes
                 v                     v
        +----------------+  +----------------------+
        | No ingestion   |  | One consolidated     |
        | dispatch       |  | serialized ingestion |
-       |                |  | stream               |
+       |                |  | stream (write only   |
+       |                |  | if value confirmed)  |
        +----------------+  +----------------------+
                 |                     |
                 |          +----------------------+
@@ -125,16 +128,16 @@ User request
 ### Workflow details
 
 - **The One Rule:** The coordinator delegates every unit to a subagent with no size threshold. Before tool calls, it self-checks that the action is allowed; direct actions are limited to user conversation, skill loading, dispatch/review, and lean context lookup.
-- **Team assembly:** Read `wiki/index.md` first, then load `orchestrate` to analyze domains, discover specialists, match exact/adjacent/fallback fits, and compose the team. Preserve separate roles and scopes; generic/default is the last resort, and no role is silently dropped or merged.
+- **Team assembly:** Load `wiki-query` and follow its consultation workflow first, then load `orchestrate` to analyze domains, discover specialists, match exact/adjacent/fallback fits, and compose the team. Preserve separate roles and scopes; generic/default is the last resort, and no role is silently dropped or merged.
 - **Structured handoffs:** Every initial delegated handoff starts with `Session type: DELEGATED` and requires `Task`, `Scope`, `Done criteria`, and `Constraints`. Adjacent or generic/fallback matches also require `Act as`; exact matches omit it. Concise `Context` and `Spec ref` are conditional. Purpose, artifact, and return requirements live in the core fields; selected agent, match type, and rationale stay coordinator-internal.
 - **Specs:** When work needs a durable behavior contract, load `spec-builder` before `orchestrate`; after user confirmation, orchestration delegates creation or evolution of `specs/` artifacts, then uses the optional `Spec ref` for scoped execution and conformity review.
-- **Executor boundary:** Executors use handoff context and do not inspect or edit `wiki/` unless wiki work is explicitly scoped.
-- **Learning:** After review/verification and before the final response, `wiki` evaluates every task for uncaptured durable workspace knowledge. Positive findings enter one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist; negative findings open no additional stream. The coordinator reviews ingestion, and explicit wiki tasks skip only redundant post-task ingestion when reviewed deliverables already capture the knowledge correctly.
+- **Executor boundary:** Executors use the handoff as primary context and may load `wiki-query` for relevant consultation without additional authorization. Wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts; editing `wiki/` requires explicit scope.
+- **Learning:** After review/verification and before the final response, the coordinator loads `wiki` to evaluate every task. Adding, revising, or removing content must yield material net durable value after compact organization, future context, maintenance, and duplication costs; new knowledge is not required for useful revision or removal. A clear positive evaluation opens one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist; negative, uncertain, or marginal findings open none. Writing remains conditional, even within the stream. The coordinator reviews the result, and explicit wiki tasks skip only redundant post-task ingestion when reviewed deliverables already capture the knowledge correctly.
 - **Wiki versus skill:** If a discovery is clearly procedural and recurring, flag the user to choose `skill-builder` or wiki; never auto-create a skill.
 - **Guardrails:** The workflow/coordination skills use anti-rationalization guidance/tables. Statuses are `DONE` (ready for review), `DONE_WITH_CONCERNS` (read concerns), `NEEDS_CONTEXT` (re-dispatch with context), and `BLOCKED` (assess, break, or escalate); after two cycles without progress for repeated `NEEDS_CONTEXT`/`BLOCKED`, stop redispatching and escalate, recompose, or apply a justified fallback.
-- **On-demand loading:** `wiki` loads first for coordinator context and again for post-review evaluation; `orchestrate` handles planning and execution; `spec-builder` loads conditionally before `orchestrate` when a durable contract is needed.
+- **On-demand loading:** `wiki-query` loads first for coordinator context without loading the full `wiki` skill; `wiki` loads for mandatory post-review evaluation and conditional maintenance; `orchestrate` handles planning and execution; `spec-builder` loads conditionally before `orchestrate` when a durable contract is needed.
 
-Skill roles: `orchestrate` assembles, delegates, reviews, and synthesizes; `wiki` routes context and evaluates/ingests knowledge; `spec-builder` manages durable contracts; `skill-builder` creates, refines, and validates Agent Skills.
+Skill roles: `orchestrate` assembles, delegates, reviews, and synthesizes; `wiki-query` provides read-only context lookup; `wiki` provides the full knowledge workflow (query via `wiki-query`, setup, evaluation, ingestion, and maintenance); `spec-builder` manages durable contracts; `skill-builder` creates, refines, and validates Agent Skills.
 
 ## Quick Start
 
@@ -249,7 +252,8 @@ templates/             # SOURCE for install — not live until installed
   AGENTS.md            # Boot-policy TEMPLATE — installed globally (marker-upsert) via install.sh
   skills/              # Skill source of truth — install globally via install.sh
     orchestrate/       # Full coordination cycle: assemble, delegate, review, learn, synthesize
-    wiki/              # Wiki query and self-learning loop
+    wiki-query/        # Read-only, index-first wiki consultation
+    wiki/              # Full wiki operations and self-learning loop
     skill-builder/     # Skill authoring and validation
     spec-builder/      # Spec-driven workflow: durable behavior contracts
 

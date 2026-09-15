@@ -1,17 +1,15 @@
 ---
 name: wiki
-description: Use this skill when querying workspace knowledge before tasks or running mandatory post-review ingest evaluation and conditional wiki ingestion. Self-learning loop for the workspace.
+description: Use this skill for wiki setup, maintenance, mandatory post-review ingest evaluation, and conditional ingestion. Provides the full workspace knowledge workflow; for read-only consultation alone, load wiki-query instead.
 ---
 
 # Wiki
 
-Workspace knowledge base and self-improvement loop. The coordinator queries wiki before broad exploration and evaluates every reviewed task for uncaptured durable knowledge before responding.
+Workspace knowledge base and self-improvement loop: setup, mandatory post-review ingest evaluation, conditional ingestion, and maintenance/validation.
 
 The wiki exists to eliminate unnecessary workspace exploration: with the right knowledge the agent goes straight to relevant context; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
 
-## <HARD-GATE> Coordinator Context Before Any Task
-
-The main agent reads `wiki/index.md` BEFORE team composition or workspace exploration — this is the coordinator's first action after receiving a request. The handoff remains executors' primary task context, and the coordinator remains responsible for supplying task-critical context. Executors may consult `wiki/index.md` and relevant linked pages when useful to their assigned task without additional authorization; wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. Wiki editing must be explicitly part of their handoff.
+For read-only consultation, use `wiki-query`; it is not a prerequisite for ingest evaluation.
 
 ## Design Principle
 
@@ -43,13 +41,9 @@ Each entry is one physical Markdown bullet with exactly one `.md` link, a separa
 
 **Date-bound artifacts go in `wiki/records/`.** Material from a specific event worth keeping — e.g., incidents, research, audits, meetings, reviews. Use a `YYYYMMDD-` filename prefix (e.g., `wiki/records/incidents/20260110-pg-outage.md`).
 
-## Three Operations
+## Setup
 
-**Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. Any root or folder index created during setup must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
-
-**Query** — coordinator reads `wiki/index.md` first to route by keyword segments and descriptions. Choose the most relevant direct page or folder index, then load only relevant linked pages.
-
-**Ingest** — after domain-appropriate review/verification of every task and before the final response, the coordinator evaluates whether optional wiki maintenance would materially improve durable workspace knowledge. Evaluation is mandatory; ingestion dispatch and wiki writing are conditional.
+**Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. Create `wiki/index.md` and an index for every new content folder, linked from its parent index as specified under Wiki Structure. All indexes must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
 ## <HARD-GATE> Post-Review Ingest Evaluation
 
@@ -65,7 +59,7 @@ Evaluate the reviewed artifacts and outcomes, verification evidence, user correc
 
 Any clear YES → open the conditional ingestion stream. All NO, uncertain, or marginal → skip additional ingestion dispatch, but the evaluation still occurred. No wiki write is required merely to complete the workflow. The absence of an executor signal never permits the coordinator to skip evaluation.
 
-Executors may consult the wiki under the read boundary above; they do not edit it unless wiki editing is explicitly part of their handoff. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
+The handoff remains executors' primary task context, and the coordinator remains responsible for supplying task-critical context. Executors may consult the wiki when useful to their assigned task without additional authorization; wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. They do not edit it unless wiki editing is explicitly part of their handoff. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
 
 When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates under the Index Entry Contract, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
 
@@ -84,31 +78,31 @@ wiki/
 ├── index.md              # Required routing map — compact keywords + descriptions
 ├── architecture.md       # System structure overview (single file)
 ├── conventions/          # One file per convention
-│   ├── index.md          # Optional folder index for larger/topic-rich wikis
+│   ├── index.md          # Required for every new content folder
 │   └── <pattern-name>.md
 ├── domain/               # One file per business rule — descriptive facts, not spec contracts
 │   ├── index.md
 │   └── <rule-name>.md
 ├── decisions/            # One file per ADR
+│   ├── index.md
 │   └── <NNNN-decision-name>.md
 ├── records/             # Date-bound artifacts
+│   ├── index.md
+│   └── incidents/
+│       ├── index.md
+│       └── YYYYMMDD-<incident-name>.md
 └── ...
 ```
 
-This is a starting point. Create additional folders/subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder; keep it navigable.
+This is a starting point. Create additional folders/subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder; keep the structure shallow.
 
-Every wiki page must be reachable from `wiki/index.md`, directly or through linked folder-level `index.md` files. Small wikis may link directly to all pages from root; larger or topic-rich wikis should use folder indexes so the root stays a compact routing map with enough keywords to choose the right path.
+Every new wiki content folder must contain `index.md`, including intermediate grouping folders and folders under `records/`. Its parent index must link to that child `index.md`, never to the folder itself. Each index lists only its level: local pages (excluding itself) and immediate subfolders' indexes, not complete descendant page lists repeated in ancestors. Every wiki page must remain reachable from `wiki/index.md` through this routing map; pages stored at root are listed directly in the root index.
+
+Apply this structure to new content folders; do not automatically migrate or reorganize existing wiki layouts to comply.
 
 Creation, ingestion, and maintenance must preserve the Index Entry Contract; never expand an index entry to capture page content.
 
-As a heuristic, split when `wiki/index.md` exceeds ~50 lines OR a single topic group exceeds ~10 entries: move that group into a folder-level `index.md` and link the folder index from root instead of the individual pages. Guidance, not law — apply judgment, but they're easy to check by counting.
-
-### Navigation
-
-1. Read `wiki/index.md` first.
-2. Pick the most relevant direct page or folder index from its keyword segment and description.
-3. If you open a folder index, read only the linked pages that match the task.
-4. Don't open broad or unrelated wiki areas just because they exist.
+As a heuristic, consider splitting or reorganizing when any index exceeds ~50 lines OR a single topic group exceeds ~10 entries: move a coherent group into a subfolder and replace its entries in the parent index with a link to the child's `index.md`. These thresholds guide organization, not whether a new folder needs an index; every new content folder requires one regardless of size. Apply judgment and preserve a shallow structure; thresholds do not trigger automatic reorganization.
 
 ## Wiki Maintenance
 
@@ -124,9 +118,11 @@ When the wiki changes, maintain it deliberately.
 When the wiki changes, check for:
 - stale references
 - index links point to `.md` files, not folders
+- every new content folder, including intermediate groups and `records/` folders, has `index.md` linked from its parent index
+- indexes for new content folders and their updated parent entries list local pages and immediate child indexes, without duplicating descendant page lists in ancestors; do not migrate existing layouts automatically
 - root and folder indexes contain only a title, optional short group headings, and entries that satisfy the Index Entry Contract
 - pages not reachable (orphaned) from `wiki/index.md` directly or through folder indexes
-- root index past the split heuristic (~50 lines, or a group over ~10 entries) that should move to a folder index
+- indexes past the split heuristic (~50 lines, or a group over ~10 entries) that merit splitting or reorganization, not automatic changes
 - contradictory guidance across pages
 
 Do not leave the wiki internally inconsistent after editing it.
@@ -140,8 +136,3 @@ Do not leave the wiki internally inconsistent after editing it.
 | "The workflow needs a wiki edit" | No. It needs an evaluation; write only for material durable value. |
 | "Too specific to track" | Workspace specificity helps only when the knowledge is stable enough to improve future work. |
 | "The log proves it happened" | Distill the insight, not the raw data. |
-
-## Gotchas
-
-- Pages not reachable from `wiki/index.md` are invisible. Keep root and folder indexes updated when pages are added, moved, or removed, and enforce the Index Entry Contract.
-- Evaluation is automatic and mandatory; ingestion and writing are optional, conditional on material durable value after future context cost.
