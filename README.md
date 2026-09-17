@@ -200,14 +200,18 @@ Only the skills and boot policy will be installed.
 
 Filter which agency-agents divisions to install using `--division` with a comma-separated list:
 
+Via curl — install only engineering and security
 ```bash
-# Via curl — install only engineering and security
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --division engineering,security
+```
 
-# Combine with --opencode
+Combine with `--opencode`
+```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --opencode --division design,marketing
+```
 
-# Combine with --all
+Combine with `--all`
+```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --all --division testing,support
 ```
 
