@@ -31,6 +31,7 @@ Boot policy is no longer a per-project manual copy. `install.sh` upserts `templa
 | Claude Code | `~/.claude/CLAUDE.md` |
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
+| Grok Build | `~/.grok/AGENTS.md` |
 
 ## Rationale
 

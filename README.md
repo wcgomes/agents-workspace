@@ -177,6 +177,7 @@ Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-
 | Claude Code | `~/.claude/skills/` | `~/.claude/CLAUDE.md` |
 | Copilot | `~/.copilot/skills/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/GEMINI.md` |
+| Grok Build | `~/.grok/skills/` | `~/.grok/AGENTS.md` |
 
 #### Installer options
 
@@ -186,6 +187,7 @@ Boot policy is written between `<!-- agents-workspace:start -->` / `<!-- agents-
 | `--opencode` | OpenCode only |
 | `--claude` | Claude Code only |
 | `--copilot` | Copilot only |
+| `--grok` | Grok Build only |
 | `--no-agency` | Skip agency-agents |
 | `--division <list>` | Install only specific divisions (comma-separated) |
 | `--list` | Show available skills |
@@ -251,6 +253,7 @@ For Antigravity and Copilot, the Agency agent paths below reflect the current up
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/config/skills/` | `~/.gemini/GEMINI.md` |
 | Claude Code | `~/.claude/skills/` | `~/.claude/agents/` | `~/.claude/CLAUDE.md` |
 | Copilot | `~/.copilot/skills/` | `~/.github/agents/` and `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Grok Build | `~/.grok/skills/` | `~/.grok/agents/` | `~/.grok/AGENTS.md` |
 | OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` | `~/.config/opencode/AGENTS.md` |
 
 ## Structure
@@ -274,6 +277,7 @@ templates/             # SOURCE for install — not live until installed
 ~/.claude/CLAUDE.md            # Claude Code user instructions (managed marker block)
 ~/.gemini/GEMINI.md            # Antigravity / Gemini CLI global context (managed marker block)
 ~/.copilot/instructions/...    # Copilot user instructions (dedicated file)
+~/.grok/AGENTS.md              # Grok Build global rules (managed marker block)
 
 # In your project workspace
 wiki/                  # Workspace knowledge — explicit setup, not installer-created; automatic evaluation for project tasks, conditional updates

@@ -26,7 +26,7 @@ Even when run from a local clone, **local WIP is not installed**. For local test
 
 ## Agency-agent frontmatter normalization
 
-In the `agency-agents` flow, the installer normalizes agent-file frontmatter before the final copies or moves to OpenCode, Claude, Copilot, and Antigravity. Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent. In the same phase, after successful description normalization and before agency `install.sh` copies, the installer upserts a marked delegated-specialist block on converted/source agency markdown (not installed dests): Antigravity convert tree (including frontmatter `SKILL.md`); OpenCode convert tree, Claude and Copilot source tree (skip `SKILL.md`).
+In the `agency-agents` flow, the installer normalizes agent-file frontmatter before the final copies or moves to OpenCode, Claude, Copilot, and Antigravity. Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent. In the same phase, after successful description normalization and before agency `install.sh` copies, the installer upserts a marked delegated-specialist block on converted/source agency markdown (not installed dests): Antigravity convert tree (including frontmatter `SKILL.md`); OpenCode convert tree, Claude and Copilot source tree (skip `SKILL.md`). Agency has no native grok/xai tool yet; after those same helpers the installer copies division `*.md` into `~/.grok/agents/`. Native Agency `install.sh` is used if `tools.json` has key `grok` or `grok-build`, or `integrations/grok{,-build}` exists.
 
 ## Installer entry points
 
@@ -52,7 +52,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | `templates/skills/*` | Per-tool global skills dirs | Copy `SKILL.md` trees |
 | `templates/AGENTS.md` | Per-tool global instruction file | Marker-upsert (or dedicated Copilot file) |
 | Repo root `AGENTS.md` | — | Distribution-only meta — not for consumers |
-| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh` |
+| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh`; Grok Build falls back to a direct copy until Agency adds a grok target |
 
 ### Skills destinations
 
@@ -62,6 +62,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | Claude Code | `~/.claude/skills/` |
 | Copilot | `~/.copilot/skills/` |
 | Antigravity | `~/.gemini/antigravity/skills/` |
+| Grok Build | `${GROK_HOME:-~/.grok}/skills/` |
 
 ### Boot policy destinations
 
@@ -71,6 +72,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | Claude Code | `~/.claude/CLAUDE.md` |
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
+| Grok Build | `~/.grok/AGENTS.md` |
 
 Managed block markers: `<!-- agents-workspace:start -->` … `<!-- agents-workspace:end -->`.
 

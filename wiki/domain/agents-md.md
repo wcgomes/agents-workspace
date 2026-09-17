@@ -30,6 +30,7 @@
 | Claude Code | `~/.claude/CLAUDE.md` | [Claude user instructions](https://docs.anthropic.com/en/docs/claude-code/memory) |
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` | Dedicated `*.instructions.md` with `applyTo: "**"` |
 | Antigravity | `~/.gemini/GEMINI.md` | [Gemini CLI global context](https://geminicli.com/docs/cli/gemini-md/) |
+| Grok Build | `~/.grok/AGENTS.md` | `GROK_HOME` (default `~/.grok`) |
 
 ## Marker upsert (preserve user content)
 

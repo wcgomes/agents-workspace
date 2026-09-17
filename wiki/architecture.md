@@ -31,6 +31,7 @@
 │      Claude   ~/.claude/CLAUDE.md                   │
 │      Copilot  ~/.copilot/instructions/...           │
 │      Gemini   ~/.gemini/GEMINI.md                   │
+│      Grok     ~/.grok/AGENTS.md                     │
 └──────────────────────┬──────────────────────────────┘
                        │ install.sh copies from
                        ▼
@@ -82,3 +83,4 @@ Skills load on demand, in three stages:
 | Claude Code | `~/.claude/skills/` | `~/.claude/agents/` |
 | Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` (unified) |
+| Grok Build | `${GROK_HOME:-~/.grok}/skills/` | `~/.grok/agents/` |
