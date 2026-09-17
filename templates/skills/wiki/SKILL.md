@@ -1,11 +1,13 @@
 ---
 name: wiki
-description: Use this skill for wiki setup, maintenance, mandatory post-review ingest evaluation, and conditional ingestion. Provides the full workspace knowledge workflow; for read-only consultation alone, load wiki-query instead.
+description: Use this skill for explicit wiki setup or maintenance, including creation without an existing wiki, and for post-review ingest evaluation and conditional ingestion when the task belongs to an identified project with wiki/ at its root. For read-only consultation alone, load wiki-query instead.
 ---
 
 # Wiki
 
-Workspace knowledge base and self-improvement loop: setup, mandatory post-review ingest evaluation, conditional ingestion, and maintenance/validation.
+Workspace knowledge base and self-improvement loop: setup, gated post-review ingest evaluation, conditional ingestion, and maintenance/validation.
+
+Apply the boot policy's Wiki gate before automatic loading or evaluation. Explicit wiki requests bypass it; clarify the target if needed. All wiki paths refer to that project or explicit target, not an unrelated current directory.
 
 The wiki exists to eliminate unnecessary workspace exploration: with the right knowledge the agent goes straight to relevant context; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
 
@@ -43,11 +45,11 @@ Each entry is one physical Markdown bullet with exactly one `.md` link, a separa
 
 ## Setup
 
-**Setup** — create `wiki/` only when qualifying durable knowledge materially improves future work and the directory doesn't exist yet. Create `wiki/index.md` and an index for every new content folder, linked from its parent index as specified under Wiki Structure. All indexes must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
+**Setup** — create `wiki/` only as part of explicitly requested creation/setup, never as a side effect of automatic consultation or evaluation. Create `wiki/index.md` and an index for every new content folder, linked from its parent index as specified under Wiki Structure. All indexes must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
 
 ## <HARD-GATE> Post-Review Ingest Evaluation
 
-The coordinator runs this evaluation after review/verification and before the final response for EVERY task, including software, writing, research, design, marketing, operations, and other deliverables. Do NOT skip it.
+When the Wiki gate applies, the coordinator runs this evaluation after review/verification and before the final response, regardless of deliverable domain. Otherwise skip automatic evaluation; explicit wiki tasks follow the rule below.
 
 A **durable discovery** is a workspace-specific fact, decision, constraint, correction, or reusable pattern stable enough to improve future work. Durability alone is insufficient: a wiki change must produce material net value after compact organization, future context cost, maintenance burden, ambiguity, and duplication are considered. Requested task artifacts and generic, low-value, ambiguous, redundant, transient, or already-captured information do not qualify for addition.
 

@@ -30,12 +30,14 @@ Skills are loaded in three progressive stages:
 | Skill | Trigger | Function | Source |
 |---|---|---|---|
 | `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, learn, synthesize | `templates/skills/` |
-| `wiki-query` | Read-only wiki consultation before coordinator planning or exploration; optional scoped executor consultation | Lightweight knowledge lookup without loading the full `wiki` skill | `templates/skills/` |
-| `wiki` | Wiki setup and maintenance; mandatory post-review evaluation and conditional ingestion | Full workspace knowledge maintenance and self-learning workflow | `templates/skills/` |
+| `wiki-query` | Explicit read-only wiki requests; project consultation subject to the Wiki gate | Lightweight knowledge lookup without loading the full `wiki` skill | `templates/skills/` |
+| `wiki` | Explicit wiki setup and maintenance; gated post-review evaluation and conditional ingestion | Full workspace knowledge maintenance and self-learning workflow | `templates/skills/` |
 | `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `templates/skills/` |
 | `spec-builder` | Work needs a durable outcome contract before execution | Specs, proposals, task plans for spec-driven development | `templates/skills/` |
 
 > **Note:** Platform built-in skills are not documented in this workspace — each platform may have its own integrated skills. The focus is on skills in `templates/skills/` (source code).
+
+The [Wiki gate](../../templates/AGENTS.md#coordinator-flow) limits automatic wiki steps to tasks associated with an identified project containing root-level `wiki/`; explicit wiki requests bypass it.
 
 ## Wiki versus Skill
 

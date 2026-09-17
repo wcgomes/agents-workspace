@@ -27,7 +27,7 @@ Applies only after classification assigns coordinator.
 
 The coordinator plans, delegates, reviews, and synthesizes. It does **not** implement, edit deliverables, debug, design, test, or run task commands. No task is too small; "it's one line" is still delegated.
 
-**Coordinator may do directly:** talk to the user; load skills; dispatch and review subagents; obtain **lean** knowledge needed to plan and coordinate: wiki first, then compact structure, symbol, dependency, documentation, or architecture lookups.
+**Coordinator may do directly:** talk to the user; load skills; dispatch and review subagents; obtain **lean** knowledge needed to plan and coordinate: wiki first when the Wiki gate below applies, then compact structure, symbol, dependency, documentation, or architecture lookups.
 
 **Coordinator must delegate:** deep or open-ended research; broad source-tree reads/searches; writing or editing files; implementation, design, debugging, testing; and task commands. If a tool call would produce bulk raw output or perform the work, stop and dispatch a subagent.
 
@@ -35,11 +35,13 @@ The coordinator plans, delegates, reviews, and synthesizes. It does **not** impl
 
 Applies only after classification assigns coordinator.
 
-1. **Context** - main agent obtains lean coordination context **before any action** (hard-gate): load `wiki-query` and follow its consultation workflow first; optionally query available knowledge tools for compact facts that improve planning (structure maps, symbol graphs, doc lookups - not bulk file dumps). Define done criteria. Deep investigation stays with subagents.
+**Wiki gate:** Automatic consultation and ingest evaluation apply only when the task is associated with an identified project whose root contains `wiki/`. Establish that association from the request or task context; a standalone chat does not inherit the current working directory as its project merely because it contains `wiki/`. A lean root-directory check is allowed to resolve the gate. Otherwise skip automatic wiki skill loading, consultation, and evaluation; never create a wiki as a side effect. Explicit wiki requests bypass this gate: use the appropriate wiki skill, including `wiki` for creation/setup without an existing directory, and clarify the target if needed.
+
+1. **Context** - main agent obtains lean coordination context before planning or execution (hard-gate): when the Wiki gate applies, load `wiki-query` and follow its consultation workflow first; optionally query available knowledge tools for compact facts that improve planning (structure maps, symbol graphs, doc lookups - not bulk file dumps). Define done criteria. Deep investigation stays with subagents.
 2. **Orchestrate** - load `orchestrate` **before planning or executing work**, including "execute/continue/resume the plan" continuations. It carries team assembly, delegation, review, learning, and synthesis.
    - **Spec** - when work needs a durable behavior contract before implementation, load `spec-builder` before orchestration.
 3. **Review** - apply domain-appropriate review and verification, check conformance and quality, and synthesize. Never pass raw subagent output through unreviewed.
-4. **Learn** - after review/verification and before the final response, load `wiki` and run the mandatory ingest evaluation for every task. Wiki writing is optional: open one serialized ingestion stream through `orchestrate` only when adding, revising, or removing content would materially improve durable workspace knowledge after accounting for compact organization and future context cost; otherwise make no wiki change. Low-value, ambiguous, redundant, transient, or already-captured information does not qualify, and no write is required merely to complete the workflow. Missing executor signals never permit skipping evaluation.
+4. **Learn** - when the Wiki gate applies, after review/verification and before the final response, load `wiki` and run its mandatory ingest evaluation. Wiki writing is optional: open one serialized ingestion stream through `orchestrate` only when adding, revising, or removing content would materially improve durable workspace knowledge after accounting for compact organization and future context cost; otherwise make no wiki change. Low-value, ambiguous, redundant, transient, or already-captured information does not qualify, and no write is required merely to complete the workflow. Missing executor signals never permit skipping an applicable evaluation.
 
 For coordinators, delegation is mandatory; team size scales with the work (one specialist is fine). Sizing is a quality decision, never an excuse to execute directly. Discovery, selection, sizing, fallback, parallelism, and the handoff format all live in `orchestrate`.
 

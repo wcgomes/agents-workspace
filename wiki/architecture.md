@@ -48,10 +48,10 @@
 ## Data flow (consumer session)
 
 1. **User** makes a request in a consumer workspace.
-2. **Main agent** follows global boot policy → loads `wiki-query` for read-only, index-first consultation → loads `orchestrate`.
+2. **Main agent** follows the global boot policy's [Wiki gate](../templates/AGENTS.md#coordinator-flow) → loads `wiki-query` for read-only, index-first consultation when applicable → loads `orchestrate`.
 3. **Orchestrate** discovers specialists, assembles a team, and delegates via handoffs.
 4. **Specialists** execute scope directly under immutable `Session type: DELEGATED` classification, using handoffs as primary context and consulting relevant wiki content only within scope; wiki editing must be explicitly in scope.
-5. **Main agent** applies domain-appropriate review and verification, then loads the full `wiki` skill for mandatory evaluation of every task: would adding, revising, or removing content yield material net durable value after compact organization, future context, maintenance, and duplication costs? Useful revision or removal does not require new knowledge.
+5. **Main agent** applies domain-appropriate review and verification, then loads the full `wiki` skill for evaluation when the Wiki gate applies or wiki work was explicitly requested: would adding, revising, or removing content yield material net durable value after compact organization, future context, maintenance, and duplication costs? Useful revision or removal does not require new knowledge. Otherwise automatic evaluation is skipped without creating a wiki.
 6. A clear positive evaluation opens one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist role; negative, uncertain, or marginal findings open none. Writing remains conditional on material net value, even within the stream. The main agent reviews the result before final synthesis; explicit wiki tasks skip redundant ingestion when reviewed deliverables already capture the knowledge correctly.
 
 ## Component relationships
