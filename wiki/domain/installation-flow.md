@@ -26,7 +26,13 @@ Even when run from a local clone, **local WIP is not installed**. For local test
 
 ## Agency-agent frontmatter normalization
 
-In the `agency-agents` flow, the installer normalizes agent-file frontmatter before the final copies or moves to OpenCode, Claude, Copilot, and Antigravity. Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent. In the same phase, after successful description normalization and before agency `install.sh` copies, the installer upserts a marked delegated-specialist block on converted/source agency markdown (not installed dests): Antigravity convert tree (including frontmatter `SKILL.md`); OpenCode convert tree, Claude and Copilot source tree (skip `SKILL.md`). Agency has no native grok/xai tool yet; after those same helpers the installer copies division `*.md` into `~/.grok/agents/`. Native Agency `install.sh` is used if `tools.json` has key `grok` or `grok-build`, or `integrations/grok{,-build}` exists.
+In the `agency-agents` flow, the installer normalizes agent-file frontmatter before dest writes (Agency `install.sh` copies/moves, or the Grok fallback conversion). Only plain, single-line scalar `description` values are rewritten with explicit quotes. Already-quoted values, block scalars, quoted multiline values, flow collections, aliases, anchors, tags, and indented structures remain unchanged to avoid semantic changes. The normalization is idempotent. In the same phase, after successful description normalization and before dest writes, the installer upserts a marked delegated-specialist block on converted/source agency markdown (not installed dests): Antigravity convert tree (including frontmatter `SKILL.md`); OpenCode convert tree; Claude, Copilot, and Grok-fallback source tree (skip `SKILL.md`).
+
+## Grok agency fallback
+
+If Agency exposes a grok target (`tools.json` key `grok` or `grok-build`, or `integrations/grok{,-build}`), use native Agency `install.sh` with that tool. Do not call Agency `convert.sh --tool grok` (absent on Agency main). Do not package agency agents as Grok skills.
+
+When no grok target exists, after those same helpers the installer converts Claude-native division `*.md` into `~/.grok/agents/`. Slugify frontmatter `name` (lowercase, non-alnum to hyphen, collapse, trim) for both dest filename and `name:` so they match: Grok `spawn_subagent` type is the filename stem; the advertised type is `name:`. Example: `Frontend Developer` → `frontend-developer.md` / `name: frontend-developer`. Keep quoted `description` and the body (including the delegated-specialist block). Drop Claude-only `color`/`emoji`/`vibe`. Body content after the first two `---` fences is preserved, including later `---` in the template. If the slug differs from the source basename, remove leftover `~/.grok/agents/<source-basename>.md` unless this run already claimed that dest. Unique-ify intra-run dest collisions as `<division>-<slug>`.
 
 ## Installer entry points
 
@@ -52,7 +58,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | `templates/skills/*` | Per-tool global skills dirs | Copy `SKILL.md` trees |
 | `templates/AGENTS.md` | Per-tool global instruction file | Marker-upsert (or dedicated Copilot file) |
 | Repo root `AGENTS.md` | — | Distribution-only meta — not for consumers |
-| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh`; Grok Build falls back to a direct copy until Agency adds a grok target |
+| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh` when a native target exists; Grok fallback converts Agency markdown into `~/.grok/agents/` |
 
 ### Skills destinations
 

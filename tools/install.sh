@@ -884,7 +884,121 @@ agency_native_grok_tool() {
   return 1
 }
 
-# Copy Agency division *.md agents to Grok Build when Agency has no grok target.
+# Slugify a display name to a Grok subagent_type.
+# "Frontend Developer" -> frontend-developer
+grok_agency_slugify() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' \
+    | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//'
+}
+
+grok_agency_yaml_quote() {
+  printf "'%s'" "$(printf '%s' "$1" | sed "s/'/''/g")"
+}
+
+# First matching YAML frontmatter scalar. Strips one outer quote pair.
+grok_agency_get_field() {
+  local field="$1" file="$2"
+  awk -v f="$field" '
+    function emit(v) {
+      sub(/^[ \t]+/, "", v); sub(/[ \t]+$/, "", v)
+      if (v ~ /^".*"$/) {
+        v = substr(v, 2, length(v) - 2)
+        gsub(/\\"/, "\"", v)
+        gsub(/\\\\/, "\\", v)
+      } else if (v ~ /^\047.*\047$/) {
+        v = substr(v, 2, length(v) - 2)
+        gsub(/\047\047/, "\047", v)
+      }
+      print v
+      printed = 1
+      exit
+    }
+    /^---$/ { fm++; if (fm == 2 && found) emit(val); next }
+    fm == 1 && !found && $0 ~ "^" f ":[[:space:]]*" {
+      sub("^" f ":[[:space:]]*", "")
+      val = $0
+      found = 1
+      next
+    }
+    fm == 1 && found && /^[ \t]+[^ \t]/ { sub(/^[ \t]+/, ""); val = val " " $0; next }
+    fm == 1 && found { emit(val) }
+    END { if (found && !printed) emit(val) }
+  ' "$file"
+}
+
+grok_agency_get_body() {
+  awk 'BEGIN{fm=0} fm<2 && /^---$/{fm++; next} fm>=2{print}' "$1"
+}
+
+# Write Grok agent md: slug name, quoted description, body after frontmatter.
+# Drops Claude-only fields (color, emoji, vibe). Does not invent tools/mcpInheritance.
+grok_agency_write_agent() {
+  local src="$1"
+  local dest="$2"
+  local slug="$3"
+  local description
+  description="$(grok_agency_get_field description "$src")"
+  {
+    printf '%s\n' '---'
+    printf 'name: %s\n' "$slug"
+    printf 'description: %s\n' "$(grok_agency_yaml_quote "$description")"
+    printf '%s\n' '---'
+    grok_agency_get_body "$src"
+  } > "$dest"
+}
+
+# True when dest would clobber a different agent (claimed this run, or
+# an existing file whose name: is not the intended slug).
+grok_agency_dest_taken() {
+  local dest="$1"
+  local intended_name="$2"
+  shift 2
+  local d existing
+  for d in "$@"; do
+    [[ "$d" == "$dest" ]] && return 0
+  done
+  if [[ -e "$dest" ]]; then
+    if [[ -f "$dest" ]]; then
+      existing="$(grok_agency_get_field name "$dest")"
+      [[ -n "$existing" && "$existing" == "$intended_name" ]] && return 1
+    fi
+    return 0
+  fi
+  return 1
+}
+
+# Prefer slug; on collision use <division>-<slug>, then -<n>.
+grok_agency_unique_slug() {
+  local dest_base="$1"
+  local slug="$2"
+  local division="$3"
+  shift 3
+  local dest alt n candidate
+  dest="$dest_base/${slug}.md"
+  if ! grok_agency_dest_taken "$dest" "$slug" "$@"; then
+    printf '%s\n' "$slug"
+    return 0
+  fi
+  alt="${division}-${slug}"
+  dest="$dest_base/${alt}.md"
+  if ! grok_agency_dest_taken "$dest" "$alt" "$@"; then
+    printf '%s\n' "$alt"
+    return 0
+  fi
+  n=2
+  while true; do
+    candidate="${alt}-${n}"
+    dest="$dest_base/${candidate}.md"
+    if ! grok_agency_dest_taken "$dest" "$candidate" "$@"; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+    n=$((n + 1))
+  done
+}
+
+# Convert Agency division *.md agents to Grok Build when Agency has no grok target.
+# Filename and name: are slugify(frontmatter name) so they match spawn_subagent types.
 install_grok_agency_agents() {
   local agency_dir="$1"
   local divisions="$2"
@@ -892,7 +1006,8 @@ install_grok_agency_agents() {
   dest_base="$(grok_home)/agents"
   local count=0
   local -a divs=()
-  local d f name
+  local -a claimed_dests=()
+  local d f name src_base slug dest old_dest claimed skip_rm
 
   mkdir -p "$dest_base"
 
@@ -916,7 +1031,34 @@ install_grok_agency_agents() {
     while IFS= read -r -d '' f; do
       [[ -f "$f" ]] || continue
       head -1 "$f" | grep -q '^---$' || continue
-      cp "$f" "$dest_base/"
+
+      src_base="$(basename "$f" .md)"
+      slug="$(grok_agency_get_field name "$f")"
+      slug="$(grok_agency_slugify "$slug")"
+      [[ -n "$slug" ]] || slug="$(grok_agency_slugify "$src_base")"
+      [[ -n "$slug" ]] || continue
+
+      if (( ${#claimed_dests[@]} > 0 )); then
+        slug="$(grok_agency_unique_slug "$dest_base" "$slug" "$name" "${claimed_dests[@]}")"
+      else
+        slug="$(grok_agency_unique_slug "$dest_base" "$slug" "$name")"
+      fi
+      dest="$dest_base/${slug}.md"
+      grok_agency_write_agent "$f" "$dest" "$slug"
+      claimed_dests+=("$dest")
+
+      old_dest="$dest_base/${src_base}.md"
+      if [[ "$src_base" != "$slug" && -f "$old_dest" && "$old_dest" != "$dest" ]]; then
+        skip_rm=false
+        for claimed in "${claimed_dests[@]}"; do
+          if [[ "$claimed" == "$old_dest" ]]; then
+            skip_rm=true
+            break
+          fi
+        done
+        $skip_rm || rm -f "$old_dest"
+      fi
+
       (( count++ )) || true
     done < <(find "$d" -type f -name '*.md' -print0)
   done
@@ -1019,7 +1161,7 @@ install_agency_tool() {
           success=false
         fi
       else
-        info "Agency has no grok target; installing division agents directly..."
+        info "Agency has no grok target; converting division agents for Grok Build..."
         if normalize_yaml_descriptions "$agency_dir"; then
           ensure_delegated_specialist_block "$agency_dir"
           install_grok_agency_agents "$agency_dir" "$divisions" || success=false
