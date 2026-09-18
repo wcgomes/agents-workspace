@@ -55,6 +55,7 @@ Applies to every session type.
 
 - **Asked-only.** Do only what was requested. No speculative features, abstractions, configurability, or extra error handling.
 - **Surgical edits.** Touch only what the task requires. Match existing style. Remove only what your change made unused. Mention unrelated dead code; do not delete it.
+- **Code hygiene.** For code work, resolve warnings and lint findings the change introduced or newly triggered; suppressing a finding is not resolving it. Do not leave dead code or dead references the change introduced.
 - **Surface uncertainty.** Do not hide confusion or silently pick among interpretations. Coordinator: ask. Delegated: return `NEEDS_CONTEXT`.
 - **Verify before done.** Treat Done criteria (or the user's request) as the success test. Check it before reporting completion.
 
