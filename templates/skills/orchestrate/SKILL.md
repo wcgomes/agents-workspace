@@ -40,7 +40,7 @@ Role preservation means preserving separate role *scopes*, not just labels. Plan
 
 ## Phase 3: Discover Specialists
 
-Before selecting, discover what specialists exist in the current environment: use the dispatch interface, available agent descriptions, and platform-exposed identifiers. If config/file inspection is needed but the coordinator may not read it directly, delegate that discovery as a handoff. Do not assume the pool is empty; do not skip to a generic/default agent.
+Before selecting, discover specialists only from the agent names and descriptions this session already lists for spawning them — not by reading agent directories or config files, and not by delegating that inspection. Do not assume the pool is empty; do not skip to a generic/default agent.
 
 **Record coordinator-internal assembly output**: discovered specialists (name + domain, or sources checked if none), and for each role the selected agent plus exact/adjacent/fallback rationale. These records are assembly output, not handoff content.
 
@@ -167,7 +167,7 @@ Coordination: Sequential with Quality Gates. Review/Consistency is required when
 Before composing each handoff:
 - Confirm the target agent appears in Phase 3's discovered specialists list as exact or adjacent (or is justified fallback).
 - Verify the roster record and conditional `Act as:` field against hard-gate 9.
-- Verify the agent name matches the exact format exposed by the dispatch interface (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use the exact identifier as discovered, not a reformatted version like "Software Architect" or "software_architect".
+- Verify the agent name matches the exact identifier this session already lists for spawning it (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use that identifier as listed, not a reformatted version like "Software Architect" or "software_architect".
 - Do not proceed to handoff without this confirmation.
 
 ## Phase 4.5: User Confirmation (Conditional)
