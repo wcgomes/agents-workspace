@@ -62,7 +62,7 @@ Before selecting, discover specialists only from the agent names and description
 - Select coordination pattern (see below)
 - Parallel groups: scopes with no integration deps
 - Sequential: output of one feeds another
-- Review always after parallel batches
+- Plan targeted checks during execution, address risks early, and verify integration or the first usable result when relevant; review after each phase or parallel batch. Final review checks coverage and evidence, not automatic reruns (Phase 6, Stage 3: Evidence).
 
 ## Coordination Patterns
 
@@ -224,7 +224,7 @@ Spec ref: <path to specs/changes/<id>/ - optional, present only when a spec-buil
 - Edits: change only files directly related to the task; no drive-by changes
 - Implementation: match existing style, even if you'd write it differently
 - Investigation/debugging: reproduce or verify the issue when feasible before fixing
-- Verification: state the check performed, the observed result, and any gaps
+- Verification: include planned checks and when to run them; require the executor to report checks performed, observed results, and gaps
 - Wiki boundary: use the handoff as primary context; `wiki-query` may be loaded for consultation when useful to the assigned task without additional authorization, but wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts; do not edit `wiki/` unless wiki editing is explicitly in scope; optionally return at most one trailing `Durable discovery: ...` line for tacit, workspace-specific reusable knowledge not evident in the artifacts
 - All handoffs: do not recompose a team or re-delegate; self-review before reporting the scope complete
 
@@ -258,9 +258,15 @@ If `Spec ref:` is present in the handoff, verify conformity against the persiste
 
 Is it correct, maintainable, and usable for the current task? With multiple delegated outputs: compare against assigned scopes, resolve conflicts, and synthesize a single coherent result before returning upward. Do not pass through raw delegated output without review.
 
+Match verification to the domain. Illustrative checks, not a universal checklist: research — sources support conclusions; content — brief, audience, and factual accuracy; data — reproducibility and interpretation; design — requirements, usability, visual quality, and accessibility; code — project conventions, maintainability, applicable lint/build/tests, and performance where relevant.
+
 ### Stage 3: Evidence
 
-When a done criterion can be verified by exercising the deliverable or observing its effect—not merely by inspecting its content or implementation—and safe, proportionate execution is feasible, obtain delegated empirical evidence through real execution or observation; static inspection may support but does not replace it. Reuse an existing role when its scope and expertise fit. Add a separate verification role only when distinct expertise or independence is needed. `N/A`, `partial`, and `blocked` are evidence states, not statuses: `N/A` means no done criterion calls for empirical validation; `partial` means evidence was obtained for only some applicable criteria; `blocked` means an applicable check could not run. Use `DONE` when all done criteria are satisfied, `DONE_WITH_CONCERNS` for a non-blocking evidence gap, `NEEDS_CONTEXT` while specific, actionable information or access can reasonably be provided to unblock validation, and `BLOCKED` when the gap prevents completion and no actionable path to obtain context or access remains. Report `N/A`, `partial`, or `blocked` when applicable and explain every gap.
+When a done criterion can be verified by exercising the deliverable or observing its effect—not merely by inspecting its content or implementation—and safe, proportionate execution is feasible, obtain delegated empirical evidence; static inspection may support but does not replace it. Verify the result where it will be used when feasible, e.g., exercise the requested app/page flow or render/export and inspect the document. Tie evidence to the request and available resources; report limitations rather than assuming unavailable tools. Reuse an existing role when its scope and expertise fit. Add a separate verification role only when distinct expertise or independence is needed.
+
+Reuse evidence that remains valid for the delivered state. Repeat affected checks after corrections, relevant changes, or failures; obtain further evidence for gaps, uncertain impact, or justified independent confirmation—not merely because the agent or phase changed. Independent review evaluates the work and its evidence; it does not inherently require identical reexecution.
+
+`N/A`, `partial`, and `blocked` are evidence states, not statuses: `N/A` means no done criterion calls for empirical validation; `partial` means evidence was obtained for only some applicable criteria; `blocked` means an applicable check could not run. Use `DONE` when all done criteria are satisfied, `DONE_WITH_CONCERNS` for a non-blocking evidence gap, `NEEDS_CONTEXT` while specific, actionable information or access can reasonably be provided to unblock validation, and `BLOCKED` when the gap prevents completion and no actionable path to obtain context or access remains. Report `N/A`, `partial`, or `blocked` when applicable and explain every gap.
 
 ### Stage 4: Wiki Ingest Evaluation
 
