@@ -64,23 +64,23 @@ The interactive selector can abort when it renders an undetected or deselected t
 
 | Tool | Skills path |
 |---|---|
-| OpenCode | `~/.config/opencode/skills/` |
-| Claude Code | `~/.claude/skills/` |
-| Copilot | `~/.copilot/skills/` |
 | Antigravity | `~/.gemini/antigravity/skills/` |
-| Grok Build | `${GROK_HOME:-~/.grok}/skills/` |
+| Claude Code | `~/.claude/skills/` |
 | Codex | `~/.agents/skills/` |
+| Copilot | `~/.copilot/skills/` |
+| Grok Build | `${GROK_HOME:-~/.grok}/skills/` |
+| OpenCode | `~/.config/opencode/skills/` |
 
 ### Boot policy destinations
 
 | Tool | Boot policy path |
 |---|---|
-| OpenCode | `~/.config/opencode/AGENTS.md` |
-| Claude Code | `~/.claude/CLAUDE.md` |
-| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
-| Grok Build | `~/.grok/AGENTS.md` |
+| Claude Code | `~/.claude/CLAUDE.md` |
 | Codex | `${CODEX_HOME:-~/.codex}/AGENTS.md` |
+| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Grok Build | `~/.grok/AGENTS.md` |
+| OpenCode | `~/.config/opencode/AGENTS.md` |
 
 Managed block markers: `<!-- agents-workspace:start -->` … `<!-- agents-workspace:end -->`.
 

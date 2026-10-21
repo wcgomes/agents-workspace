@@ -82,11 +82,11 @@ The boot policy uses `<!-- agents-workspace:start -->` / `<!-- agents-workspace:
 | Flag | Description |
 |---|---|
 | `--all` | Install for all detected tools; the noninteractive default. |
-| `--opencode` | Select OpenCode. |
 | `--claude` | Select Claude Code. |
+| `--codex` | Select Codex. |
 | `--copilot` | Select Copilot. |
 | `--grok` | Select Grok Build. |
-| `--codex` | Select Codex. |
+| `--opencode` | Select OpenCode. |
 | `--no-agency` | Install only skills and boot policy; keep your own specialist catalog. |
 | `--division <list>` | Limit Agency agents to comma-separated divisions. |
 | `--list` | Download and list available workflow skills without installing. |
@@ -114,12 +114,12 @@ These are installer destinations, not a claim of end-to-end validation on every 
 
 | Tool | Skills path | Agents path | Boot policy path |
 |---|---|---|---|
-| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` | `~/.config/opencode/AGENTS.md` |
-| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` | `~/.claude/CLAUDE.md` |
-| Copilot | `~/.copilot/skills/` | `~/.github/agents/` and `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/config/skills/` | `~/.gemini/GEMINI.md` |
-| Grok Build | `~/.grok/skills/` | `~/.grok/agents/` | `~/.grok/AGENTS.md` |
+| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` | `~/.claude/CLAUDE.md` |
 | Codex | `~/.agents/skills/` | `~/.codex/agents/` | `~/.codex/AGENTS.md` |
+| Copilot | `~/.copilot/skills/` | `~/.github/agents/` and `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Grok Build | `~/.grok/skills/` | `~/.grok/agents/` | `~/.grok/AGENTS.md` |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` | `~/.config/opencode/AGENTS.md` |
 
 Grok paths use `$GROK_HOME` when set, otherwise `~/.grok`. The Codex boot-policy path uses `$CODEX_HOME` when set, otherwise `~/.codex`. Codex skills use the current user location, `~/.agents/skills/`. Codex specialist agents are installed by Agency's own installer (`--tool codex`) into `~/.codex/agents/`. Agency-managed destinations, including Copilot and Antigravity, depend on the upstream installer and can change.
 

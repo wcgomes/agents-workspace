@@ -32,12 +32,12 @@ templates/skills/          templates/AGENTS.md
 
 | Tool | Boot policy path |
 |---|---|
-| OpenCode | `~/.config/opencode/AGENTS.md` |
-| Claude Code | `~/.claude/CLAUDE.md` |
-| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
-| Grok Build | `~/.grok/AGENTS.md` |
+| Claude Code | `~/.claude/CLAUDE.md` |
 | Codex | `${CODEX_HOME:-~/.codex}/AGENTS.md` |
+| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Grok Build | `~/.grok/AGENTS.md` |
+| OpenCode | `~/.config/opencode/AGENTS.md` |
 
 Repo root `AGENTS.md` is **not** part of install. It stays in the distribution repo for agents developing the harness.
 

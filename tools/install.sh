@@ -4,14 +4,14 @@
 #
 # Always downloads GitHub main.zip (never installs from the local working tree).
 # Installs skills from templates/skills and boot policy from templates/AGENTS.md
-# inside the archive to OpenCode, Claude Code, Antigravity, Copilot, Grok Build, and Codex.
+# inside the archive to Antigravity, Claude Code, Codex, Copilot, Grok Build, and OpenCode.
 #
 # Boot policy is installed to each tool's global instruction file, upserted between
 # <!-- agents-workspace:start --> and <!-- agents-workspace:end --> markers so
 # existing user content outside the block is preserved.
 #
 # Usage:
-#   ./install.sh [--opencode|--claude|--copilot|--grok|--codex|--all] [--division <list>] [--list] [--help]
+#   ./install.sh [--claude|--codex|--copilot|--grok|--opencode|--all] [--division <list>] [--list] [--help]
 #
 # Install directly:
 #   curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
@@ -22,7 +22,7 @@ REPO_URL="https://github.com/wcgomes/agents-workspace/archive/refs/heads/main.zi
 REPO_NAME="agents-workspace-main"
 AGENCY_REPO_URL="https://github.com/msitarzewski/agency-agents/archive/refs/heads/main.zip"
 AGENCY_REPO_NAME="agency-agents-main"
-ALL_TOOLS=(opencode claude copilot antigravity grok codex)
+ALL_TOOLS=(antigravity claude codex copilot grok opencode)
 MARKER_START="<!-- agents-workspace:start -->"
 MARKER_END="<!-- agents-workspace:end -->"
 
@@ -47,11 +47,11 @@ usage() {
 Usage: install.sh [options]
 
 Options:
-  --opencode          Install only for OpenCode
   --claude            Install only for Claude Code
+  --codex             Install only for Codex
   --copilot           Install only for Copilot
   --grok              Install only for Grok Build
-  --codex             Install only for Codex
+  --opencode          Install only for OpenCode
   --all               Install to all detected tools (default)
   --division <list>   Comma-separated agency-agents divisions to install
   --no-agency         Skip agency-agents installation
@@ -63,12 +63,12 @@ Installs for each selected tool:
   - Boot policy from templates/AGENTS.md (global instruction files, marker-upsert)
 
 Global boot policy destinations:
-  OpenCode      ~/.config/opencode/AGENTS.md
-  Claude Code   ~/.claude/CLAUDE.md
-  Copilot       ~/.copilot/instructions/agents-workspace.instructions.md
   Antigravity   ~/.gemini/GEMINI.md
-  Grok Build    ~/.grok/AGENTS.md
+  Claude Code   ~/.claude/CLAUDE.md
   Codex         ~/.codex/AGENTS.md   (or \$CODEX_HOME/AGENTS.md)
+  Copilot       ~/.copilot/instructions/agents-workspace.instructions.md
+  Grok Build    ~/.grok/AGENTS.md
+  OpenCode      ~/.config/opencode/AGENTS.md
 
 Examples:
   install.sh              # Interactive mode
@@ -1406,7 +1406,7 @@ main() {
   if [[ ${#selected_tools[@]} -eq 0 ]]; then
     err "No tools selected or detected."
     echo ""
-    info "Run with --opencode, --claude, --copilot, --grok, --codex, or --all to force install."
+    info "Run with --claude, --codex, --copilot, --grok, --opencode, or --all to force install."
     info "Available tools: ${ALL_TOOLS[*]}"
     exit 1
   fi

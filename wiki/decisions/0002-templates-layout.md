@@ -27,12 +27,12 @@ Boot policy is no longer a per-project manual copy. `install.sh` upserts `templa
 
 | Tool | Global path |
 |---|---|
-| OpenCode | `~/.config/opencode/AGENTS.md` |
-| Claude Code | `~/.claude/CLAUDE.md` |
-| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
-| Grok Build | `~/.grok/AGENTS.md` |
+| Claude Code | `~/.claude/CLAUDE.md` |
 | Codex | `${CODEX_HOME:-~/.codex}/AGENTS.md` |
+| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Grok Build | `~/.grok/AGENTS.md` |
+| OpenCode | `~/.config/opencode/AGENTS.md` |
 
 ## Rationale
 

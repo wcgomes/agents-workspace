@@ -51,12 +51,12 @@ Keeping content in the wiki still requires material net durable value after cont
 
 | Platform | Path |
 |---|---|
-| OpenCode | `~/.config/opencode/skills/<name>/SKILL.md` |
-| Claude Code | `~/.claude/skills/<name>/SKILL.md` |
-| Copilot | `~/.copilot/skills/<name>/SKILL.md` |
 | Antigravity | `~/.gemini/antigravity/skills/<name>/SKILL.md` |
-| Grok Build | `${GROK_HOME:-~/.grok}/skills/<name>/SKILL.md` |
+| Claude Code | `~/.claude/skills/<name>/SKILL.md` |
 | Codex | `~/.agents/skills/<name>/SKILL.md` |
+| Copilot | `~/.copilot/skills/<name>/SKILL.md` |
+| Grok Build | `${GROK_HOME:-~/.grok}/skills/<name>/SKILL.md` |
+| OpenCode | `~/.config/opencode/skills/<name>/SKILL.md` |
 
 Subdirectories (`references/`, `scripts/`, etc.) are **not** installed.
 

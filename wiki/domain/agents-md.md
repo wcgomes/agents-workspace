@@ -26,12 +26,12 @@
 
 | Tool | Global boot policy path | Notes |
 |---|---|---|
-| OpenCode | `~/.config/opencode/AGENTS.md` | [OpenCode global rules](https://opencode.ai/docs/rules/) |
-| Claude Code | `~/.claude/CLAUDE.md` | [Claude user instructions](https://docs.anthropic.com/en/docs/claude-code/memory) |
-| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` | Dedicated `*.instructions.md` with `applyTo: "**"` |
 | Antigravity | `~/.gemini/GEMINI.md` | [Gemini CLI global context](https://geminicli.com/docs/cli/gemini-md/) |
-| Grok Build | `~/.grok/AGENTS.md` | `GROK_HOME` (default `~/.grok`) |
+| Claude Code | `~/.claude/CLAUDE.md` | [Claude user instructions](https://docs.anthropic.com/en/docs/claude-code/memory) |
 | Codex | `~/.codex/AGENTS.md` | `CODEX_HOME` (default `~/.codex`). `AGENTS.override.md` in that directory still wins |
+| Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` | Dedicated `*.instructions.md` with `applyTo: "**"` |
+| Grok Build | `~/.grok/AGENTS.md` | `GROK_HOME` (default `~/.grok`) |
+| OpenCode | `~/.config/opencode/AGENTS.md` | [OpenCode global rules](https://opencode.ai/docs/rules/) |
 
 ## Marker upsert (preserve user content)
 
