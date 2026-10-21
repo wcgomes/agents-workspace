@@ -31,6 +31,7 @@
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` | Dedicated `*.instructions.md` with `applyTo: "**"` |
 | Antigravity | `~/.gemini/GEMINI.md` | [Gemini CLI global context](https://geminicli.com/docs/cli/gemini-md/) |
 | Grok Build | `~/.grok/AGENTS.md` | `GROK_HOME` (default `~/.grok`) |
+| Codex | `~/.codex/AGENTS.md` | `CODEX_HOME` (default `~/.codex`). `AGENTS.override.md` in that directory still wins |
 
 ## Marker upsert (preserve user content)
 

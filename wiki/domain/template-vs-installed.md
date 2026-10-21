@@ -37,6 +37,7 @@ templates/skills/          templates/AGENTS.md
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
 | Grok Build | `~/.grok/AGENTS.md` |
+| Codex | `${CODEX_HOME:-~/.codex}/AGENTS.md` |
 
 Repo root `AGENTS.md` is **not** part of install. It stays in the distribution repo for agents developing the harness.
 

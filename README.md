@@ -86,6 +86,7 @@ The boot policy uses `<!-- agents-workspace:start -->` / `<!-- agents-workspace:
 | `--claude` | Select Claude Code. |
 | `--copilot` | Select Copilot. |
 | `--grok` | Select Grok Build. |
+| `--codex` | Select Codex. |
 | `--no-agency` | Install only skills and boot policy; keep your own specialist catalog. |
 | `--division <list>` | Limit Agency agents to comma-separated divisions. |
 | `--list` | Download and list available workflow skills without installing. |
@@ -118,8 +119,9 @@ These are installer destinations, not a claim of end-to-end validation on every 
 | Copilot | `~/.copilot/skills/` | `~/.github/agents/` and `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/config/skills/` | `~/.gemini/GEMINI.md` |
 | Grok Build | `~/.grok/skills/` | `~/.grok/agents/` | `~/.grok/AGENTS.md` |
+| Codex | `~/.agents/skills/` | `~/.codex/agents/` | `~/.codex/AGENTS.md` |
 
-Grok paths use `$GROK_HOME` when set, otherwise `~/.grok`. Agency-managed destinations, including Copilot and Antigravity, depend on the upstream installer and can change.
+Grok paths use `$GROK_HOME` when set, otherwise `~/.grok`. The Codex boot-policy path uses `$CODEX_HOME` when set, otherwise `~/.codex`. Codex skills use the current user location, `~/.agents/skills/`. Codex specialist agents are installed by Agency's own installer (`--tool codex`) into `~/.codex/agents/`. Agency-managed destinations, including Copilot and Antigravity, depend on the upstream installer and can change.
 
 ### Manual install from a local checkout
 

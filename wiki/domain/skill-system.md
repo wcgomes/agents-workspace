@@ -56,6 +56,7 @@ Keeping content in the wiki still requires material net durable value after cont
 | Copilot | `~/.copilot/skills/<name>/SKILL.md` |
 | Antigravity | `~/.gemini/antigravity/skills/<name>/SKILL.md` |
 | Grok Build | `${GROK_HOME:-~/.grok}/skills/<name>/SKILL.md` |
+| Codex | `~/.agents/skills/<name>/SKILL.md` |
 
 Subdirectories (`references/`, `scripts/`, etc.) are **not** installed.
 

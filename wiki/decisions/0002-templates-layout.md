@@ -32,6 +32,7 @@ Boot policy is no longer a per-project manual copy. `install.sh` upserts `templa
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
 | Grok Build | `~/.grok/AGENTS.md` |
+| Codex | `${CODEX_HOME:-~/.codex}/AGENTS.md` |
 
 ## Rationale
 

@@ -58,7 +58,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | `templates/skills/*` | Per-tool global skills dirs | Copy `SKILL.md` trees |
 | `templates/AGENTS.md` | Per-tool global instruction file | Marker-upsert (or dedicated Copilot file) |
 | Repo root `AGENTS.md` | — | Distribution-only meta — not for consumers |
-| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh` when a native target exists; Grok fallback converts Agency markdown into `~/.grok/agents/` |
+| agency-agents (optional) | Tool agent/skill paths | Via their `install.sh` when a native target exists; Codex uses Agency `--tool codex` (`~/.codex/agents/`); Grok fallback converts Agency markdown into `~/.grok/agents/` |
 
 ### Skills destinations
 
@@ -69,6 +69,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | Copilot | `~/.copilot/skills/` |
 | Antigravity | `~/.gemini/antigravity/skills/` |
 | Grok Build | `${GROK_HOME:-~/.grok}/skills/` |
+| Codex | `~/.agents/skills/` |
 
 ### Boot policy destinations
 
@@ -79,6 +80,7 @@ The interactive selector can abort when it renders an undetected or deselected t
 | Copilot | `~/.copilot/instructions/agents-workspace.instructions.md` |
 | Antigravity | `~/.gemini/GEMINI.md` |
 | Grok Build | `~/.grok/AGENTS.md` |
+| Codex | `${CODEX_HOME:-~/.codex}/AGENTS.md` |
 
 Managed block markers: `<!-- agents-workspace:start -->` … `<!-- agents-workspace:end -->`.
 

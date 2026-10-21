@@ -32,6 +32,7 @@
 │      Copilot  ~/.copilot/instructions/...           │
 │      Gemini   ~/.gemini/GEMINI.md                   │
 │      Grok     ~/.grok/AGENTS.md                     │
+│      Codex    ~/.codex/AGENTS.md                    │
 └──────────────────────┬──────────────────────────────┘
                        │ install.sh copies from
                        ▼
@@ -84,3 +85,4 @@ Skills load on demand, in three stages:
 | Copilot | `~/.copilot/skills/` | `~/.copilot/agents/` |
 | Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/antigravity/skills/` (unified) |
 | Grok Build | `${GROK_HOME:-~/.grok}/skills/` | `~/.grok/agents/` |
+| Codex | `~/.agents/skills/` | `~/.codex/agents/` |

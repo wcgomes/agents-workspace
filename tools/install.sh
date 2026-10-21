@@ -4,14 +4,14 @@
 #
 # Always downloads GitHub main.zip (never installs from the local working tree).
 # Installs skills from templates/skills and boot policy from templates/AGENTS.md
-# inside the archive to OpenCode, Claude Code, Antigravity, Copilot, and Grok Build.
+# inside the archive to OpenCode, Claude Code, Antigravity, Copilot, Grok Build, and Codex.
 #
 # Boot policy is installed to each tool's global instruction file, upserted between
 # <!-- agents-workspace:start --> and <!-- agents-workspace:end --> markers so
 # existing user content outside the block is preserved.
 #
 # Usage:
-#   ./install.sh [--opencode|--claude|--copilot|--grok|--all] [--division <list>] [--list] [--help]
+#   ./install.sh [--opencode|--claude|--copilot|--grok|--codex|--all] [--division <list>] [--list] [--help]
 #
 # Install directly:
 #   curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
@@ -22,7 +22,7 @@ REPO_URL="https://github.com/wcgomes/agents-workspace/archive/refs/heads/main.zi
 REPO_NAME="agents-workspace-main"
 AGENCY_REPO_URL="https://github.com/msitarzewski/agency-agents/archive/refs/heads/main.zip"
 AGENCY_REPO_NAME="agency-agents-main"
-ALL_TOOLS=(opencode claude copilot antigravity grok)
+ALL_TOOLS=(opencode claude copilot antigravity grok codex)
 MARKER_START="<!-- agents-workspace:start -->"
 MARKER_END="<!-- agents-workspace:end -->"
 
@@ -51,6 +51,7 @@ Options:
   --claude            Install only for Claude Code
   --copilot           Install only for Copilot
   --grok              Install only for Grok Build
+  --codex             Install only for Codex
   --all               Install to all detected tools (default)
   --division <list>   Comma-separated agency-agents divisions to install
   --no-agency         Skip agency-agents installation
@@ -67,6 +68,7 @@ Global boot policy destinations:
   Copilot       ~/.copilot/instructions/agents-workspace.instructions.md
   Antigravity   ~/.gemini/GEMINI.md
   Grok Build    ~/.grok/AGENTS.md
+  Codex         ~/.codex/AGENTS.md   (or \$CODEX_HOME/AGENTS.md)
 
 Examples:
   install.sh              # Interactive mode
@@ -87,6 +89,7 @@ detect_claude()      { [[ -d "${HOME}/.claude" ]] || command -v claude >/dev/nul
 detect_copilot()    { [[ -d "${HOME}/.copilot" ]] || command -v code >/dev/null 2>&1; }
 detect_antigravity(){ [[ -d "${HOME}/.gemini/antigravity" ]] || command -v gemini >/dev/null 2>&1; }
 detect_grok()        { [[ -d "${GROK_HOME:-$HOME/.grok}" ]] || command -v grok >/dev/null 2>&1; }
+detect_codex()       { [[ -d "$(codex_home)" ]] || command -v codex >/dev/null 2>&1; }
 
 is_detected() {
   case "$1" in
@@ -95,6 +98,7 @@ is_detected() {
     copilot)    detect_copilot     ;;
     antigravity) detect_antigravity ;;
     grok)        detect_grok        ;;
+    codex)       detect_codex       ;;
     *)           return 1 ;;
   esac
 }
@@ -106,10 +110,12 @@ tool_label() {
     copilot)     printf "%-12s  %s" "Copilot"     "~/.copilot/skills"            ;;
     antigravity) printf "%-12s  %s" "Antigravity"  "~/.gemini/antigravity/skills"   ;;
     grok)        printf "%-12s  %s" "Grok Build"   "~/.grok/skills"                ;;
+    codex)       printf "%-12s  %s" "Codex"       "~/.agents/skills"              ;;
   esac
 }
 
 grok_home() { echo "${GROK_HOME:-$HOME/.grok}"; }
+codex_home() { echo "${CODEX_HOME:-$HOME/.codex}"; }
 
 # Global boot-policy file per tool (docs-aligned).
 boot_policy_dest() {
@@ -119,6 +125,7 @@ boot_policy_dest() {
     copilot)     echo "${HOME}/.copilot/instructions/agents-workspace.instructions.md" ;;
     antigravity) echo "${HOME}/.gemini/GEMINI.md" ;;
     grok)        echo "$(grok_home)/AGENTS.md" ;;
+    codex)       echo "$(codex_home)/AGENTS.md" ;;
     *)           return 1 ;;
   esac
 }
@@ -383,6 +390,23 @@ install_antigravity_ours() {
 install_grok_ours() {
   local src="$1"
   local dest_base="$(grok_home)/skills"
+  local count=0
+  mkdir -p "$dest_base"
+  for skill_dir in "$src"/*/; do
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    local name; name="$(basename "$skill_dir")"
+    mkdir -p "$dest_base/$name"
+    cp -rf "$skill_dir"* "$dest_base/$name/"
+    (( count++ )) || true
+  done
+  echo "$count"
+}
+
+# Codex user skills live in ~/.agents/skills. ~/.codex/skills remains a
+# deprecated compatibility root and is not the install destination.
+install_codex_ours() {
+  local src="$1"
+  local dest_base="${HOME}/.agents/skills"
   local count=0
   mkdir -p "$dest_base"
   for skill_dir in "$src"/*/; do
@@ -1170,6 +1194,13 @@ install_agency_tool() {
         fi
       fi
       ;;
+    codex)
+      # Agency writes Codex custom agents to ~/.codex/agents/. Do not convert them here.
+      info "Running agency-agents install.sh for Codex agents..."
+      install_cmd=("$agency_dir/scripts/install.sh" --tool codex --no-interactive)
+      [[ ${#division_args[@]} -gt 0 ]] && install_cmd+=("${division_args[@]}")
+      "${install_cmd[@]}" >/dev/null 2>&1 || success=false
+      ;;
   esac
 
   if $success; then
@@ -1306,6 +1337,7 @@ main() {
       --claude)      selected_tools+=("claude");       shift ;;
       --copilot)     selected_tools+=("copilot");     shift ;;
       --grok)        selected_tools+=("grok");        shift ;;
+      --codex)       selected_tools+=("codex");       shift ;;
       --all)         selected_tool="all";             explicit_all=true; shift ;;
       --no-agency)   skip_agency=true;                shift ;;
       --division)
@@ -1374,7 +1406,7 @@ main() {
   if [[ ${#selected_tools[@]} -eq 0 ]]; then
     err "No tools selected or detected."
     echo ""
-    info "Run with --opencode, --claude, --copilot, --grok, or --all to force install."
+    info "Run with --opencode, --claude, --copilot, --grok, --codex, or --all to force install."
     info "Available tools: ${ALL_TOOLS[*]}"
     exit 1
   fi
@@ -1390,11 +1422,13 @@ main() {
   local our_count_copilot=0
   local our_count_antigravity=0
   local our_count_grok=0
+  local our_count_codex=0
   local boot_status_opencode=""
   local boot_status_claude=""
   local boot_status_copilot=""
   local boot_status_antigravity=""
   local boot_status_grok=""
+  local boot_status_codex=""
 
   for t in "${selected_tools[@]}"; do
     case "$t" in
@@ -1403,6 +1437,7 @@ main() {
       copilot)    our_count_copilot=$(install_copilot_ours "$src")     ;;
       antigravity) our_count_antigravity=$(install_antigravity_ours "$src")   ;;
       grok)        our_count_grok=$(install_grok_ours "$src")          ;;
+      codex)       our_count_codex=$(install_codex_ours "$src")        ;;
     esac
   done
 
@@ -1421,6 +1456,7 @@ main() {
       copilot)     boot_status_copilot="$status" ;;
       antigravity) boot_status_antigravity="$status" ;;
       grok)        boot_status_grok="$status" ;;
+      codex)       boot_status_codex="$status" ;;
     esac
     dest_disp="$(boot_policy_dest "$t" | sed "s|^${HOME}|~|")"
     ok "boot policy ($status) -> $dest_disp"
@@ -1496,6 +1532,10 @@ main() {
         dest="$(grok_home)/skills/"
         dest="${dest/#$HOME/~}"
         ;;
+      codex)
+        count="$our_count_codex"
+        dest="~/.agents/skills/"
+        ;;
     esac
     ok "$count skills -> $dest"
   done
@@ -1511,6 +1551,7 @@ main() {
       copilot)     bstatus="$boot_status_copilot" ;;
       antigravity) bstatus="$boot_status_antigravity" ;;
       grok)        bstatus="$boot_status_grok" ;;
+      codex)       bstatus="$boot_status_codex" ;;
     esac
     ok "${bstatus:-?} -> $bdest"
   done
