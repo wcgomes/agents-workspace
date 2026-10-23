@@ -1,16 +1,8 @@
 # Evaluating skill output quality
 
-> How to test whether your skill produces good outputs using eval-driven iteration.
-
 ## Designing test cases
 
-A test case has three parts:
-
-* **Prompt**: a realistic user message — the kind of thing someone would actually type.
-* **Expected output**: a human-readable description of what success looks like.
-* **Input files** (optional): files the skill needs to work with.
-
-Store test cases in `evals/evals.json` inside your skill directory:
+Cases need a realistic **prompt**, human-readable **expected output**, and optional **input files**. Store in the skill's `evals/evals.json`:
 
 ```json
 {
@@ -26,20 +18,15 @@ Store test cases in `evals/evals.json` inside your skill directory:
 }
 ```
 
-**Tips for writing good test prompts:**
-
-* **Start with 2-3 test cases.** Don't over-invest before you've seen your first round of results.
-* **Vary the prompts.** Use different phrasings, levels of detail, and formality.
-* **Cover edge cases.** Include at least one prompt that tests a boundary condition.
-* **Use realistic context.** Real users mention file paths, column names, and personal context.
+Start with 2–3 cases; vary phrasing/detail/formality, include at least one boundary, and use realistic paths/columns/personal context.
 
 ## Running evals
 
-The core pattern is to run each test case twice: once **with the skill** and once **without it** (or with a previous version). This gives you a baseline to compare against.
+Run each case **with skill** vs **without skill** (or previous version) as baseline.
 
 ### Workspace structure
 
-Organize eval results in a workspace directory alongside your skill directory. Each pass through the full eval loop gets its own `iteration-N/` directory:
+Use a sibling workspace with a new `iteration-N/` for each full loop:
 
 ```
 csv-analyzer/
@@ -62,20 +49,11 @@ csv-analyzer-workspace/
 
 ### Spawning runs
 
-Each eval run should start with a clean context — no leftover state from previous runs. Provide:
-
-* The skill path (or no skill for the baseline)
-* The test prompt
-* Any input files
-* The output directory
-
-For the baseline, use the same prompt but without the skill path, saving to `without_skill/outputs/`.
-
-When improving an existing skill, use the previous version as your baseline. Snapshot it before editing (`cp -r <skill-path> <workspace>/skill-snapshot/`).
+Start each run in clean context with skill path (omit for no-skill baseline), prompt, input files, output directory. Baseline uses the same prompt and `without_skill/outputs/`. For existing skills, snapshot before editing (`cp -r <skill-path> <workspace>/skill-snapshot/`) and use that version as baseline.
 
 ### Capturing timing data
 
-Timing data lets you compare how much time and tokens the skill costs relative to the baseline. Record token count and duration for each run:
+Record per-run tokens/duration to compare baseline cost:
 
 ```json
 {
@@ -86,18 +64,7 @@ Timing data lets you compare how much time and tokens the skill costs relative t
 
 ## Writing assertions
 
-Assertions are verifiable statements about what the output should contain or achieve. Add them after you see your first round of outputs.
-
-Good assertions:
-
-* `"The output file is valid JSON"` — programmatically verifiable.
-* `"The bar chart has labeled axes"` — specific and observable.
-* `"The report includes at least 3 recommendations"` — countable.
-
-Weak assertions:
-
-* `"The output is good"` — too vague to grade.
-* `"The output uses exactly the phrase 'Total Revenue: $X'"` — too brittle.
+After first outputs, add verifiable assertions: valid JSON, labeled axes, ≥3 recommendations. Avoid vague "good output" or brittle exact wording such as "Total Revenue: $X".
 
 Add assertions to each test case in `evals/evals.json`:
 
@@ -123,9 +90,7 @@ Add assertions to each test case in `evals/evals.json`:
 
 ## Grading outputs
 
-Grading means evaluating each assertion against the actual outputs and recording **PASS** or **FAIL** with specific evidence. The evidence should quote or reference the output, not just state an opinion.
-
-The simplest approach is to give the outputs and assertions to an LLM and ask it to evaluate each one. For assertions that can be checked by code (valid JSON, correct row count, file exists), use a verification script — scripts are more reliable than LLM judgment for mechanical checks.
+Grade actual outputs **PASS/FAIL**, citing/quoting evidence, not opinion. An LLM can judge assertions; prefer scripts for mechanical checks (JSON, row counts, file existence).
 
 ```json
 {
@@ -152,14 +117,11 @@ The simplest approach is to give the outputs and assertions to an LLM and ask it
 
 ### Grading principles
 
-* **Require concrete evidence for a PASS.** Don't give the benefit of the doubt.
-* **Review the assertions themselves, not just the results.** While grading, notice when assertions are too easy, too hard, or unverifiable. Fix these for the next iteration.
-
-For comparing two skill versions, try **blind comparison**: present both outputs to an LLM judge without revealing which came from which version.
+Require concrete evidence for PASS, never benefit of doubt. Review assertions too: fix easy/hard/unverifiable ones next iteration. For two versions, try blind LLM comparison without version labels.
 
 ## Aggregating results
 
-Once every run in the iteration is graded, compute summary statistics per configuration and save them to `benchmark.json`:
+After grading all runs, save per-configuration statistics in `benchmark.json`:
 
 ```json
 {
@@ -183,21 +145,20 @@ Once every run in the iteration is graded, compute summary statistics per config
 }
 ```
 
-The `delta` tells you what the skill costs (more time, more tokens) and what it buys (higher pass rate).
+`delta` compares cost (time/tokens) and benefit (pass rate).
 
 ## Analyzing patterns
 
-Aggregate statistics can hide important patterns. After computing the benchmarks:
-
-* **Remove or replace assertions that always pass in both configurations.** These don't tell you anything useful.
-* **Investigate assertions that always fail in both configurations.** Either the assertion is broken, the test case is too hard, or the assertion is checking for the wrong thing.
-* **Study assertions that pass with the skill but fail without.** This is where the skill is clearly adding value. Understand *why*.
-* **Tighten instructions when results are inconsistent across runs.** High stddev may mean ambiguous instructions. Add examples or more specific guidance.
-* **Check time and token outliers.** If one eval takes 3x longer, read its execution transcript to find the bottleneck.
+After benchmarks, inspect patterns hidden by aggregates:
+- Always pass both: remove/replace uninformative assertions.
+- Always fail both: investigate broken/wrong assertions or excessive difficulty.
+- Pass only with skill: understand why it adds value.
+- Inconsistent/high stddev: tighten ambiguity with examples/specific guidance.
+- Time/token outliers (e.g., 3×): read traces for bottlenecks.
 
 ## Reviewing results with a human
 
-Assertion grading catches a lot, but only checks what you thought to write assertions for. A human reviewer brings a fresh perspective. Record specific feedback for each test case and save it in the workspace (e.g., `feedback.json`):
+Human review catches unasserted issues. Save specific per-case feedback in workspace `feedback.json`:
 
 ```json
 {
@@ -210,18 +171,7 @@ Assertion grading catches a lot, but only checks what you thought to write asser
 
 ## Iterating on the skill
 
-After grading and reviewing, you have three sources of signal:
-
-* **Failed assertions** point to specific gaps.
-* **Human feedback** points to broader quality issues.
-* **Execution transcripts** reveal *why* things went wrong.
-
-The most effective way to turn these signals into skill improvements is to give all three — along with the current `SKILL.md` — to an LLM and ask it to propose changes. When prompting the LLM, include these guidelines:
-
-* **Generalize from feedback.** Fixes should address underlying issues broadly rather than adding narrow patches for specific examples.
-* **Keep the skill lean.** Fewer, better instructions often outperform exhaustive rules.
-* **Explain the why.** Reasoning-based instructions work better than rigid directives.
-* **Bundle repeated work.** If every test run independently wrote a similar helper script, bundle it into `scripts/`.
+Give the LLM current `SKILL.md` plus failed assertions (specific gaps), human feedback (broader quality), and traces (causes). Request generalized fixes, not case-specific patches; fewer/better instructions; reasons, not rigid directives; repeated helpers bundled in `scripts/`.
 
 ### The loop
 
@@ -231,4 +181,4 @@ The most effective way to turn these signals into skill improvements is to give 
 4. Grade and aggregate the new results.
 5. Review with a human. Repeat.
 
-Stop when you're satisfied with the results, feedback is consistently empty, or you're no longer seeing meaningful improvement between iterations.
+Stop at satisfactory results, consistently empty feedback, or no meaningful improvement.

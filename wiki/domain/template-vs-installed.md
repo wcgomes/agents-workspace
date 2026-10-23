@@ -20,6 +20,8 @@ If you treat `templates/AGENTS.md` as the live boot policy while working **in th
 
 ## Installation flow
 
+The installer uses published GitHub `main`, not local edits. See [installation flow](installation-flow.md) for resource copying, destinations, and local testing.
+
 ```
 templates/skills/          templates/AGENTS.md
        │                          │
@@ -55,7 +57,3 @@ Repo root `AGENTS.md` is **not** part of install. It stays in the distribution r
 ## Exception: Workspace-Local Skills
 
 Skills created from skill candidates live in `.agents/skills/` in a **consumer** workspace. Not managed by `install.sh`.
-
-## References Subdirectory
-
-`references/` (and similar) under a skill template are **not** installed. Only `SKILL.md` is copied. Access references from the source repo or inline them in `SKILL.md`.

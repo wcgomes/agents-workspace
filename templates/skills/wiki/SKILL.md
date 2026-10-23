@@ -1,35 +1,22 @@
 ---
 name: wiki
-description: Use this skill for explicit wiki setup or maintenance, including creation without an existing wiki, and for post-review ingest evaluation and conditional ingestion when the task belongs to an identified project with wiki/ at its root. For read-only consultation alone, load wiki-query instead.
+description: Use for explicit wiki setup/maintenance (including creation), or post-review ingest evaluation and conditional ingestion for an identified task project with root wiki/. Read-only consultation uses wiki-query instead.
 ---
 
 # Wiki
 
-Workspace knowledge base and self-improvement loop: setup, gated post-review ingest evaluation, conditional ingestion, and maintenance/validation.
-
-Apply the boot policy's Wiki gate before automatic loading or evaluation. Explicit wiki requests bypass it; clarify the target if needed. All wiki paths refer to that project or explicit target, not an unrelated current directory.
-
-The wiki exists to eliminate unnecessary workspace exploration: with the right knowledge the agent goes straight to relevant context; if exploration is still needed, the wiki narrows it — focused and directed, not open-ended.
-
-For read-only consultation, use `wiki-query`; it is not a prerequisite for ingest evaluation.
+Setup → gated post-review evaluation → conditional ingestion → maintenance/validation. Apply the boot policy's Wiki gate before automatic loading/evaluation; explicit requests bypass it (clarify target if needed). Paths refer to that project/target, not unrelated cwd. Wiki eliminates or narrows exploration to relevant context. Read-only consultation uses `wiki-query`, not a prerequisite for evaluation.
 
 ## Design Principle
 
-> **Language:** All wiki content defaults to English. Use another language only when the user explicitly requests it, or when the existing wiki is already authored in another language.
+> **Language:** English unless explicitly requested otherwise or the existing wiki uses another language.
+> **Prose:** Single-line paragraphs, no hard-wrapping, preambles, or filler.
 
-> **Prose:** No hard-wrapping — paragraphs flow as single lines; the renderer wraps. Write what matters, skip the rest; no preambles, no filler.
+Every line costs context: short paragraphs/bullets, clear headings, one topic per file. Keep only precise future-useful decision/action guidance; dense patterns, conventions, and examples are welcome. `index.md` is the required routing map: page/child-index `.md` links, never folders, under the contract below.
 
-Wiki files are loaded into agent context. Every line costs tokens.
+Do not restate trivial facts readily visible in source material. Preserve maps, rationale, and non-obvious relationships that materially reduce exploration; link to sources rather than duplicate details.
 
-- **Compact** — short paragraphs, bullets, no filler
-- **Precise** — only information that matters for future tasks
-- **Scannable** — clear headings, one topic per file, easy to locate
-- **Lean** — if it doesn't help the agent decide or act, remove it
-- **index.md is the routing map** — required entrypoint; `.md` links followed by short keyword segments and brief descriptions (page or subfolder's `index.md`, never the folder itself); every root and folder index must obey the Index Entry Contract below
-
-Keep substantive pages dense. Patterns, conventions, examples — all welcome there if compact and actionable. Cut ruthlessly: if a sentence doesn't help the agent decide or act, delete it.
-
-Treat future context and maintenance cost as part of every ingest decision. Wiki maintenance is worthwhile only when its durable retrieval value materially exceeds the added context, navigation, duplication, and upkeep cost. Evaluation is required; writing is not.
+Evaluate every ingest for material net durable retrieval value after context, navigation, duplication, and upkeep cost. Evaluation is mandatory; writing is not.
 
 ### Index Entry Contract
 
@@ -37,21 +24,21 @@ An `index.md` may contain only its title, optional short group headings, and ent
 
 `- [Page title](relative/path.md) — keyword-1, keyword-2 — Description of 12 words or fewer.`
 
-Each entry is one physical Markdown bullet with exactly one `.md` link, a separate segment of 2–5 short retrieval keywords, then a description of at most 12 words. Separate the three segments with em dashes; do not prefix the keyword segment with a label. Route; do not summarize. Index entries must not contain architectural details, exhaustive behavior, changelog or spec inventories, test or run instructions, rationale, examples, or content duplicated from the linked page. Move qualifying detail to the linked page; otherwise omit it.
+Each entry: one physical bullet, exactly one `.md` link, 2–5 short retrieval keywords in an unlabeled segment, description ≤12 words; separate all three segments with em dashes. Route, never summarize: no architecture, exhaustive behavior, changelog/spec inventories, test/run instructions, rationale, examples, or linked-page duplication. Put qualifying detail on the page; otherwise omit.
 
-**Never add raw data to the wiki.** Logs, stack traces, command outputs, API responses, and dumps are ephemeral artifacts, not knowledge. Store distilled insights: what was learned, what pattern was identified, what decision was made. If a log reveals an error condition worth remembering, write "X error happens when Y" — not the full log.
+**No raw data:** logs, stack traces, command output, API responses, dumps are ephemeral. Distill learning/patterns/decisions: "X error happens when Y", not its log.
 
-**Date-bound artifacts go in `wiki/records/`.** Material from a specific event worth keeping — e.g., incidents, research, audits, meetings, reviews. Use a `YYYYMMDD-` filename prefix (e.g., `wiki/records/incidents/20260110-pg-outage.md`).
+**Date-bound artifacts:** retain worthwhile incidents/research/audits/meetings/reviews in `wiki/records/` with `YYYYMMDD-` filenames (e.g., `wiki/records/incidents/20260110-pg-outage.md`).
 
 ## Setup
 
-**Setup** — create `wiki/` only as part of explicitly requested creation/setup, never as a side effect of automatic consultation or evaluation. Create `wiki/index.md` and an index for every new content folder, linked from its parent index as specified under Wiki Structure. All indexes must obey the Index Entry Contract. For broad wiki setup/creation, use `orchestrate` roles for Workspace Research / Architecture Analysis and Technical Writing / Documentation; add Review / Consistency when persistent docs are created.
+Create `wiki/` only for explicitly requested setup/creation, never automatic consultation/evaluation. Create `wiki/index.md` and parent-linked indexes for every new content folder under Wiki Structure/Index Entry Contract. Broad setup uses `orchestrate` roles: Workspace Research / Architecture Analysis, Technical Writing / Documentation, plus Review / Consistency when creating persistent docs.
 
 ## <HARD-GATE> Post-Review Ingest Evaluation
 
-When the Wiki gate applies, the coordinator runs this evaluation after review/verification and before the final response, regardless of deliverable domain. Otherwise skip automatic evaluation; explicit wiki tasks follow the rule below.
+When Wiki-gated, coordinator evaluates after review/verification and before final response in every domain. Otherwise skip automatic evaluation; explicit wiki tasks still evaluate below.
 
-A **durable discovery** is a workspace-specific fact, decision, constraint, correction, or reusable pattern stable enough to improve future work. Durability alone is insufficient: a wiki change must produce material net value after compact organization, future context cost, maintenance burden, ambiguity, and duplication are considered. Requested task artifacts and generic, low-value, ambiguous, redundant, transient, or already-captured information do not qualify for addition.
+A **durable discovery** is a workspace-specific fact/decision/constraint/correction/reusable pattern stable enough to improve future work. Durability alone does not qualify: require material net value after compact organization, context/maintenance cost, ambiguity, and duplication. Do not add requested task artifacts or generic, low-value, ambiguous, redundant, transient, or already-captured information.
 
 Evaluate the reviewed artifacts and outcomes, verification evidence, user corrections, and any optional executor signal against these questions:
 
@@ -59,17 +46,17 @@ Evaluate the reviewed artifacts and outcomes, verification evidence, user correc
 2. Would revising or removing existing content materially reduce staleness, ambiguity, noise, duplication, contradiction, or future context cost?
 3. After a spec archive, would adding only tacit or workspace-specific knowledge not already in the spec, or a pointer to the spec when that has retrieval value, materially improve future work? Restating or syncing the archived contract does not qualify.
 
-Any clear YES → open the conditional ingestion stream. All NO, uncertain, or marginal → skip additional ingestion dispatch, but the evaluation still occurred. No wiki write is required merely to complete the workflow. The absence of an executor signal never permits the coordinator to skip evaluation.
+Any clear YES → conditional ingestion stream. All NO/uncertain/marginal → no additional dispatch. Missing executor signals never waive evaluation; completion never requires a write.
 
-The handoff remains executors' primary task context, and the coordinator remains responsible for supplying task-critical context. Executors may consult the wiki when useful to their assigned task without additional authorization; wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts. They do not edit it unless wiki editing is explicitly part of their handoff. They may optionally return at most one line, `Durable discovery: ...`, only for tacit knowledge not evident in their artifacts; they are not required to emit it.
+Coordinator supplies task-critical handoff context; handoff stays primary. Executors may consult wiki when useful to assigned work without further authorization, never expanding scope or overriding handoff/specs/current sources. Edits require explicit handoff scope. Optional: at most one `Durable discovery: ...` line for tacit knowledge not evident in artifacts.
 
-When ingestion is positive, consolidate discoveries from all sequential and parallel outputs into one serialized ingestion stream owned by the Wiki Ingestion Specialist role; never run parallel wiki writers. The owner handles classification, deduplication, add/update/remove decisions, qualifying wiki edits, navigation updates under the Index Entry Contract, and consistency lint, and must not alter the task's original deliverables. Closer inspection may conclude that no edit has material net value; returning without a wiki write is valid. The coordinator reviews the result before the final response. Failed review or a non-complete status triggers bounded retry/correction under `orchestrate`'s status protocol within the same stream; unresolved work follows the stuck rule and is reported, never silently dropped.
+Positive ingestion: consolidate all sequential/parallel discoveries into **one serialized stream** owned by the Wiki Ingestion Specialist role; never parallel writers. Owner classifies/deduplicates, decides qualifying add/update/remove edits, maintains contract-compliant navigation, and lints consistency; never alter original deliverables. No-write return is valid if closer inspection finds no material net value. Coordinator reviews before final response. Failed review/non-complete status: bounded retry/correction in the same stream under `orchestrate` status/stuck rules; report unresolved work, never drop it.
 
-Explicit wiki tasks and broad wiki setup/creation still run this mandatory evaluation. If their reviewed deliverables already captured the durable knowledge correctly, including navigation and consistency, skip redundant ingestion dispatch. Broad setup/creation remains the separate multi-role workflow under **Setup**; post-task ingestion does not replace it.
+Explicit wiki tasks/broad setup still evaluate. Skip redundant ingestion if reviewed deliverables already correctly capture durable knowledge, navigation, and consistency. Ingestion never replaces multi-role **Setup**.
 
-**Wiki vs spec.** Specs own the prescriptive live contract — requirements, scenarios, acceptance. Wiki owns durable descriptive knowledge that is not that contract, and may reference specs. Skills stay procedural. If content lives in a spec, point at `specs/<domain>.md` or the relevant change path; do not copy or paraphrase requirements, scenarios, or acceptance. On conflict, the spec wins: delete or shrink the wiki restatement — do not keep a mirror in sync.
+**Wiki vs spec:** specs own the prescriptive live contract (requirements/scenarios/acceptance); wiki owns durable descriptive knowledge, skills procedures. Link `specs/<domain>.md`/relevant change, never copy/paraphrase its contract. On conflict spec wins: delete/shrink wiki restatements, never sync a mirror.
 
-**Wiki vs skill.** Wiki = durable declarative knowledge (what is true / decided / how the workspace is). Skill = recurring procedural workflow (multi-step, triggered often, improves with explicit instruction). Only when content is clearly procedural AND clearly recurring, flag to the user: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create the skill; the user decides. Check existing skills first — adapt, don't duplicate. Uncertainty alone is not a reason to ingest; declarative content must still pass the durability and future-use test. Wiki pages may reference workspace skills when relevant; skills keep their procedures self-contained and may direct runtime wiki consultation for workspace context, but must not depend on wiki pages for procedural instructions.
+**Wiki vs skill:** wiki is declarative (true/decided/workspace facts); skills are recurring multi-step procedures improved by instruction. Only for clearly procedural AND recurring content, ask: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create it; user decides. Check existing skills first; adapt, don't duplicate. Uncertainty never justifies ingestion; declarations still need durable future value. Wiki may reference skills; skills may consult runtime wiki context but must keep procedures self-contained, never depend on wiki for instructions.
 
 Do NOT ask "should I update the wiki?" — evaluate automatically.
 
@@ -96,24 +83,22 @@ wiki/
 └── ...
 ```
 
-This is a starting point. Create additional folders/subfolders as needed — for projects, features, work-in-progress, or any grouping that improves organization. One topic per file, one concept per folder; keep the structure shallow.
+Adapt folders for projects/features/WIP/useful groupings. One topic per file, one concept per folder; stay shallow.
 
-Every new wiki content folder must contain `index.md`, including intermediate grouping folders and folders under `records/`. Its parent index must link to that child `index.md`, never to the folder itself. Each index lists only its level: local pages (excluding itself) and immediate subfolders' indexes, not complete descendant page lists repeated in ancestors. Every wiki page must remain reachable from `wiki/index.md` through this routing map; pages stored at root are listed directly in the root index.
+Every new content folder (including intermediate/`records/` folders) needs parent-linked `index.md`, never a folder link. Each index lists only local pages (not itself) and immediate child indexes, never repeated descendant inventories. Every page must be reachable from `wiki/index.md`; root pages link directly there.
 
 Apply this structure to new content folders; do not automatically migrate or reorganize existing wiki layouts to comply.
 
 Creation, ingestion, and maintenance must preserve the Index Entry Contract; never expand an index entry to capture page content.
 
-As a heuristic, consider splitting or reorganizing when any index exceeds ~50 lines OR a single topic group exceeds ~10 entries: move a coherent group into a subfolder and replace its entries in the parent index with a link to the child's `index.md`. These thresholds guide organization, not whether a new folder needs an index; every new content folder requires one regardless of size. Apply judgment and preserve a shallow structure; thresholds do not trigger automatic reorganization.
+Consider splitting when an index exceeds ~50 lines OR a topic group ~10 entries: move a coherent group to a subfolder; replace parent entries with its `index.md` link. Heuristics, not automatic reorganization; use judgment, stay shallow. New folders always need indexes regardless of size.
 
 ## Wiki Maintenance
 
-When the wiki changes, maintain it deliberately.
-
-- **Add** — create a page only when the knowledge is new, unambiguous, stable enough to reuse, not already covered, and worth its future context and maintenance cost.
-- **Update** — revise content when doing so materially clarifies durable knowledge, completes a useful rule, or reduces misleading or stale guidance.
-- **Reorganize** — merge files/pages, rename or move them, or split oversized or mixed-topic content when doing so materially improves compactness or retrieval, or reduces future context cost. Update all affected navigation and references.
-- **Remove** — delete or consolidate a page/section when doing so materially reduces ambiguity, noise, context cost, contradiction, duplication, or obsolete content. Also update or remove references from `wiki/index.md` and related pages.
+- **Add:** only new, unambiguous, reusable, uncovered knowledge worth context/maintenance cost.
+- **Update:** materially clarify durable knowledge, complete useful rules, reduce misleading/stale guidance.
+- **Reorganize:** merge/rename/move/split oversized or mixed topics for material compactness/retrieval/context benefit; update all navigation/references.
+- **Remove:** delete/consolidate pages/sections to materially reduce ambiguity/noise/context/contradiction/duplication/obsolescence; update/remove index and related-page references.
 
 ### Lint
 
@@ -129,12 +114,4 @@ When the wiki changes, check for:
 
 Do not leave the wiki internally inconsistent after editing it.
 
-## Rationalization Prevention
-
-| Excuse | Reality |
-|--------|---------|
-| "I didn't learn anything new" | Run the evaluation. |
-| "This is too minor to document" | Size alone is irrelevant; dispatch only for material net durable value. |
-| "The workflow needs a wiki edit" | No. It needs an evaluation; write only for material durable value. |
-| "Too specific to track" | Workspace specificity helps only when the knowledge is stable enough to improve future work. |
-| "The log proves it happened" | Distill the insight, not the raw data. |
+Size, specificity, or "nothing learned" never waives evaluation; only material durable value warrants writing. Distill insights, never logs.

@@ -13,7 +13,7 @@ Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separ
 
 ### Spend context wisely
 
-Ask for each paragraph: "Would the agent get this wrong without this instruction?" If no → cut it.
+Cut paragraphs whose omission would not cause errors.
 
 - ✅ Project-specific conventions, domain procedures, non-obvious edge cases, environment-specific facts
 - ❌ General concepts the agent already understands (what a PDF is, how HTTP works, what a migration does)
@@ -50,7 +50,7 @@ Join `orders` to `customers` on `customer_id`, filter `region = 'EMEA'`, sum `am
 
 ### Aim for moderate detail
 
-Concise stepwise guidance with one working example > exhaustive documentation. Over-comprehensive skills trigger unproductive paths on instructions that don't apply.
+Prefer steps + one working example to exhaustive rules that trigger irrelevant paths.
 
 ---
 
@@ -58,7 +58,7 @@ Concise stepwise guidance with one working example > exhaustive documentation. O
 
 ### Gotchas section — highest-value content
 
-Environment-specific facts that defy assumptions. Not general advice — concrete corrections:
+Correct false assumptions with environment-specific facts:
 
 ```markdown
 ## Gotchas
@@ -70,11 +70,11 @@ Environment-specific facts that defy assumptions. Not general advice — concret
   even if DB is down. Use `/ready` for full service health.
 ```
 
-> **Iteration tip:** when the agent makes a mistake you correct, add it to gotchas. Most direct way to improve a skill.
+Add corrected agent mistakes to gotchas.
 
 ### Templates for output format
 
-Concrete format example in a code block — agents pattern-match against structures better than prose descriptions. Short templates inline; long ones in `assets/`.
+Use concrete code-block formats, not prose descriptions. Short templates inline; long ones in `assets/`.
 
 ### Checklists for multi-step workflows
 
@@ -98,6 +98,6 @@ Do work → run validator → fix → repeat until pass.
 
 ### Plan-validate-execute
 
-For destructive or batch ops. Agent creates structured plan → validates against source of truth → executes only on success.
+Destructive/batch operations: structured plan → validate against source of truth → execute only on success.
 
-The critical step is validation with actionable errors: "Field 'signature_date' not found — available: customer_name, order_total, signature_date_signed".
+Validation errors must be actionable: "Field 'signature_date' not found — available: customer_name, order_total, signature_date_signed".

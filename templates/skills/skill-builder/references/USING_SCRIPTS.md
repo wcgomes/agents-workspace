@@ -1,12 +1,10 @@
 # Using scripts in skills
 
-> How to run commands and bundle executable scripts in your skills.
-
-Skills can instruct agents to run shell commands and bundle reusable scripts in a `scripts/` directory. This guide covers one-off commands, self-contained scripts with their own dependencies, and how to design script interfaces for agentic use.
+Use one-off commands or reusable self-contained `scripts/` executables with agent-friendly interfaces.
 
 ## One-off commands
 
-When an existing package already does what you need, you can reference it directly in your `SKILL.md` instructions without a `scripts/` directory.
+Reference existing packages directly in `SKILL.md`; no `scripts/` directory needed.
 
 ### uvx
 
@@ -17,8 +15,7 @@ uvx ruff@0.8.0 check .
 uvx black@24.10.0 .
 ```
 
-* Not bundled with Python — requires a separate install.
-* Fast. Caches aggressively so repeat runs are near-instant.
+* Separate install, not bundled with Python; cached repeats are near-instant.
 
 ### pipx
 
@@ -29,8 +26,7 @@ pipx run 'black==24.10.0' .
 pipx run 'ruff==0.8.0' check .
 ```
 
-* Not bundled with Python — requires a separate install.
-* A mature alternative to `uvx`.
+* Separately installed, mature `uvx` alternative; not bundled with Python.
 
 ### npx
 
@@ -41,8 +37,7 @@ npx eslint@9 --fix .
 npx create-vite@6 my-app
 ```
 
-* Bundled with Node.js — no extra install needed.
-* Pin versions with `npx package@version` for reproducibility.
+* No extra install beyond Node.js; pin `npx package@version` for reproducibility.
 
 ### bunx
 
@@ -81,15 +76,13 @@ go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.0 run
 
 **Tips for one-off commands in skills:**
 
-* **Pin versions** (e.g., `npx eslint@9.0.0`) so the command behaves the same over time.
-* **State prerequisites** in your `SKILL.md` rather than assuming the agent's environment has them. For runtime-level requirements, use the `compatibility` frontmatter field.
-* **Move complex commands into scripts.** A one-off command works well when you're invoking a tool with a few flags. When a command grows complex enough that it's hard to get right on the first try, a tested script in `scripts/` is more reliable.
+* Pin versions (e.g., `npx eslint@9.0.0`) for stable behavior.
+* State prerequisites in `SKILL.md`; use `compatibility` for runtime requirements, never assume availability.
+* A few flags fit one-off commands; move complex/error-prone logic into tested `scripts/`.
 
 ## Referencing scripts from `SKILL.md`
 
-Use **relative paths from the skill directory root** to reference bundled files. The agent resolves these paths automatically.
-
-List available scripts in your `SKILL.md` so the agent knows they exist:
+Use automatically resolved **skill-root-relative paths** for bundled files. List scripts in `SKILL.md`:
 
 ```markdown
 ## Available scripts
@@ -100,7 +93,7 @@ List available scripts in your `SKILL.md` so the agent knows they exist:
 
 Then instruct the agent to run them:
 
-```markdown
+````markdown
 ## Workflow
 
 1. Run the validation script:
@@ -110,15 +103,15 @@ Then instruct the agent to run them:
 
 2. Process the results:
    ```bash
-   python3 scripts/process.py --input results.json
-   ```
-```
+    python3 scripts/process.py --input results.json
+    ```
+````
 
 The same relative-path convention works in support files like `references/*.md` — script execution paths are relative to the **skill directory root**.
 
 ## Self-contained scripts
 
-When you need reusable logic, bundle a script in `scripts/` that declares its own dependencies inline. The agent can run the script with a single command — no separate manifest file or install step required.
+Bundle reusable `scripts/` logic with inline dependencies: one command, no separate manifest/install step.
 
 ### Python (PEP 723)
 
@@ -219,13 +212,11 @@ ruby scripts/extract.rb
 
 ## Designing scripts for agentic use
 
-When an agent runs your script, it reads stdout and stderr to decide what to do next. A few design choices make scripts dramatically easier for agents to use.
+Agents choose next actions from stdout/stderr.
 
 ### Avoid interactive prompts
 
-This is a hard requirement of the agent execution environment. Agents operate in non-interactive shells — they cannot respond to TTY prompts, password dialogs, or confirmation menus. A script that blocks on interactive input will hang indefinitely.
-
-Accept all input via command-line flags, environment variables, or stdin:
+Hard requirement: non-interactive shells cannot answer TTY/password/confirmation prompts; scripts hang. Accept flags, environment variables, or stdin instead:
 
 ```
 # Bad: hangs waiting for input
@@ -240,7 +231,7 @@ Usage: python scripts/deploy.py --env staging --tag v1.2.3
 
 ### Document usage with `--help`
 
-`--help` output is the primary way an agent learns your script's interface. Include a brief description, available flags, and usage examples:
+`--help` teaches the interface: include description, flags, examples:
 
 ```
 Usage: scripts/process.py [OPTIONS] INPUT_FILE
@@ -257,11 +248,11 @@ Examples:
   scripts/process.py --format csv --output report.csv data.csv
 ```
 
-Keep it concise — the output enters the agent's context window.
+Keep help short; it consumes context.
 
 ### Write helpful error messages
 
-When an agent gets an error, the message directly shapes its next attempt. Instead of opaque "Error: invalid input", say what went wrong, what was expected, and what to try:
+Errors guide retries: state failure, expected input, and remedy, not "invalid input":
 
 ```
 Error: --format must be one of: json, csv, table.
@@ -270,15 +261,13 @@ Error: --format must be one of: json, csv, table.
 
 ### Use structured output
 
-Prefer structured formats — JSON, CSV, TSV — over free-form text. Structured formats can be consumed by both the agent and standard tools (`jq`, `cut`, `awk`), making your script composable in pipelines.
-
-**Separate data from diagnostics:** send structured data to stdout and progress messages, warnings, and other diagnostics to stderr. This lets the agent capture clean, parseable output while still having access to diagnostic information when needed.
+Prefer JSON/CSV/TSV for agents and pipeline tools (`jq`, `cut`, `awk`). Structured data to stdout; progress/warnings/diagnostics to stderr, preserving parseability.
 
 ### Further considerations
 
-* **Idempotency.** Agents may retry commands. "Create if not exists" is safer than "create and fail on duplicate."
-* **Input constraints.** Reject ambiguous input with a clear error rather than guessing. Use enums and closed sets where possible.
-* **Dry-run support.** For destructive or stateful operations, a `--dry-run` flag lets the agent preview what will happen.
-* **Meaningful exit codes.** Use distinct exit codes for different failure types and document them in your `--help` output.
-* **Safe defaults.** Destructive operations should require explicit confirmation flags (`--confirm`, `--force`) or other safeguards.
-* **Predictable output size.** Many agent harnesses truncate tool output beyond a threshold (e.g., 10-30K characters). If your script might produce large output, default to a summary or a reasonable limit, and support flags like `--offset` so the agent can request more information. Alternatively, require an `--output` flag that specifies either an output file or `-` to explicitly opt in to stdout.
+* **Idempotency:** retries favor "create if absent", not duplicate failures.
+* **Input:** reject ambiguity with clear errors; prefer enums/closed sets, never guess.
+* **Dry-run:** preview destructive/stateful operations via `--dry-run`.
+* **Exit codes:** distinct failure codes, documented in `--help`.
+* **Safety:** destructive operations require explicit `--confirm`/`--force` or other safeguards.
+* **Output size:** harnesses may truncate at 10–30K characters. Default large output to summary/limit with pagination (`--offset`), or require `--output` file/explicit `-` for stdout.

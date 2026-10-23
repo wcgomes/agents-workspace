@@ -1,27 +1,21 @@
 # Optimizing skill descriptions
 
-> How to improve your skill's description so it triggers reliably on relevant prompts.
-
-A skill only helps if it gets activated. The `description` field in your `SKILL.md` frontmatter is the primary mechanism agents use to decide whether to load a skill for a given task.
+`SKILL.md` frontmatter `description` primarily controls activation.
 
 ## How skill triggering works
 
-Agents use progressive disclosure to manage context. At startup, they load only the `name` and `description` of each available skill — just enough to decide when a skill might be relevant. When a user's task matches a description, the agent reads the full `SKILL.md` into context and follows its instructions.
-
-This means the description carries the entire burden of triggering. If the description doesn't convey when the skill is useful, the agent won't know to reach for it.
-
-One important nuance: agents typically only consult skills for tasks that require knowledge or capabilities beyond what they can handle alone. A simple, one-step request may not trigger a skill even if the description matches perfectly, because the agent can handle it with basic tools.
+Startup loads only each skill's name/description; a match loads all `SKILL.md`. Descriptions must convey when useful. Agents may skip matching simple one-step requests solvable with basic tools, consulting primarily for additional knowledge/capabilities.
 
 ## Writing effective descriptions
 
-* **Use imperative phrasing.** Frame the description as an instruction to the agent: "Use this skill when..." rather than "This skill does..."
-* **Focus on user intent, not implementation.** Describe what the user is trying to achieve, not the skill's internal mechanics.
-* **Err on the side of being pushy.** Explicitly list contexts where the skill applies, including cases where the user doesn't name the domain directly: "even if they don't explicitly mention 'CSV' or 'analysis.'"
-* **Keep it concise.** A few sentences to a short paragraph is usually right. The specification enforces a hard limit of 1024 characters.
+* Imperative "Use this skill when...", not "This skill does...".
+* User intent, not internal mechanics.
+* Explicit/pushy contexts, including unnamed domains: "even without mentioning CSV or analysis".
+* A few sentences/short paragraph; hard maximum 1024 characters.
 
 ## Designing trigger eval queries
 
-To test triggering, you need a set of eval queries — realistic user prompts labeled with whether they should or shouldn't trigger your skill.
+Label realistic queries with expected activation:
 
 ```json
 [
@@ -34,18 +28,11 @@ Aim for about 20 queries: 8-10 that should trigger and 8-10 that shouldn't.
 
 ### Should-trigger queries
 
-Vary them along several axes:
-
-* **Phrasing**: some formal, some casual, some with typos or abbreviations.
-* **Explicitness**: some name the skill's domain directly, others describe the need without naming it.
-* **Detail**: mix terse prompts with context-heavy ones.
-* **Complexity**: vary the number of steps and decision points.
-
-The most useful should-trigger queries are ones where the skill would help but the connection isn't obvious from the query alone.
+Vary formality/typos/abbreviations, explicit vs implicit domain, terse vs detailed context, steps/decisions. Prioritize useful but non-obvious skill connections.
 
 ### Should-not-trigger queries
 
-The most valuable negative test cases are **near-misses** — queries that share keywords or concepts with your skill but actually need something different.
+Prefer **near-misses** sharing keywords/concepts but needing other work.
 
 For a CSV analysis skill, weak negative examples would be:
 
@@ -59,40 +46,19 @@ Strong negative examples:
 
 ### Tips for realism
 
-Real user prompts contain context that generic test queries lack. Include:
-
-* File paths (`~/Downloads/report_final_v2.xlsx`)
-* Personal context (`"my manager asked me to..."`)
-* Specific details (column names, company names, data values)
-* Casual language, abbreviations, and occasional typos
+Include paths (`~/Downloads/report_final_v2.xlsx`), personal context ("my manager asked..."), columns/companies/values, casual language, abbreviations, and typos.
 
 ## Testing whether a description triggers
 
-The basic approach: run each query through your agent with the skill installed and observe whether the agent invokes it.
-
-Most agent clients provide some form of observability — execution logs, tool call histories, or verbose output — that lets you see which skills were consulted during a run.
-
-A query "passes" if:
-
-* `should_trigger` is `true` and the skill was invoked, or
-* `should_trigger` is `false` and the skill was not invoked.
+Run queries with the skill installed; observe invocation in logs/tool histories/verbose output. A run passes iff invocation equals `should_trigger`.
 
 ### Running multiple times
 
-Model behavior is nondeterministic — the same query might trigger the skill on one run but not the next. Run each query multiple times (3 is a reasonable starting point) and compute a **trigger rate**: the fraction of runs where the skill was invoked.
-
-A should-trigger query passes if its trigger rate is above a threshold (0.5 is a reasonable default). A should-not-trigger query passes if its trigger rate is below that threshold.
+Repeat nondeterministic queries (start with 3 runs). **Trigger rate** = fraction invoking skill. Positive queries pass above threshold (default 0.5); negatives below it.
 
 ## Avoiding overfitting with train/validation splits
 
-If you optimize the description against all your queries, you risk overfitting — crafting a description that works for these specific phrasings but fails on new ones.
-
-The solution is to split your query set:
-
-* **Train set (~60%)**: the queries you use to identify failures and guide improvements.
-* **Validation set (~40%)**: queries you set aside and only use to check whether improvements generalize.
-
-Make sure both sets contain a proportional mix of should-trigger and should-not-trigger queries. Shuffle randomly and keep the split fixed across iterations.
+Avoid phrasing overfit: randomly split ~60% train (failure-guided changes), ~40% validation (generalization only). Preserve positive/negative proportions and keep the split fixed across iterations.
 
 ## The optimization loop
 
@@ -108,7 +74,7 @@ Make sure both sets contain a proportional mix of should-trigger and should-not-
 4. **Repeat** steps 1-3 until all *train set* queries pass or you stop seeing meaningful improvement.
 5. **Select the best iteration** by its validation pass rate — the fraction of queries in the *validation set* that passed. Note that the best description may not be the last one you produced.
 
-Five iterations is usually enough. If performance isn't improving, the issue may be with the queries (too easy, too hard, or poorly labeled) rather than the description.
+Usually five iterations suffice; stalled improvement may mean easy/hard/mislabeled queries, not a bad description.
 
 ## Applying the result
 

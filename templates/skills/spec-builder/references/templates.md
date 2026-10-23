@@ -1,6 +1,6 @@
 # Spec-Builder Templates
 
-Canonical section structures for each artifact. Copy verbatim; fill in. Use RFC 2119 keywords (`MUST`/`SHOULD`/`MAY`).
+Copy these canonical structures verbatim; fill in. Use RFC 2119 (`MUST`/`SHOULD`/`MAY`).
 
 ## 1. proposal.md
 
@@ -14,10 +14,10 @@ Canonical section structures for each artifact. Copy verbatim; fill in. Use RFC 
 <What outcome is in scope. Reference affected domains/requirements.>
 
 ## Non-goals
-<Explicitly out of scope — prevents scope creep.>
+<Explicit exclusions.>
 
 ## Approach
-<Brief approach summary. Expanded non-normative detail goes in design.md only when the overflow rule requires it.>
+<Approach summary; expanded non-normative detail in design.md only under the overflow rule.>
 
 ## Decision index
 - **<Decision>:** <conclusion + concise rationale; link to design.md section when expanded detail is needed>
@@ -30,7 +30,7 @@ Canonical section structures for each artifact. Copy verbatim; fill in. Use RFC 
 
 ## 2. spec.md (DELTA — for a change)
 
-Only include sections that apply to this change. Source spec uses the same Requirement/Scenario format but under `## Requirements` (no ADDED/MODIFIED/REMOVED wrappers).
+Include only applicable sections. Source specs use the same Requirement/Scenario format under `## Requirements`, without delta wrappers.
 
 ```markdown
 # Change Spec: <change-id>
@@ -41,7 +41,7 @@ Only include sections that apply to this change. Source spec uses the same Requi
 <Outcome statement. RFC 2119 keywords as needed.>
 
 #### Scenario: <name>
-<!-- Choose one form. Software: keep the Given/When/Then lines below. Non-software: replace them with one acceptance-condition line, e.g., "X delivered and stakeholder Y approves." -->
+<!-- Software: Given/When/Then below. Non-software: replace with one acceptance line, e.g., "X delivered and stakeholder Y approves." -->
 - Given <initial state>
 - When <action>
 - Then <observable outcome>
@@ -52,7 +52,7 @@ Only include sections that apply to this change. Source spec uses the same Requi
 <Updated outcome statement.>
 
 #### Scenario: <name>
-<!-- Choose one form. Software: keep the Given/When/Then lines below. Non-software: replace them with one acceptance-condition line, e.g., "X delivered and stakeholder Y approves." -->
+<!-- Software: Given/When/Then below. Non-software: replace with one acceptance line, e.g., "X delivered and stakeholder Y approves." -->
 - Given <initial state>
 - When <action>
 - Then <observable outcome>
@@ -65,7 +65,7 @@ Only include sections that apply to this change. Source spec uses the same Requi
 
 ## 3. tasks.md
 
-The executable "how" — consumed by `orchestrate` via handoffs. Dependency-ordered; `[P]` marks parallelizable items; one file path per task; checkpoint validation per phase. **Software:** order tasks test-first (write test, confirm failing, then implement); checkpoint = spec scenario maps to a passing test.
+Executable "how" for `orchestrate` handoffs: dependency order, `[P]` for parallelizable tasks, one path per task, checkpoint per phase. **Software:** write test → confirm failure → implement; checkpoint maps spec scenario to passing test.
 
 ```markdown
 # Tasks: <change-id>
@@ -86,7 +86,7 @@ The executable "how" — consumed by `orchestrate` via handoffs. Dependency-orde
 
 ## 4. design.md (conditional)
 
-Create only when a material design decision cannot remain understandable and actionable as a concise proposal decision plus task instructions without overloading either artifact or duplicating substantial context. Evidence may include meaningful alternatives and trade-offs, an interacting multi-step flow, or substantial migration, rollback, security, or cross-component reasoning; work category alone is insufficient. Keep it non-normative and omit it when concise entries suffice. Guarantees always belong in `spec.md`. Omit sections that add no value.
+Create only if a material decision cannot stay understandable/actionable as a short proposal decision + tasks without overload/substantial duplication. Evidence: needed alternatives/trade-offs, interacting multi-step flow, substantial migration/rollback/security/cross-component reasoning—not category alone. Non-normative; omit if short entries suffice. Guarantees stay in `spec.md`; omit valueless sections.
 
 ```markdown
 # Design: <change-id>

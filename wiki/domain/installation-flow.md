@@ -55,10 +55,12 @@ The interactive selector can abort when it renders an undetected or deselected t
 
 | Source | Destination | Method |
 |---|---|---|
-| `templates/skills/*` | Per-tool global skills dirs | Copy `SKILL.md` trees |
+| `templates/skills/*/` containing `SKILL.md` | Per-tool global skills dirs | Recursively copy skill contents, including resource subdirectories |
 | `templates/AGENTS.md` | Per-tool global instruction file | Marker-upsert (or dedicated Copilot file) |
 | Repo root `AGENTS.md` | — | Distribution-only meta — not for consumers |
 | agency-agents (optional) | Tool agent/skill paths | Via their `install.sh` when a native target exists; Codex uses Agency `--tool codex` (`~/.codex/agents/`); Grok fallback converts Agency markdown into `~/.grok/agents/` |
+
+The six `install_*_ours` functions in [`tools/install.sh`](../../tools/install.sh) use `cp -rf "$skill_dir"*`: they copy `SKILL.md` and resources such as `references/`, `scripts/`, and `assets/`, not just the entry file. The glob excludes top-level dotfiles; copying merges into existing destinations without removing obsolete files.
 
 ### Skills destinations
 

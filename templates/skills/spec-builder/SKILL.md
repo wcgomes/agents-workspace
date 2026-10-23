@@ -1,11 +1,11 @@
 ---
 name: spec-builder
-description: Create, evolve, and archive spec-driven workflow artifacts (proposals, outcome specs, task plans). Use when work needs a durable outcome contract before execution — new deliverables or outcome changes, API/contract changes, migrations, security/privacy-sensitive work, or any long-running task where the outcome must be agreed upfront. Do NOT use for trivial fixes, exploratory spikes, or tasks where the handoff's done criteria suffice. Produces specs/ artifacts that orchestrate consumes via Spec ref.
+description: Use to create/evolve/archive specs/ proposals, outcome specs, and task plans when durable upfront alignment is needed for new deliverables/outcomes, API/contracts, migrations, security/privacy, or long-running work. Not for trivial fixes, exploratory spikes, or sufficient handoff done criteria. orchestrate consumes artifacts via Spec ref.
 ---
 
 # Spec-Builder
 
-SDD layer — durable outcome contracts. Specs describe **WHAT** outcome the work produces and **WHY**, not **HOW** it's executed. `orchestrate` consumes the artifacts via the `Spec ref` field.
+Durable outcome contracts: **WHAT/WHY**, not execution **HOW**. `orchestrate` consumes `Spec ref`.
 
 ## <HARD-GATE> Confirm Before Creating Specs
 
@@ -25,9 +25,9 @@ Skip confirmation only when the user explicitly requests a spec.
 
 ## Principles
 
-> **Language:** Spec artifacts (proposals, spec deltas, task plans, design docs) default to English. Use another language only when the user explicitly requests it, or when existing specs in the workspace are already authored in that language.
+> **Language:** All spec artifacts default to English; another language only if explicitly requested or already used by workspace specs.
 
-> **Prose:** No hard-wrapping — paragraphs flow as single lines; the renderer wraps. Write what matters, skip the rest; no preambles, no filler.
+> **Prose:** Single-line paragraphs; no hard-wrapping, preambles, or filler.
 
 - **Spec = outcome**: deliverables, acceptance conditions, constraints, scenarios. Implementation detail (class/function names, library choices, step-by-step execution) goes in `tasks.md`/`design.md`, never the spec.
 - **What/HOW split test:** "If execution can change without changing the visible outcome, it likely does not belong in the spec."
@@ -59,19 +59,19 @@ specs/
 
 **Required change artifacts:** `proposal.md`, `spec.md`, and `tasks.md`. `design.md` is conditional, not a workflow mode or category requirement.
 
-**Artifact routing:**
-- `proposal.md` is the bounded alignment record: intent, scope, non-goals, approach summary, clarifications, and a concise index of decisions. Keep each decision to its conclusion and short rationale; link to `design.md` when expansion is needed.
-- `spec.md` is the normative observable contract: requirements, guarantees, constraints, and acceptance scenarios. Guarantees MUST live here, even when `design.md` discusses how to achieve them.
-- `tasks.md` is executable work: dependency order, paths, implementation actions, and validation checkpoints.
-- `design.md`, when present, is non-normative overflow for expanded rationale, alternatives and trade-offs, diagrams or flows, and substantial migration, rollback, security, or cross-component design detail.
+**Routing:**
+- `proposal.md`: bounded intent, scope, non-goals, approach, clarifications, decision index (conclusion + short rationale; link expanded decisions to `design.md`).
+- `spec.md`: normative observable requirements, guarantees, constraints, acceptance scenarios. Guarantees MUST stay here even if design explains implementation.
+- `tasks.md`: dependency order, paths, implementation actions, validation checkpoints.
+- `design.md`: non-normative overflow—expanded rationale, alternatives/trade-offs, diagrams/flows, substantial migration/rollback/security/cross-component detail.
 
-**Design overflow rule:** create `design.md` only when a material design decision cannot remain understandable and actionable as a concise proposal decision plus task instructions without overloading either artifact or duplicating substantial context. Typical evidence is a real need to compare alternatives and trade-offs, explain an interacting multi-step flow, or preserve substantial migration/rollback/security reasoning. A work category (including API, migration, cross-team, or security work) never triggers it by itself. Omit it when concise entries suffice; do not move normative guarantees out of `spec.md` to justify it.
+**Design overflow rule:** create `design.md` only if a material decision cannot stay understandable/actionable as a short proposal decision + task instructions without overload or substantial duplication. Evidence: needed alternatives/trade-offs, interacting multi-step flow, substantial migration/rollback/security reasoning. Category alone (API, migration, cross-team, security) never triggers it. Omit when short entries suffice; never move normative guarantees out of `spec.md` to justify it.
 
-**Legacy workspace migration:** before the next spec action, migrate all legacy sources as one atomic change. First inventory every `specs/<legacy-domain>/spec.md`, choose a unique target whose id satisfies the Domain id rule, and preflight target collisions. If a target exists, compare and explicitly merge any differing content — never overwrite it. In the same change, write or move the reconciled flat files, update all references, and remove only empty legacy directories. Do not continue the spec action until no legacy source remains; never keep both paths as sources of truth.
+**Legacy migration before the next action:** atomically migrate all `specs/<legacy-domain>/spec.md`. Inventory all sources, assign unique valid Domain ids, preflight collisions. Compare existing targets and explicitly merge differences; never overwrite. Write/move reconciled flat files, update all references, remove only empty legacy directories. Resume only when no legacy source remains; never retain dual sources of truth.
 
 ## State lifecycle
 
-A spec change follows one lifecycle. The **active/archived** distinction is encoded by folder location (no separate status field): top-level `changes/<id>/` = active (WIP), `changes/archive/<YYYYMMDD>-<id>/` = archived/immutable. The in-progress sub-states below are **procedural** — determined by completed actions (`propose` → `clarify` → `plan` → `analyze` → execution → `verify`), not by folder location.
+One lifecycle: location alone determines **active** (`changes/<id>/`) vs **archived/immutable** (`changes/archive/<YYYYMMDD>-<id>/`), with no status field. WIP sub-states are procedural, determined by completed actions, not location.
 
 | State | Trigger | Artifacts present | Source spec `specs/<domain>.md` |
 |---|---|---|---|
@@ -82,33 +82,23 @@ A spec change follows one lifecycle. The **active/archived** distinction is enco
 | Verified | `verify` passed | Unchanged; awaiting archive confirmation (HARD-GATE) | Unchanged |
 | Archived | `archive` done | Delta merged into source spec; `changes/<id>/` moved to `changes/archive/<YYYYMMDD>-<id>/` | Updated (created if domain is new) |
 
-**Live contract** (the prescriptive contract in force at any moment) = `specs/<domain>.md` (if it exists) **plus** every `changes/<id>/spec.md` delta where `<id>` is NOT under `changes/archive/`. To reason about the live contract during WIP, read the realized spec and all active deltas together; never assume the realized spec alone reflects in-progress work.
-
-**File movement rules:**
-- Source spec `specs/<domain>.md` is created on the first `archive` for that domain (before that, the domain's contract lives only in active deltas).
-- `changes/<id>/` moves to `changes/archive/<YYYYMMDD>-<id>/` ONLY on `archive`. If a change folder sits at the top of `changes/` (not under `archive/`), it is ACTIVE — expect its delta to still be evolving.
-
-```
-[Draft] ------> [Planned] -----> [Ready] ----> [In-progress] -> [Verified] --HARD-GATE--> [Archived]
-   |               |               |                |                |                        |
-propose+clarify   plan           analyze         execution        verify                   archive
-                                                                                (merge delta + move folder)
-```
+**Live contract** = realized `specs/<domain>.md` (if any) **plus all active** `changes/<id>/spec.md` deltas, excluding `changes/archive/`. Read them together; realized alone never represents WIP. First `archive` creates the domain source; until then its contract exists only in active deltas. Move a change under `archive/` **only** on `archive`; top-level changes remain active/mutable.
 
 ## Actions
-
-For each: what it does, output, and handoff to orchestrate.
 
 ### `propose`
 Prerequisite: user confirmed spec creation (see HARD-GATE). If not confirmed, RECOMMEND and wait — do not proceed.
 
-**Before proposing a new change:** scan `specs/changes/` (top-level entries, excluding `changes/archive/`) for an ACTIVE change folder in the same domain or overlapping scope. If one exists and the new intent refines it (defect in current behavior, requirement clarification, improvement within the same scope), edit that change's `spec.md` (delta) in place per "Evolving a spec mid-work" — do NOT open a new change. Only open a new `changes/<new-id>/` when scope genuinely expands (new requirement, different bounded context, behavior outside this change).
-Create `changes/<id>/proposal.md` + `spec.md` (delta), and create `design.md` only if the design overflow rule is already met. Keep the proposal bounded and record decisions in its concise decision index. Before drafting, when the boot policy's Wiki gate applies, load `wiki-query` and follow its consultation workflow for relevant descriptive knowledge. Compare relevant descriptive facts with the realized source spec (if any) and every active delta in the same domain or overlapping scope; these form the relevant prescriptive live contract. Flag every conflict; never silently choose a source, expand scope, or dump the live contract into the wiki.
+Before proposing, scan top-level `specs/changes/` (exclude archive) for active same-domain/overlapping work. If found, refine it in place unless scope genuinely expands (see Evolving); otherwise create a new change.
+
+Before drafting, when boot-policy Wiki-gated, load `wiki-query` and consult. Compare descriptive facts against realized source (if any) + every active same-domain/overlapping delta: the relevant prescriptive live contract. Flag every conflict; never silently prefer a source, expand scope, or dump the contract into wiki.
+
+Create `changes/<id>/proposal.md` + delta `spec.md`; `design.md` only when overflow already warrants it. Keep proposal bounded with short decision index.
 - **Output:** change folder with proposal + delta spec, plus design only when the overflow rule is met.
 - **Handoff:** none yet — awaits `plan`.
 
 ### `clarify`
-Before planning, review the proposal, spec, relevant live contract, and conditional design for ambiguity. Resolve every `[NEEDS CLARIFICATION]` marker with the user; record material Q&A in `proposal.md` → Clarifications and update the decision index, spec, and design as applicable. Reapply the design overflow rule when answers add or remove complexity.
+Before planning, review proposal/spec/live contract/conditional design for ambiguity. Resolve every `[NEEDS CLARIFICATION]` with the user; record material Q&A in proposal Clarifications and update decisions/spec/design as applicable. Reapply overflow when answers change complexity.
 - **Output:** aligned artifacts with **zero unresolved markers** before `plan`. If no ambiguity exists, record no synthetic Q&A and proceed.
 - **Handoff:** none — feeds `plan`.
 
@@ -118,7 +108,7 @@ Derive `tasks.md` from the clarified spec and proposal decisions, using `design.
 - **Output:** `tasks.md`.
 
 ### `analyze`
-Mandatory pre-execution readiness gate. Validate routing and consistency: normative decisions and guarantees map to `spec.md` and have task coverage; internal design decisions map consistently to executable tasks and, when expanded detail is needed, `design.md`; every spec requirement and scenario has task coverage; and tasks neither omit required outcomes nor introduce scope. Do not require internal design decisions to become normative requirements. Resolve all contradictions, missing coverage, stale rationale, and unresolved clarification markers before execution.
+Mandatory pre-execution gate: normative decisions/guarantees belong in `spec.md` with task coverage; internal design decisions align with executable tasks and expanded `design.md` when needed, not forced into normative requirements. Every requirement/scenario needs task coverage; tasks must neither omit outcomes nor add scope. Resolve contradictions, missing coverage, stale rationale, and clarification markers before execution.
 - **Output:** readiness status plus issues corrected or still blocking.
 - **Handoff:** only after a pass does the coordinator load `orchestrate` and dispatch from `tasks.md`.
 
@@ -135,13 +125,13 @@ Merge delta sections into the source spec `specs/<domain>.md`: `ADDED` appended,
 
 ## Evolving a spec mid-work
 
-SDD is **fluid, not waterfall** — execution, verification, and user feedback uncover changes. The proposal, spec, tasks, and conditional design stay in sync at all times.
+Keep proposal/spec/tasks/conditional design synchronized as execution, verification, and feedback uncover changes.
 
 **Decision rule — update the current change vs. start a new one:**
 - **Refines the current change** (defect in current behavior, requirement clarification, improvement within the same scope): edit `changes/<id>/spec.md` (delta) in place. Update the proposal decision index and `tasks.md`; create, update, or remove `design.md` as the overflow rule requires.
 - **Expands scope** (new requirement, different bounded context, behavior outside this change): start a new `changes/<new-id>/`.
 
-**Active vs. archived:** the active/archived distinction is determined solely by folder location. Top-level `changes/<id>/` = ACTIVE — its delta is mutable and part of the live contract. `changes/archive/<YYYYMMDD>-<id>/` = archived/immutable — never edit an archived delta; if a new need arises, open a new active change.
+Never edit archived deltas; new needs require a new active change. Active deltas remain mutable parts of the live contract.
 
 **Loop:** artifacts ↔ `analyze` ↔ execution ↔ `verify`. When behavior or a material decision changes, update the routed artifacts, rerun `analyze`, and keep execution aligned — even for small adjustments. `verify` (`converge`) catches remaining drift, including stale conditional design.
 
@@ -158,18 +148,10 @@ If the user requests further changes instead, return to the fluid loop above —
 
 ## Integration with orchestrate
 
-- After `plan`, mandatory `analyze` must pass; then the coordinator loads `orchestrate` and dispatches from `tasks.md`. Every in-scope implementation handoff MUST carry `Spec ref: specs/changes/<id>/` so review can check against the spec. Rerun `analyze` before further implementation dispatch whenever active proposal, spec, tasks, or design artifacts materially change.
-- `verify` runs AS PART OF orchestrate's Phase 6 review (Stage 1 Conformance) when a Spec ref exists — it checks spec conformity in addition to done-criteria conformance.
-- `orchestrate` enforces this readiness gate and consumes the `Spec ref`.
+`orchestrate` enforces readiness, consumes `Spec ref`, and runs `verify` in Phase 6 Stage 1. After any material active proposal/spec/tasks/design change, rerun `analyze` before further implementation dispatch.
 
 ## Templates
 
 Read `references/templates.md` **when creating any artifact** (proposal, spec-delta, tasks, design). It contains the canonical section structure for each.
 
-## Rationalization Prevention
-
-| Excuse | Reality |
-|---|---|
-| "Too small to spec" | If work needs durable alignment before execution, use the same workflow and keep each artifact proportional. |
-| "I'll fix the spec later" | Update mid-work; never let spec and execution drift. |
-| "Execution detail belongs in spec" | No — outcome only. Detail goes in `tasks`/`design`. |
+Use this same workflow proportionally even for small work needing durable alignment. Never defer spec updates or put execution detail in the outcome contract.

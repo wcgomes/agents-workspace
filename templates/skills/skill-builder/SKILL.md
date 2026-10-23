@@ -1,23 +1,23 @@
 ---
 name: skill-builder
-description: Create, refine, and validate Agent Skills following the agentskills.io specification. Use when writing a SKILL.md, creating a new skill directory, improving an existing skill's triggering or content, running evals, or diagnosing why a skill isn't activating.
+description: "Use to create, refine, or validate agentskills.io skills: write SKILL.md, create skill directories, improve content/triggering, run evals, or diagnose activation failures."
 ---
 
 # Agent Skills
 
-Create skills that follow the agentskills.io standard. A skill is a directory with a `SKILL.md` file and optional resources.
+Follow agentskills.io: a skill directory contains `SKILL.md` and optional resources.
 
-> **Golden rule:** Add what the agent lacks, omit what it knows. If the agent would get it right without your instruction, cut it.
+> Add only what the agent would get wrong without instruction; cut known material.
 
-> **Language:** All skill content must be written in English. Skill frontmatter, instructions, examples, and reference files are consumed by AI agents — English is the expected language.
+> **Language:** English for all frontmatter, instructions, examples, and references.
 
-> **Prose:** No hard-wrapping — paragraphs flow as single lines; the renderer wraps. Write what matters, skip the rest; no preambles, no filler.
+> **Prose:** Single-line paragraphs, no hard-wrapping, preambles, or filler.
 
 ## Quickstart — minimal skill
 
 Create `<name>/SKILL.md` (directory name MUST match `name`):
 
-```markdown
+````markdown
 ---
 name: roll-dice
 description: Roll dice using a random number generator. Use when asked to roll a die (d6, d20, etc.), roll dice, or generate a random dice roll.
@@ -30,9 +30,9 @@ echo $((RANDOM % <sides> + 1))
 ```
 
 Replace `<sides>` with the number of sides (6 for standard, 20 for d20).
-```
+````
 
-That's a complete skill. Expand only as needed.
+Expand only as needed.
 
 ## Directory structure
 
@@ -49,31 +49,16 @@ Keep file references one level deep from `SKILL.md`. Avoid deeply nested chains.
 
 ## Frontmatter
 
-### Required
-
 | Field | Rules |
 |---|---|
-| `name` | 1-64 chars. `a-z`, `0-9`, hyphens. No leading/trailing/consecutive hyphens. Must match folder name. |
-| `description` | 1-1024 chars. What it does AND when to use it. See "Writing descriptions" below. |
-
-### Optional
-
-| Field | Purpose |
-|---|---|
-| `license` | License name or bundled file reference |
-| `compatibility` | 1-500 chars. Env requirements (tools, OS, products). Most skills don't need this. |
-| `metadata` | Arbitrary key-value map. Use unique keys to avoid conflicts. |
-| `allowed-tools` | Space-separated pre-approved tools (experimental, support varies) |
+| `name` (required) | 1–64 chars: `a-z`, `0-9`, hyphens; no leading/trailing/consecutive hyphens; matches folder. |
+| `description` (required) | 1–1024 chars: what it does AND when to use it. |
+| `license` | Optional license name/bundled file reference. |
+| `compatibility` | Optional, 1–500 chars: tools/OS/product requirements; usually unnecessary. |
+| `metadata` | Optional key-value map; unique keys avoid conflicts. |
+| `allowed-tools` | Optional space-separated pre-approved tools; experimental, support varies. |
 
 ### Examples
-
-Minimal:
-```yaml
----
-name: pdf-processing
-description: Extract PDF text, fill forms, merge files. Use when handling PDFs.
----
-```
 
 With optional fields:
 ```yaml
@@ -93,13 +78,7 @@ allowed-tools: Bash(git:*) Bash(jq:*) Read
 
 ## Writing descriptions
 
-The description decides activation. Poor description → skill never triggers.
-
-**Principles:**
-- **Imperative phrasing:** "Use this skill when..." not "This skill helps..."
-- **User intent, not implementation:** what the user is trying to achieve, not internal mechanics
-- **Err on the pushy side:** explicitly list contexts, including implicit ones
-- **Name the boundary:** what the skill does NOT do, when relevant
+Descriptions control activation. Use imperative "Use this skill when...", user intent rather than implementation, explicit contexts (including implicit ones), and relevant exclusion boundaries.
 
 **Good vs poor:**
 
@@ -118,48 +97,25 @@ description: >
   even if they don't explicitly mention "CSV" or "analysis."
 ```
 
-**Nuance:** agents often skip skills for simple one-step tasks they can handle alone. Descriptions matter most for specialized knowledge or non-obvious domains.
+Agents may skip simple one-step tasks they can handle alone; descriptions matter most for specialized/non-obvious knowledge.
 
 ## Writing the body
 
 Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separate files.
 
-Ask for each paragraph: "Would the agent get this wrong without this instruction?" If no → cut it.
-
-See [references/WRITING_SKILLS.md](references/WRITING_SKILLS.md) for body structure, patterns, and examples.
+For body structure, patterns, and examples, read [references/WRITING_SKILLS.md](references/WRITING_SKILLS.md).
 
 ## Progressive disclosure
 
-Three load stages:
-
-1. **Discovery** (~100 tokens) — `name` + `description` loaded at startup for all skills
-2. **Activation** (< 5000 tokens) — full `SKILL.md` loaded when task matches
-3. **Resources** (on demand) — files in `scripts/`, `references/`, `assets/` loaded only when referenced
-
-Tell the agent *when* to load each file:
-
-```markdown
-# Good
-Read `references/api-errors.md` when the API returns a non-200 status.
-
-# Bad
-See references/ for details.
-```
+Startup loads every skill's `name` + `description` (~100 tokens); activation loads **all** `SKILL.md` (<5000 tokens); referenced `scripts/`, `references/`, `assets/` load on demand. Keep off-critical-path reference material separate. Specify loading conditions: "Read `references/api-errors.md` when the API returns non-200", not "see references/".
 
 ## Scripts
 
 Bundle executables in `scripts/` when the agent repeats the same logic. Use one-off commands (`uvx`, `npx`) for simple invocations.
 
-**Design for agentic use:**
-- Non-interactive (no TTY prompts)
-- `--help` documentation
-- Helpful errors ("Received X, expected Y")
-- Structured output (JSON/CSV) to stdout, diagnostics to stderr
-- Idempotent where possible
-- Dry-run flag for destructive ops
-- Meaningful exit codes
+Require non-interactive operation (no TTY), `--help`, actionable errors ("Received X, expected Y"), structured JSON/CSV stdout and diagnostic stderr, meaningful exit codes, destructive-operation dry-run, and idempotency where possible.
 
-See [references/USING_SCRIPTS.md](references/USING_SCRIPTS.md) for language-specific setup (Python PEP 723, Deno, Bun, Ruby).
+For language setup (Python PEP 723, Deno, Bun, Ruby), read [references/USING_SCRIPTS.md](references/USING_SCRIPTS.md).
 
 ## Evaluating skills
 
@@ -169,9 +125,7 @@ See [references/EVALUATING.md](references/EVALUATING.md) for full workflow.
 
 ## Optimizing descriptions (triggering)
 
-A skill only helps if it activates. Test triggering systematically.
-
-See [references/OPTIMIZING_DESCRIPTIONS.md](references/OPTIMIZING_DESCRIPTIONS.md) for eval query design and optimization loop.
+Test triggering systematically; read [references/OPTIMIZING_DESCRIPTIONS.md](references/OPTIMIZING_DESCRIPTIONS.md) for query design and optimization. Use a validation split: description edits can regress passing queries.
 
 ## Validation
 
@@ -181,21 +135,8 @@ skills-ref validate ./my-skill
 
 Checks frontmatter and naming conventions.
 
-## Best practices summary
+## Refinement
 
-1. **Start from real expertise** — extract from actual tasks or synthesize from project artifacts. Not generic references.
-2. **Refine with execution** — read agent traces, not just outputs. Wasted steps signal vague instructions.
-3. **Spend context wisely** — cut anything the agent would get right without the skill.
-4. **Scope coherently** — one skill = one coherent unit of work. Not too narrow, not too broad.
-5. **Iterate with evals** — test systematically, not anecdotally.
+Ground skills in real tasks/project artifacts, not generic references. Keep one coherent scope, neither too narrow nor too broad. Iterate systematically with evals and execution traces, not only outputs; wasted steps signal vague instructions. No baseline improvement may mean no added value. Recheck description length and name/folder match after edits.
 
-## Gotchas
-
-- Description under 1024 chars — they tend to grow during optimization.
-- Directory name MUST match `name` in frontmatter. Mismatch breaks discovery.
-- Body loads **entirely** on activation — anything not on the critical path belongs in `references/`.
-- Generic references ("see references/") don't trigger loading. Specify the condition.
-- Skills that don't improve vs baseline may not be adding value — test with and without.
-- Description changes during optimization can regress on earlier-passing queries — validation split catches this.
-
-See [references/BEST_PRACTICES.md](references/BEST_PRACTICES.md) and [references/SPECIFICATION.md](references/SPECIFICATION.md) for full details.
+For authoring guidance read [references/BEST_PRACTICES.md](references/BEST_PRACTICES.md); for format details read [references/SPECIFICATION.md](references/SPECIFICATION.md).

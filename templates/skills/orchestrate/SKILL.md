@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: "Use only in coordinator sessions to orchestrate planning or execution of work, including execute, continue, or resume-plan requests. Covers role definition, specialist discovery, dispatch, review, learning, and synthesis. Never use in Session type: DELEGATED executor sessions; those agents perform their handed scope directly without orchestration."
+description: "Use only as coordinator for planning/execution, including execute/continue/resume-plan requests: roles, specialist discovery, dispatch, review, learning, synthesis. Never use in Session type: DELEGATED; execute the handed scope directly."
 ---
 
 # Orchestrate
@@ -9,90 +9,54 @@ Full coordination cycle: analyze → assemble → delegate → review → learn 
 
 ## <HARD-GATES>
 
-1. **Coordinator context first** — the main agent obtains lean coordination context before orchestration (when the boot policy's Wiki gate applies, load `wiki-query` and follow its consultation workflow first; optional compact knowledge-tool lookups). The handoff remains executors' primary task context, and the coordinator remains responsible for supplying task-critical context. Executors may use `wiki-query` when useful to their assigned task without additional authorization; wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts, and executors do not edit `wiki/` unless wiki editing is explicitly in scope.
-2. **Roles are mandatory** — if no exact specialist is found, use the best adjacent specialist. Use a generic/default agent only when no exact or adjacent fit exists. Generic/default is the last resort, not a convenience. Never drop or collapse a role from the plan.
-3. **Plan-to-execution uses orchestration** — when the user asks to execute, continue, resume, or implement a prior plan, load this skill before dispatch. If the prior plan was not created through orchestration, treat it as context and run team assembly from scratch.
-4. **Software work needs verification roles** — for coding/refactoring tasks, select implementation and review roles at minimum unless the user explicitly asks not to review or the task is trivial.
-5. **Parallel by default** — independent scopes dispatched in parallel. Sequential only with explicit output dependency.
-6. **Measurable done criteria** — every handoff includes verifiable acceptance criteria. Review checks against these criteria. When the outcome has observable behavior and safe, proportionate execution is feasible, verification requires empirical validation through real execution or observation; static inspection alone is insufficient.
-7. **Confirm before multi-domain work** — when the planned execution team has 3+ specialists OR scope is ambiguous/destructive: present team roster + execution plan, wait for user confirmation before delegating unless the user already approved that plan. Do not count the conditional post-review ingestion role toward the 3+ threshold unless wiki work is an ordinary planned scope; this exclusion never waives ambiguity, destructive-work, or explicit-approval triggers.
-8. **Preserve team on continuation** — when user requests continuation of a task with an orchestrated team: reuse existing roles and specialists by default. Replace only when a specialist is unavailable, clearly wrong for the role, or the user changed direction.
-9. **Dispatch rationale and persona required** - In the coordinator roster, record each role's selected agent, match type (exact, adjacent, or fallback), and match rationale. Keep that metadata out of the handoff. For adjacent or generic/fallback matches, include nonempty `Act as: <expected task persona>`; omit it for exact matches.
-10. **Spec readiness before implementation** — applies only when a named change/spec path is in scope or an active `specs/changes/<id>/` is clearly in scope for the request; otherwise SDD is N/A and skip this gate. If in scope and `specs/changes/<id>/tasks.md` is missing, do not start implementation handoffs — load `spec-builder` and run `plan`. Once tasks exist, load `spec-builder` and run its mandatory `analyze`; do not dispatch implementation until it passes. Rerun `analyze` before further implementation dispatch whenever active proposal, spec, tasks, or design artifacts materially change. Every in-scope implementation handoff MUST include `Spec ref: specs/changes/<id>/`.
-11. **Post-review wiki evaluation** — when the boot policy's Wiki gate applies, after domain-appropriate review/verification and before the final response, the coordinator loads `wiki` and evaluates the task. Explicit wiki tasks also undergo evaluation. Wiki maintenance and ingestion dispatch are optional and conditional. Open one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist role only when adding, revising, or removing content would materially improve durable workspace knowledge after accounting for compact organization and future context cost. Low-value, ambiguous, redundant, transient, or already-captured information does not qualify; a completed workflow requires no wiki write.
+1. **Context first:** obtain lean coordination context before orchestration: when the boot policy's Wiki gate applies, load `wiki-query` and consult first; compact knowledge-tool lookups are optional. Coordinator supplies task-critical handoff context. Executor wiki boundaries appear under Phase 5.
+2. **Mandatory roles:** never drop or merge planned roles; choose best exact → best adjacent → generic/default only if neither exists (Phase 3).
+3. **Prior plans:** load this skill before execute/continue/resume/implement dispatch. Preserve an orchestrated team; otherwise treat the prior plan as context and assemble from scratch.
+4. **Software verification:** coding/refactoring needs implementation and review roles unless trivial or the user explicitly opts out of review.
+5. **Parallel default:** dispatch independent scopes in parallel; sequence only for explicit output dependencies.
+6. **Acceptance:** every handoff needs verifiable done criteria; review against them. Observable behavior requires real execution/observation when safe and proportionate; static inspection alone is insufficient.
+7. **Confirmation:** apply Phase 4.5 before dispatch; context sufficiency never waives its triggers.
+8. **Continuation:** reuse roles/specialists by default; replace only if unavailable, clearly wrong for the role, or user direction changed. Add roles for new domains.
+9. **Rationale/persona:** internal roster records role, selected agent, exact/adjacent/fallback match and rationale, never in the handoff. Nonempty `Act as: <expected task persona>` is required for adjacent/fallback, omitted for exact.
+10. **Spec readiness:** only for an in-scope named change/spec path or clearly applicable active `specs/changes/<id>/`; otherwise SDD is N/A. Missing `tasks.md`: load `spec-builder`, run `plan`, and withhold implementation. Once tasks exist, load `spec-builder` and run mandatory `analyze`; dispatch only after it passes. Rerun before further implementation whenever active proposal/spec/tasks/design materially changes. Every in-scope implementation handoff MUST include `Spec ref: specs/changes/<id>/`.
+11. **Wiki evaluation:** when boot-policy Wiki-gated or explicitly doing wiki work, after domain review/verification and before final response load `wiki` and evaluate. Stage 4 governs conditional ingestion; evaluation requires no write.
 
 ## Phase 1: Analyze Request
 
-Assemble a professional team for the job:
-
-- What domains are involved (engineering, design, testing, marketing, etc.)?
-- What platforms, tools, or channels are mentioned?
-- What phases does the work go through (planning → implementation → review → testing)?
-- Classify complexity: single-domain, multi-domain, or cross-functional.
-
-**Continuation requests:** if a team was already composed through orchestration, preserve existing roles and specialists by default; add roles for new domains, replace a specialist only when unavailable, clearly wrong for the role, or the user changed direction. If the prior plan was not orchestrated, treat it as context and compose roles from scratch.
+Identify domains, platforms/tools/channels, and phases (planning → implementation → review → testing). Classify complexity: single-domain, multi-domain, or cross-functional. For continuations apply gates 3 and 8.
 
 ## Phase 2: Define Roles
 
-Map each domain + phase to a specialist role; apply the templates below for common patterns. For multi-domain work, ensure each domain has representation; each phase needing distinct expertise needs a responsible role. For coding/refactoring, define at least an implementation role and a review role unless the user opts out of review or the task is trivial.
-
-Role preservation means preserving separate role *scopes*, not just labels. Plan one handoff per role/scope; do not merge roles.
+Represent each domain and each phase needing distinct expertise with a responsible role (templates below; software exception in gate 4). Preserve separate **scopes**, not just labels: one handoff per role/scope, never merged.
 
 ## Phase 3: Discover Specialists
 
-Before selecting, discover specialists only from the agent names and descriptions this session already lists for spawning them — not by reading agent directories or config files, and not by delegating that inspection. Do not assume the pool is empty; do not skip to a generic/default agent.
+Discover **before selection**, using only agent names/descriptions already listed in this session for spawning. Never inspect agent directories/configs, directly or by delegation; never assume an empty pool or skip discovery.
 
-**Record coordinator-internal assembly output**: discovered specialists (name + domain, or sources checked if none), and for each role the selected agent plus exact/adjacent/fallback rationale. These records are assembly output, not handoff content.
+Record internally: discovered names + domains (or sources checked if none), and each role's selected agent with exact/adjacent/fallback rationale. This authorizes dispatch; it is not handoff content.
 
-**Matching rules:**
-
-- **Semantic match**: domain + work-type, NOT tech stack. A "Frontend Developer" covers React, Vue, or any stack.
-- **Adjacent match** acceptable when exact unavailable: the specialist directly overlaps the role in domain (e.g., backend developer for a database task) or work type/phase. A connection needing more than one inferential step is not adjacent.
-- **Select the best discovered fit**: dispatch each role to the best exact or adjacent specialist found. Never use generic/default when an exact or adjacent specialist is available.
-- **Generic/default fallback is last resort**: use it, acting in the planned role, only when no exact or adjacent fit exists or remains — record that rationale only on the coordinator-internal roster, not in the handoff body.
-- **Generic/default still has a role**: never dispatch an unscoped generalist. Assign the generic/default agent to the defined role and scope.
-- **Same generic/default, separate scopes**: if generic/default fallback covers multiple roles, dispatch separate role-scoped handoffs. Do not combine roles just because the agent type is the same.
-- If the user specified agents, incorporate them and apply semantic matching for the remaining roles.
-
-**Role preservation:** roles defined in Phase 2 are mandatory. No exact specialist → best adjacent; no adjacent → generic/default acting in that role — but the role (reviewer, tester, architect) stays in the plan and the handoff instructs the generic/default agent to act in it. "No specialist found" never justifies merging distinct domains or phases into one broad handoff.
+- Match semantically by domain + work type, not stack (Frontend Developer covers React/Vue/etc.).
+- If no exact fit, choose the best adjacent: direct overlap in domain or work type/phase; more than one inferential step is not adjacent.
+- Generic/default is last resort only when no exact/adjacent fit exists or remains. Assign the planned persona and scope; never an unscoped generalist.
+- Preserve every role, even when several use the same fallback agent: separate handoffs, never merged domains/phases.
+- Incorporate user-specified agents; match remaining roles semantically.
 
 ## Phase 4: Plan Execution
 
-- Identify dependencies between scopes
-- Select coordination pattern (see below)
-- Parallel groups: scopes with no integration deps
-- Sequential: output of one feeds another
-- Plan targeted checks during execution, address risks early, and verify integration or the first usable result when relevant; review after each phase or parallel batch. Final review checks coverage and evidence, not automatic reruns (Phase 6, Stage 3: Evidence).
+Identify dependencies and choose a pattern below: parallel groups have no integration dependencies; sequence when one output feeds another. Plan targeted checks, address risks early, verify integration/first usable result when relevant, and review each phase or parallel batch. Final review checks evidence/coverage, not automatic reruns (Phase 6, Stage 3).
 
 ## Coordination Patterns
 
-### Full Parallel Discovery
-
-**When:** independent analyses of the same topic from different angles.  
-**How:** all specialists work simultaneously, synthesize at end.  
-**Example:** product discovery from 8 domain perspectives.
-
-### Parallel Kickoff → Merge → Review
-
-**When:** parallel work feeds a downstream integrator.  
-**How:** parallel group → merge point → sequential review.  
-**Example:** content + design (parallel) → frontend dev (merge) → growth review.
-
-### Sequential with Quality Gates
-
-**When:** each phase depends on prior output.  
-**How:** sequential handoffs with checkpoint reviews.  
-**Example:** research → architecture → implementation → testing.
-
-### Single Agent Structured
-
-**When:** task fits cleanly in one domain and a specialist or adjacent specialist is available.  
-**How:** one selected specialist or adjacent specialist, structured handoff. Generic/default only under the fallback rule with justification.  
-**Example:** write a chapter, fix a specific bug.
+| Pattern | Use / flow |
+|---|---|
+| Full Parallel Discovery | Independent perspectives on one topic → synthesize (e.g., 8-domain product discovery). |
+| Parallel Kickoff → Merge → Review | Independent work feeds integrator → review (content + design → frontend → growth review). |
+| Sequential with Quality Gates | Output dependencies; checkpoint each handoff (research → architecture → implementation → testing). |
+| Single Agent Structured | One-domain task → one specialist/adjacent with structured handoff (chapter, specific bug); justified generic only under fallback rule. |
 
 ## Team Templates
 
-Starting points, not prescriptions. Adapt roles, add or remove specialists based on the actual request — a small UI fix needs one specialist; a full product launch may need 10+. The specialist names below are examples: match by equivalent role/domain, not literal name, and never delegate to a name that isn't actually available.
+Adapt these starting points to the request (small UI fix: one specialist; product launch: possibly 10+). Names are illustrative: match equivalent roles/domains and dispatch only available identifiers.
 
 ### Software Development
 
@@ -164,11 +128,7 @@ Coordination: Sequential with Quality Gates. Review/Consistency is required when
 
 ## Pre-Dispatch Verification
 
-Before composing each handoff:
-- Confirm the target agent appears in Phase 3's discovered specialists list as exact or adjacent (or is justified fallback).
-- Verify the roster record and conditional `Act as:` field against hard-gate 9.
-- Verify the agent name matches the exact identifier this session already lists for spawning it (case, separators, spelling). Discovery may surface an agent like `software-architect` — when dispatching, use that identifier as listed, not a reformatted version like "Software Architect" or "software_architect".
-- Do not proceed to handoff without this confirmation.
+Before each handoff, confirm discovered exact/adjacent fit or justified fallback, gate-9 roster/persona compliance, and exact spawn identifier (case, separators, spelling: `software-architect`, not "Software Architect"/`software_architect`). Do not dispatch until confirmed.
 
 ## Phase 4.5: User Confirmation (Conditional)
 
@@ -199,13 +159,13 @@ Estimated complexity: [single/multi-domain, coordination pattern]
 - No confirmation trigger applies
 - User already approved the current team and execution plan
 
-The conditional Stage 4 ingestion role does not independently trigger confirmation by increasing team size. It does not suppress confirmation when its own scope or the original task is ambiguous/destructive, when the user requested approval, or when 3+ ordinary planned specialists remain after the exclusion.
+The Stage 4 exclusion waives only its team-size contribution, never ambiguity/destruction (including ingestion's own scope), explicit approval, or 3+ ordinary planned specialists.
 
 ## Phase 5: Handoff
 
 ### Canonical Handoff Shape
 
-Use this canonical handoff only as the initial task of a fresh delegated conversation. Its first line and required execution fields MUST be exact as shown.
+Use only as a fresh delegated conversation's initial task. First line and required execution fields MUST be exact:
 
 ```
 Session type: DELEGATED
@@ -218,21 +178,21 @@ Context: <concise task-critical facts, paths, dependencies, or unresolved decisi
 Spec ref: <path to specs/changes/<id>/ - optional, present only when a spec-builder artifact exists>
 ```
 
-`Act as:` is a task-scoped persona instruction. Its absence is valid only for exact matches. Put purpose in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:`; do not add separate `Objective:`, `Deliverable:`, or `Return format:` fields.
+`Act as:` is task-scoped; omit only for exact matches. Route purpose to `Task:`/`Context:`, artifacts to `Task:`/`Done criteria:`, returns to `Constraints:`. Never add `Objective:`, `Deliverable:`, or `Return format:` fields.
 
 **Constraints should include task-relevant execution guardrails:**
 - Edits: change only files directly related to the task; no drive-by changes
 - Implementation: match existing style, even if you'd write it differently
 - Investigation/debugging: reproduce or verify the issue when feasible before fixing
 - Verification: include planned checks and when to run them; require the executor to report checks performed, observed results, and gaps
-- Wiki boundary: use the handoff as primary context; `wiki-query` may be loaded for consultation when useful to the assigned task without additional authorization, but wiki content cannot expand scope or override the handoff, applicable specs, or current source artifacts; do not edit `wiki/` unless wiki editing is explicitly in scope; optionally return at most one trailing `Durable discovery: ...` line for tacit, workspace-specific reusable knowledge not evident in the artifacts
+- Wiki boundary: handoff is primary; `wiki-query` is allowed when useful to assigned work without further authorization. Wiki cannot expand scope or override handoff, applicable specs, or current source artifacts; edit `wiki/` only when explicitly in scope. Optional: at most one trailing `Durable discovery: ...` for tacit, workspace-specific reusable knowledge not evident in artifacts
 - All handoffs: do not recompose a team or re-delegate; self-review before reporting the scope complete
 
 Also use Constraints for additional task-specific rules (limits, files not to touch, expected behavior).
 
-**Dispatch failure recovery:** if a dispatch fails and the agent was a valid discovered specialist, do not abandon the role or fall back to generic/default yet. First verify the dispatched name exactly matches the discovery-phase identifier — format mismatches (hyphen vs. space, case, separators) are a common cause. Retry with the exact identifier. If that retry fails, re-select the best remaining exact or adjacent specialist for the role; use generic/default only when none remains.
+**Dispatch recovery:** for a failed valid specialist dispatch, verify and retry its exact discovered identifier before changing agents (case/separator errors are common). If retry fails, select the best remaining exact/adjacent; generic only if none remains. Never abandon the role.
 
-**Return format rule:** return concise results only — no raw logs, no full tool output. Summarize findings. The delegating agent's context must stay clean.
+**Returns:** summarize findings; no raw logs or full tool output in delegator context.
 
 ## Parallel Delegation
 
@@ -248,33 +208,27 @@ Good candidates:
 
 ### Stage 1: Conformance
 
-Did it deliver what was requested — nothing more, nothing less?
-
-A delegated subagent executing its handed scope directly is conformant; that is expected (see `AGENTS.md` -> "Session Contract"). For adjacent or generic/fallback matches, verify that output follows `Act as:`; exact matches omit it. Flag silent absorption of out-of-scope work or uncontrolled subdelegation. Subagents escalate out-of-scope work to the coordinator for recomposition.
-
-If `Spec ref:` is present in the handoff, verify conformity against the persisted spec (load `spec-builder` `verify`) in addition to the done criteria.
+Check requested scope, nothing more/less. Direct delegated execution is expected (`AGENTS.md` → Session Contract). Check adjacent/fallback output against `Act as:` (omitted for exact). Flag scope absorption/subdelegation; escalate out-of-scope work to coordinator. With `Spec ref:`, load `spec-builder` `verify` against the persisted spec **in addition** to done criteria.
 
 ### Stage 2: Quality
 
-Is it correct, maintainable, and usable for the current task? With multiple delegated outputs: compare against assigned scopes, resolve conflicts, and synthesize a single coherent result before returning upward. Do not pass through raw delegated output without review.
-
-Match verification to the domain. Illustrative checks, not a universal checklist: research — sources support conclusions; content — brief, audience, and factual accuracy; data — reproducibility and interpretation; design — requirements, usability, visual quality, and accessibility; code — project conventions, maintainability, applicable lint/build/tests, and performance where relevant.
+Check correctness, maintainability, and usability. Compare multiple outputs with assigned scopes, resolve conflicts, and synthesize before returning; never forward unreviewed raw output. Domain examples, not a universal checklist: research—source support; content—brief/audience/facts; data—reproducibility/interpretation; design—requirements/usability/visual quality/accessibility; code—conventions/maintainability/applicable lint, build, tests/performance where relevant.
 
 ### Stage 3: Evidence
 
-When a done criterion can be verified by exercising the deliverable or observing its effect—not merely by inspecting its content or implementation—and safe, proportionate execution is feasible, obtain delegated empirical evidence; static inspection may support but does not replace it. Verify the result where it will be used when feasible, e.g., exercise the requested app/page flow or render/export and inspect the document. Tie evidence to the request and available resources; report limitations rather than assuming unavailable tools. Reuse an existing role when its scope and expertise fit. Add a separate verification role only when distinct expertise or independence is needed.
+If a criterion can be checked by exercising a deliverable/observing effects and execution is safe and proportionate, obtain delegated empirical evidence; inspection alone cannot replace it. Where feasible, verify in its use context (app/page flow, document render/export). Tie evidence to request/resources; report unavailable-tool limitations. Reuse a fitting role; add verification roles only for distinct expertise or independence.
 
-Reuse evidence that remains valid for the delivered state. Repeat affected checks after corrections, relevant changes, or failures; obtain further evidence for gaps, uncertain impact, or justified independent confirmation—not merely because the agent or phase changed. Independent review evaluates the work and its evidence; it does not inherently require identical reexecution.
+Reuse evidence valid for the delivered state. Rerun affected checks after corrections, relevant changes, or failures; add evidence for gaps, uncertain impact, or justified independent confirmation—not just a changed agent/phase. Independent review need not repeat identical execution.
 
-`N/A`, `partial`, and `blocked` are evidence states, not statuses: `N/A` means no done criterion calls for empirical validation; `partial` means evidence was obtained for only some applicable criteria; `blocked` means an applicable check could not run. Use `DONE` when all done criteria are satisfied, `DONE_WITH_CONCERNS` for a non-blocking evidence gap, `NEEDS_CONTEXT` while specific, actionable information or access can reasonably be provided to unblock validation, and `BLOCKED` when the gap prevents completion and no actionable path to obtain context or access remains. Report `N/A`, `partial`, or `blocked` when applicable and explain every gap.
+Evidence states are **not statuses**: `N/A` = no criterion needs empirical validation; `partial` = only some applicable criteria evidenced; `blocked` = applicable check could not run. Report applicable states and explain every gap. Status: `DONE` if all criteria satisfied; `DONE_WITH_CONCERNS` for non-blocking gaps; `NEEDS_CONTEXT` if specific actionable information/access can reasonably unblock validation; `BLOCKED` if completion is prevented and no actionable context/access path remains.
 
 ### Stage 4: Wiki Ingest Evaluation
 
-Apply hard-gate 11; if it does not apply, skip this stage without loading `wiki`. Otherwise, after Stages 1–3, load `wiki` and run its ingest evaluation before final synthesis. Evaluate whether adding, revising, or removing wiki content would materially improve durable workspace knowledge after the reviewed deliverables, accounting for compact organization and future context cost. Evaluate the artifacts and outcomes even when no executor supplied a `Durable discovery:` line; that optional signal is only a pointer to tacit knowledge and its absence has no workflow meaning.
+If gate 11 is inapplicable, skip without loading `wiki`. Otherwise load it after Stages 1–3, before final synthesis. Evaluate artifacts/outcomes even without `Durable discovery:` (optional tacit-knowledge pointer, not a workflow signal): would adding/revising/removing content materially improve durable knowledge after compact organization and future context cost?
 
-If the evaluation is positive, consolidate discoveries across all outputs into one serialized ingestion stream scoped only to the Wiki Ingestion Specialist role. This label defines a role profile, not a literal agent identifier: select the best discovered exact or adjacent specialist under Phase 3, and use generic/default fallback only when neither exists. Never dispatch parallel wiki writers. The owner classifies and deduplicates the knowledge, makes only qualifying add/update/remove edits, maintains navigation, runs consistency lint, and does not alter original deliverables; it may return without edits if closer inspection shows no material net improvement. Review the result before responding. Retry or correct a failed dispatch, non-complete status, or failed review within the same stream under the normal status protocol; the two-cycle stuck rule remains in force. Low-value, ambiguous, redundant, transient, or already-captured information must not be added. If the evaluation is negative, do not dispatch ingestion; no wiki write is required merely to complete orchestration.
+Positive: consolidate all outputs into **one serialized ingestion stream**, owned solely by the Wiki Ingestion Specialist **role**, not a literal agent name. Select under Phase 3: best exact/adjacent, generic only if neither. Never parallel wiki writers. Owner classifies/deduplicates, makes qualifying add/update/remove edits, maintains navigation, runs consistency lint, and leaves original deliverables unchanged. No edits is valid if closer inspection finds no material net improvement. Review before response; correct failed dispatch, non-complete status, or failed review in the same stream under the status protocol/two-cycle stuck rule.
 
-Explicit wiki tasks and the multi-role **Wiki Setup / Creation** workflow still undergo evaluation, but skip a redundant post-task stream when their reviewed deliverables already captured all durable knowledge correctly. Post-task ingestion remains distinct from broad wiki construction.
+Never add low-value, ambiguous, redundant, transient, or already-captured information. Negative evaluation: no ingestion dispatch; completion never requires a write. Explicit wiki tasks and multi-role **Wiki Setup / Creation** still undergo evaluation, but skip redundant ingestion if reviewed deliverables already captured durable knowledge correctly. Post-task ingestion does not replace broad construction.
 
 ## Status Protocol
 
@@ -289,31 +243,16 @@ Delegated agents report one of:
 
 This protocol applies across the delegation tree, including work the coordinator recomposed after a subagent escalated out-of-scope parts.
 
-**If stuck** — two cycles with no progress (repeated `NEEDS_CONTEXT` or `BLOCKED` without material progress counts): stop redispatching, declare the blocker, and choose among: provide missing context, decompose differently, escalate (ask the user for direction), or apply justified fallback.
+**Stuck:** after two cycles without material progress (including repeated `NEEDS_CONTEXT`/`BLOCKED`), stop redispatching and declare the blocker; supply context, decompose differently, ask the user, or apply justified fallback.
 
 ## Escalation Rules
 
-- Subagents do not compose sub-teams or subdelegate.
-- When handed scope is genuinely multi-domain and exceeds a subagent's role, the subagent escalates back to the coordinator (status `BLOCKED` or `DONE_WITH_CONCERNS`), flagging the out-of-domain part rather than executing or re-delegating it.
-- The coordinator remains the sole integrator and recomposes the team from the top.
-- The subagent stays accountable for delivering its in-role part; it escalates the out-of-domain part, not abandons it.
-- Review escalated output before recomposing; avoid loops and ping-pong by resolving scope boundaries at the coordinator.
-- Preserve explicit scope ownership: a subagent never absorbs out-of-scope work silently.
-- Escalation is not a way to avoid synthesis or review responsibility — the subagent must still deliver and self-review its in-role part.
+- No sub-teams/subdelegation or silent scope absorption. Deliver, synthesize, and self-review the in-role part; flag excessive multi-domain scope to the coordinator as `BLOCKED`/`DONE_WITH_CONCERNS`, never execute/redelegate it.
+- Coordinator is sole integrator: review escalated output before recomposing from the top; resolve ownership/boundaries to prevent loops. Escalation does not abandon the out-of-domain part or waive in-role accountability.
 
-## Rationalization Prevention
+## Operating boundary
 
-| Thought | Reality |
-|---|---|
-| "This is too simple to delegate" / "It's faster if I just do it" | The One Rule has no size threshold. Simple work goes to one specialist. Breaking the operating mode for speed is not allowed. |
-| "I already know the answer" / "I just need to peek at the code first" | Knowing ≠ executing. Lean knowledge lookups for coordination are fine; open-ended research and task execution stay with specialists. |
-| "A team of one is pointless, so I'll do it" | A team of one means one delegated subagent selected through orchestration — not you. |
-| "No specialist found, skip this role" | Roles are mandatory. Use the best adjacent specialist; use a generic/default agent acting in that role only when no exact or adjacent fit exists. |
-| "Sequential is safer" | Parallel is default for independent work. Sequential needs explicit dependency. |
-| "Context is sufficient, so skip confirmation" | Confirmation depends on triggers, not context volume. |
-| "Continuation means the same team no matter what" | Preserve roles and specialists by default, but replace when unavailable, wrong, or user-directed. |
-| "Generic is fine, no one will notice" | Every generic dispatch must be justified on the roster (coordinator-internal). A generic/default fallback is invalid when a discovered exact or adjacent fit for that role is available. |
-| "Dispatch failed, agent must be unavailable" | First verify the agent name format matches the exact discovered identifier. Format mismatches (case, separators) are a common cause of failure — retry with the correct format before falling back. |
+Size, speed, or knowing the answer never waives delegation. A team of one means one **subagent**, not the coordinator. Lean coordination lookups are allowed; open-ended research and task execution remain delegated.
 
 ## Return Format
 

@@ -47,18 +47,7 @@ Keeping content in the wiki still requires material net durable value after cont
 
 ## Loading by Platform
 
-`install.sh` copies only `SKILL.md` to the platform path (run manually — the agent never runs `install.sh` automatically):
-
-| Platform | Path |
-|---|---|
-| Antigravity | `~/.gemini/antigravity/skills/<name>/SKILL.md` |
-| Claude Code | `~/.claude/skills/<name>/SKILL.md` |
-| Codex | `~/.agents/skills/<name>/SKILL.md` |
-| Copilot | `~/.copilot/skills/<name>/SKILL.md` |
-| Grok Build | `${GROK_HOME:-~/.grok}/skills/<name>/SKILL.md` |
-| OpenCode | `~/.config/opencode/skills/<name>/SKILL.md` |
-
-Subdirectories (`references/`, `scripts/`, etc.) are **not** installed.
+Installed skills include `SKILL.md` and resource subdirectories, so relative resource links remain usable. See [installation flow](installation-flow.md#what-is-installed) for copy semantics and platform destinations. Run the installer manually; the agent never runs it automatically.
 
 ## Description Drives Activation
 
