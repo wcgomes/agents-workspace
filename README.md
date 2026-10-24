@@ -47,6 +47,8 @@ Roles follow the task, not a fixed team template. Review and verification can st
 
 The skills guide this behavior; actual execution depends on your host tool, available agents, permissions, and resources. See [Workflow details](#workflow-details) for the operating rules.
 
+The coordinator adjusts subagent reasoning effort to the task, and you can override that choice.
+
 ## Project knowledge and durable plans
 
 ### Wiki: optional project memory
