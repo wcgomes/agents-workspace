@@ -45,6 +45,14 @@ Record internally: discovered names + domains (or sources checked if none), and 
 
 Identify dependencies and choose a pattern below: parallel groups have no integration dependencies; sequence when one output feeds another. Plan targeted checks, address risks early, verify integration/first usable result when relevant, and review each phase or parallel batch. Final review checks evidence/coverage, not automatic reruns (Phase 6, Stage 3).
 
+### Task-Based Reasoning Effort
+
+Preserve the effective subagent provider/model unless the user explicitly requests a change. Honor explicit user subagent effort overrides; otherwise, use the model’s documented native default—not inherited orchestrator effort—as the baseline and adjust by complexity, uncertainty, and risk—not persona: consider lower effort for locating known files/symbols or a specified rename; higher effort for ambiguous cross-module debugging, architectural trade-offs, or complex security/concurrency reasoning. Small scope alone does not justify lower effort.
+
+Apply the selected effort through supported, authorized native controls using discovered values and meanings. Set it explicitly when needed to prevent inheritance. If controls are unavailable or unauthorized, or the required default/value or its meaning is unknown, preserve existing settings and note the limitation; never guess or represent prompt-only guidance as runtime effort selection.
+
+Reassess before subsequent dispatches; never weaken acceptance criteria or required verification.
+
 ## Coordination Patterns
 
 | Pattern | Use / flow |
