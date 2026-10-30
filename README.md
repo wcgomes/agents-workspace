@@ -63,7 +63,7 @@ Illustrative requests, not completed case studies:
 
 ## Installation reference
 
-Reinstalling replaces the boot-policy block between `<!-- agents-workspace:start -->` and `<!-- agents-workspace:end -->`, preserving text outside it. **Copilot's dedicated instructions file is replaced in full.** Matching skill and agent files can be overwritten; boot-policy markers do not protect them.
+Reinstalling updates the shared policy and may overwrite matching skill and agent files. Instructions outside that policy are preserved, except in Copilot’s dedicated instructions file, which is replaced in full.
 
 ### Installer options
 
