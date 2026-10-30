@@ -1,196 +1,110 @@
+<div align="center">
+
 # Agents Workspace
 
-**One request. The right specialists. A reviewed result.**
+**You ask. The right specialists deliver.**
 
-Give your AI assistant an outcome, not a roster to manage. Agents Workspace provides portable skills and a boot policy that guide your assistant to coordinate domain specialists, delegate scoped work, and review the result before handing it back to you.
+[Quick Start](#quick-start) · [How it works](#how-it-works) · [Use cases](#one-workflow-different-domains) · [Installation](#installation-reference)
 
-It is a template distribution—not a separate agent runtime. Your AI tool supplies the models, tools, and subagent execution. The installer includes [The Agency](https://github.com/msitarzewski/agency-agents) specialist catalog by default, spanning engineering, design, marketing, sales, finance, and other domains. You can also use your own catalog.
+</div>
+
+Describe the outcome. Agents Workspace guides your AI assistant to coordinate specialists across research, design, marketing, data analysis, writing, software, and engineering, then bring their work together into a clear, reviewed result.
+
+It distributes reusable skills and instructions, not a separate runtime. Your AI tool supplies the models, tools, and subagent execution.
 
 ## Quick Start
 
-Use a tool listed in [Installer targets](#installer-targets), with Bash, `curl`, and `unzip` available.
+You need a [target tool](#installer-targets), Bash, `curl`, and `unzip`.
 
-> **Global install, remote source:** This installs skills, specialist agents, and a boot policy globally for the selected tools, affecting sessions beyond this project. The installer downloads the current GitHub `main` archives—even when you run `./tools/install.sh` from a local checkout. It does **not** install your local edits, and installed content can change as `main` changes. Review [the installer](tools/install.sh) before running it.
+> **Global install:** skills, specialist agents, and the shared instruction policy (boot policy) go into the selected tools' global configuration, affecting other projects too. The installer downloads current GitHub `main` archives, **even from a local checkout**; it does not install local edits. Review [the script](tools/install.sh) first; remote content can change.
 
 ```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash
 ```
 
-This piped command targets all detected tools. To choose a tool, limit Agency divisions, or keep your own specialists with `--no-agency`, see [Installer options](#installer-options).
+This command targets all detected tools and includes [The Agency's specialist catalog](https://github.com/msitarzewski/agency-agents) by default. [Installer options](#installer-options) let you select tools, limit divisions, or keep your own compatible agents with `--no-agency`.
 
-Open a new session with your tool's main assistant and ask for an outcome as you normally would:
+Open a new session with your tool's main assistant and ask for an outcome:
 
 > Review our onboarding flow, fix the main usability issues, and explain what you verified.
 
-Your main assistant acts as the **coordinator**, even with a specialist persona, unless its initial task starts with the `Session type: DELEGATED` control line, which always wins: it selects specialists, scopes their work, and brings their results back for review. You do not need a wiki or a spec to start.
-
-## One workflow, different domains
-
-These are **illustrative requests, possible teams, and verification targets**, not recorded runs or guaranteed outcomes. The coordinator selects the smallest sufficient team from available specialists; a focused task can use one specialist, while dependencies may call for sequential work rather than parallel execution.
-
-| Your request | Possible team | What a verified outcome would include |
-|---|---|---|
-| “Improve our onboarding flow and implement the changes.” | UX researcher, frontend developer, accessibility specialist | Updated flow, checks of the relevant interactions and accessibility behavior, and explicit coverage gaps. |
-| “Prepare a launch campaign for this product.” | Marketing strategist, copywriter, designer | Campaign brief, copy, and creative assets checked against the audience, brand, channel requirements, and supplied product facts—not a promise of campaign performance. |
-| “Turn these sales figures into a decision-ready report.” | Data analyst, finance specialist, data visualization specialist | Reconciled totals, traceable assumptions, and a rendered report checked for readable charts and supported conclusions. |
-
-Roles follow the task, not a fixed team template. Every specialist self-verifies its work; an independent reviewer with fresh context is added at strategic points such as final delivery, integration of parallel work, risky domains, or before irreversible actions. A specialist never reviews its own work.
+You do not need a wiki or a spec to start.
 
 ## How it works
 
-**Request → context → team → scoped execution → review and verification → synthesis**
+1. **Your main assistant coordinates.** It clarifies the outcome and chooses the smallest sufficient team from available specialists. A focused task can use one specialist.
+2. **Specialists get focused assignments.** Each has a clear scope, success criteria, and constraints. Only independent work runs in parallel; dependent work stays ordered.
+3. **Work is checked.** Specialists self-verify. Independent fresh-context review runs at strategic points, such as final delivery, integration, or risky work—not after every handoff.
+4. **You get one answer.** The coordinator combines results and reports completed work, checks run, limitations, and blockers.
 
-1. **Understand the outcome.** The coordinator gathers lean context and defines what “done” means. Trivial work (single file, no behavior or contract change, reversible, no governing contract artifact) goes straight to one specialist unless you asked for approval first; the specialist self-verifies and the coordinator checks that evidence against the done criteria. The steps below apply to everything else.
-2. **Choose the specialists.** It matches domains to available agents and delegates every unit of work. Independent scopes can run in parallel; dependent work stays ordered. It asks you first when the work is destructive, ambiguous, irreversible or outward-facing, or unusually costly.
-3. **Check the result.** Specialists self-verify; independent fresh-context review runs at strategic points. When safe and proportionate, specialists exercise the deliverable where it will be used—not just inspect its source. Valid evidence is reused; affected checks repeat after changes.
-4. **Return a reviewed answer.** Each review finding is fixed, contested with evidence, escalated to you, or declined as a nit. One clean round converges; after three rounds, or if fixes start undoing each other, the coordinator stops and reports or asks you. It then summarizes deliverables, checks, and remaining limitations. Blocked work is surfaced rather than silently treated as complete.
+## Checks, not just claims
 
-The skills guide this behavior; actual execution depends on your host tool, available agents, permissions, and resources. See [Workflow details](#workflow-details) for the operating rules.
+- **Scale checks to risk.** When safe and proportionate, specialists run or observe the deliverable in use. Writing tests is not evidence that they ran.
+- **Keep the work complete.** Less work never means dropping a requirement or safety control. Missing required verification blocks the affected conclusion or action; gaps stay visible.
+- **Get approval when needed.** The coordinator checks with you before destructive work, work with unclear scope, publishing, or unusually costly work.
 
-The coordinator assigns each handoff an effort tier—light, standard, or deep—based on the work, not its size. If you declare a tier-to-model/effort mapping, it applies it; otherwise it keeps current models and uses only native effort controls your tool provides. If your tool cannot spawn subagents, the coordinator says so once and runs plan, execute, and self-review as separate passes, recording independent review as not run.
+## Context and token use
 
-## Project knowledge and durable plans
+The workflow loads relevant context, keeps handoffs compact, and reuses suitable resources and still-valid evidence. Affected checks repeat after changes. The aim is the smallest complete solution, not merely a shorter answer.
 
-### Wiki: optional project memory
+Coordination and review also cost time and tokens. Total cost varies with the task, models, and host tool; savings are not guaranteed.
 
-If you want durable project knowledge, ask:
+## One workflow, different domains
 
-> Initialize a wiki for this project using the wiki skill.
+Illustrative requests, not completed case studies:
 
-A root-level `wiki/` enables consultation for tasks associated with that project: the coordinator reads the index and only pages that affect planning, and specialists consult the wiki themselves when useful. After review of non-trivial work, a quick check decides whether to run a full ingest evaluation. It triggers on a user correction; a new decision, convention, constraint, or reusable pattern; stale or contradicted wiki content; an executor `Durable discovery:` line; or tacit knowledge reported after a spec archive. Updates happen only when they add material durable value after accounting for duplication and upkeep—not after every task. The installer never creates a project wiki, and standalone chats do not inherit this workflow just because a wiki exists in the current directory.
+- “Draft a launch campaign from this brief, checking product claims and channel requirements.”
+- “Turn these sales figures into a report, reconcile totals, and flag unsupported conclusions.”
 
-See the [Wiki gate](templates/AGENTS.md#coordinator-flow), [read-only consultation skill](templates/skills/wiki-query/SKILL.md), and [wiki maintenance skill](templates/skills/wiki/SKILL.md).
+## Optional project knowledge
 
-### Specs: when the outcome needs a contract
-
-For work that needs an agreed, durable behavior contract—such as a new API, migration, or security-sensitive change—`spec-builder` manages proposals, outcome specs, and task plans under `specs/`, with your confirmation before creating them. Handoffs reference a change with `Contract ref:`; implementation starts only after the change passes `analyze`, and review runs `verify` against it as well as checking the done criteria. Small, well-defined work can proceed from explicit done criteria without adding a spec.
-
-See [spec-builder](templates/skills/spec-builder/SKILL.md) for when and how to use it.
+- **Wiki:** preserve durable project decisions and conventions. Ask to initialize one; installation never creates it. See [wiki maintenance](templates/skills/wiki/SKILL.md) and [read-only lookup](templates/skills/wiki-query/SKILL.md).
+- **Specs:** agree on outcomes and acceptance before a new API, migration, or other work needing durable alignment. [Spec builder](templates/skills/spec-builder/SKILL.md) manages those plans under `specs/`, with your confirmation before creation.
 
 ## Installation reference
 
-### What gets installed
-
-| Artifact | Source | Installation behavior |
-|---|---|---|
-| Workflow skills | `templates/skills/` | Copies skills into each selected tool's global skills directory. |
-| Boot policy | `templates/AGENTS.md` | Upserts the managed block in the global instruction file. |
-| Specialist agents (default) | External [Agency catalog](https://github.com/msitarzewski/agency-agents) | Converts/installs agents for the selected tools; skip with `--no-agency`. |
-
-The boot policy uses `<!-- agents-workspace:start -->` / `<!-- agents-workspace:end -->` markers. Re-running the installer replaces that block and preserves content outside it. Copilot uses a dedicated instructions file that is replaced in full. Skills and Agency agents are not protected by these boot-policy markers.
+Reinstalling replaces the boot-policy block between `<!-- agents-workspace:start -->` and `<!-- agents-workspace:end -->`, preserving text outside it. **Copilot's dedicated instructions file is replaced in full.** Matching skill and agent files can be overwritten; boot-policy markers do not protect them.
 
 ### Installer options
 
 | Flag | Description |
 |---|---|
-| `--all` | Install for all detected tools; the noninteractive default. |
-| `--claude` | Select Claude Code. |
-| `--codex` | Select Codex. |
-| `--copilot` | Select Copilot. |
-| `--grok` | Select Grok Build. |
-| `--opencode` | Select OpenCode. |
-| `--no-agency` | Install only skills and boot policy; keep your own specialist catalog. |
-| `--division <list>` | Limit Agency agents to comma-separated divisions. |
-| `--list` | Download and list available workflow skills without installing. |
-| `--help`, `-h` | Show help. |
+| `--claude`, `--codex`, `--copilot`, `--grok`, `--opencode` | Select target tools. |
+| `--all` | Select all detected tools; the noninteractive default. |
+| `--no-agency` | Skip Agency; use your own specialist catalog. |
+| `--division <list>` | Limit Agency to comma-separated divisions. |
+| `--list` | Download and list skills without installing. |
+| `--help`, `-h` | Show help without downloading archives. |
 
-For example, select OpenCode and two Agency divisions:
+For example, select OpenCode and two divisions:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --opencode --division engineering,security
 ```
 
-Or keep your existing agents:
-
-```bash
-curl -sL https://raw.githubusercontent.com/wcgomes/agents-workspace/main/tools/install.sh | bash -s -- --all --no-agency
-```
-
-Use [The Agency's current catalog](https://github.com/msitarzewski/agency-agents) for division names and specialist descriptions. Divisions include engineering, design, marketing, finance, sales, security, and testing; availability follows upstream `main`.
-
-From a checkout, run `./tools/install.sh` with explicit tool flags or `--all` to avoid interactive selection. It still downloads remote `main`. To include Antigravity, use `--all` with Antigravity detected; there is no dedicated `--antigravity` flag.
+An interactive terminal run without flags offers a selection menu; explicit tool flags or `--all` bypass it. Antigravity uses `--all` detection; there is no dedicated flag. Division names follow [Agency's current catalog](https://github.com/msitarzewski/agency-agents).
 
 ### Installer targets
 
-These are installer destinations, not a claim of end-to-end validation on every tool. Agent discovery at execution time follows the host platform's available sources, not this path table alone.
+These are installer destinations, not an end-to-end compatibility guarantee.
 
-| Tool | Skills path | Agents path | Boot policy path |
-|---|---|---|---|
-| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/config/skills/` | `~/.gemini/GEMINI.md` |
-| Claude Code | `~/.claude/skills/` | `~/.claude/agents/` | `~/.claude/CLAUDE.md` |
-| Codex | `~/.agents/skills/` | `~/.codex/agents/` | `~/.codex/AGENTS.md` |
-| Copilot | `~/.copilot/skills/` | `~/.github/agents/` and `~/.copilot/agents/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
-| Grok Build | `~/.grok/skills/` | `~/.grok/agents/` | `~/.grok/AGENTS.md` |
-| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/agents/` | `~/.config/opencode/AGENTS.md` |
+| Tool | Skills | Boot policy |
+|---|---|---|
+| Antigravity | `~/.gemini/antigravity/skills/` | `~/.gemini/GEMINI.md` |
+| Claude Code | `~/.claude/skills/` | `~/.claude/CLAUDE.md` |
+| Codex | `~/.agents/skills/` | `~/.codex/AGENTS.md` |
+| Copilot | `~/.copilot/skills/` | `~/.copilot/instructions/agents-workspace.instructions.md` |
+| Grok Build | `~/.grok/skills/` | `~/.grok/AGENTS.md` |
+| OpenCode | `~/.config/opencode/skills/` | `~/.config/opencode/AGENTS.md` |
 
-Grok paths use `$GROK_HOME` when set, otherwise `~/.grok`. The Codex boot-policy path uses `$CODEX_HOME` when set, otherwise `~/.codex`. Codex skills use the current user location, `~/.agents/skills/`. Codex specialist agents are installed by Agency's own installer (`--tool codex`) into `~/.codex/agents/`. Agency-managed destinations, including Copilot and Antigravity, depend on the upstream installer and can change.
+`$GROK_HOME` overrides Grok's base directory; `$CODEX_HOME` overrides Codex's boot-policy directory, not its skills path. Agent destinations and conversions follow [this installer](tools/install.sh) and [Agency's installer](https://github.com/msitarzewski/agency-agents/blob/main/scripts/install.sh); upstream details can change.
 
-### Manual install from a local checkout
+### Using local edits
 
-Use this route to install your local template edits rather than remote `main`. Run from the repository root. These steps install OpenCode skills and boot policy only, not specialist agents.
+To use checkout edits instead of remote `main`, copy the [skill sources](templates/skills/) to your tool's skills directory above. Merge the managed block from [the boot-policy template](templates/AGENTS.md) into its instruction file, preserving unrelated content; append it if no block exists. Adapt to the host's file format. This does not install specialist agents.
 
-```bash
-mkdir -p ~/.config/opencode/skills
-cp -r templates/skills/* ~/.config/opencode/skills/
-```
+## Further reading
 
-This copies over same-named skill files. For the boot policy, if `~/.config/opencode/AGENTS.md` already exists, manually replace its managed marker block (or append the template if no block exists), preserving unrelated instructions. **Only for a new instruction file**, copy the template:
-
-```bash
-cp -n templates/AGENTS.md ~/.config/opencode/AGENTS.md
-```
-
-The no-clobber flag leaves an existing file unchanged; it does not update its policy. For other tools, use the destinations above and the host's instruction-file format. For specialists, follow [The Agency's installation instructions](https://github.com/msitarzewski/agency-agents) or use your own compatible agents.
-
-## Workflow details
-
-<details>
-<summary>Coordination boundaries, review loop, and source references</summary>
-
-The **coordinator does not execute task work**. It talks with you, loads skills, gathers lean context, dispatches specialists, and reviews their results. Executors stay within their assigned scope and do not assemble another team.
-
-```text
-Request → lean context (wiki index + planning-relevant pages when applicable)
-        ├─ trivial → one executor handoff → self-verify → coordinator checks evidence (no separate reviewer) → synthesis
-        └─ otherwise → orchestrate: select roles, plan, confirm if triggered, delegate
-                     → scoped execution (single, sequential, or parallel; self-verified)
-                     → integrate → independent review at strategic points
-                                      ├─ findings → fix / contest / escalate / decline → review again (max 3 rounds)
-                                      ├─ blocked → clarify, escalate, or recompose
-                                      └─ converged → wiki pre-check when applicable
-                                                   → ingest evaluation if positive → conditional update → synthesis
-```
-
-When durable upfront alignment is needed, the boot policy routes to `spec-builder`, whose actions are delegated like any work; skills do not reference each other. Handoffs define the task, scope, done criteria, and constraints, with context and a `Contract ref:` when needed. Work under a spec change starts only after `analyze` passes, and its review runs `verify`. Review checks both the deliverable and its evidence; it does not automatically rerun valid checks. The final synthesis identifies any partial, blocked, or inapplicable verification and explains gaps.
-
-Project wiki updates use one serialized ingestion stream only when the post-review pre-check is positive and the ingest evaluation justifies a change. No useful change means no write. Recurring procedures may warrant a skill instead, but the workflow does not automatically create one.
-
-Use the source documents for the full contract rather than treating this overview as a second policy:
-
-- [Boot policy](templates/AGENTS.md): session boundaries, delegation, and conditional wiki workflow.
-- [Orchestrate](templates/skills/orchestrate/SKILL.md): role discovery, effort, confirmation, handoffs, review, evidence, statuses, and escalation; details such as the review loop and team templates live in [`references/`](templates/skills/orchestrate/references/).
-- [Spec builder](templates/skills/spec-builder/SKILL.md): durable outcome contracts referenced by `Contract ref:`.
-- [Wiki](templates/skills/wiki/SKILL.md) and [wiki-query](templates/skills/wiki-query/SKILL.md): ingest evaluation and maintenance; read-only consultation.
-- [Skill builder](templates/skills/skill-builder/SKILL.md): authoring and validating reusable skills.
-
-</details>
-
-## Structure
-
-```text
-AGENTS.md              # Guidance for maintaining this distribution, not consumer policy
-README.md              # Adoption guide and installation reference
-tools/install.sh       # Installer; downloads current GitHub main
-templates/             # Source of truth; changes take effect after installation
-  AGENTS.md            # Consumer boot-policy template
-  skills/
-    orchestrate/       # Team assembly, delegation, review, and synthesis
-      references/      # Review loop, confirmation, handoff example, team templates
-    wiki-query/        # Read-only project knowledge lookup
-    wiki/              # Wiki setup, evaluation, and maintenance
-    spec-builder/      # Durable outcome contracts and task plans
-    skill-builder/     # Skill authoring and validation
-wiki/                  # This distribution's own project knowledge
-```
-
-In your projects, `wiki/` is optional and explicitly initialized; `specs/` holds contracts when needed. Project-specific `AGENTS.md` / `CLAUDE.md` instructions can layer with global policy, and `.agents/skills/` can hold explicitly created workspace-local skills where your tool supports them.
+- [Boot policy](templates/AGENTS.md): delegation boundaries and the short path for trivial work.
+- [Orchestration](templates/skills/orchestrate/SKILL.md): coordination, approval, evidence, and model/effort controls; [review loop](templates/skills/orchestrate/references/review-loop.md): finding resolution and convergence.
+- [Skill builder](templates/skills/skill-builder/SKILL.md): authoring reusable skills. [Contributor guidance](AGENTS.md): maintaining this distribution rather than installed copies.

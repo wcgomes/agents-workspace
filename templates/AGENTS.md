@@ -1,5 +1,4 @@
 <!-- agents-workspace:start -->
-This block is the agents-workspace boot policy ("the boot policy"). Sections are cited by heading.
 
 ## Session Contract
 
