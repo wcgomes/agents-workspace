@@ -16,7 +16,7 @@ Skills named each other (`orchestrate` consumed `Spec ref:`, `spec-builder` told
 - **Session classification:** the main user-facing agent is coordinator even with a specialist persona; domain-specialist subagents are delegated; the `Session type: DELEGATED` control line always wins.
 - **Trivial fast path:** defined once in the boot policy; skips `orchestrate`, separate review, and ingest evaluation.
 - **Wiki use:** the coordinator reads the index plus only planning-relevant pages; executors self-consult. After non-trivial work, the boot policy's Learn (pre-check) with five triggers gates loading the `wiki` skill, which owns the full ingest criteria.
-- **Review:** executors always self-verify; independent fresh-context review runs only at strategic points. Findings resolve as fix, contest, escalate, or decline (`nit` only); severity is `blocker`/`major`/`minor`/`nit`; one clean round converges, cap three rounds, churn goes to the user ([review-loop](../../templates/skills/orchestrate/references/review-loop.md)). A missing or malformed return counts as `not run`.
+- **Review:** executors always self-verify; independent fresh-context review runs only at strategic points. The canonical [review-loop](../../templates/skills/orchestrate/references/review-loop.md) defines finding resolution and convergence. A missing or malformed return counts as `not run`.
 - **Confirmation:** risk-based triggers only (destructive, ambiguous, irreversible/outward-facing, unusually costly, user asked); no headcount trigger.
 - **Returns:** bounded inline returns; no report files in the user's workspace unless the file is the deliverable.
 - **No-subagent harness:** reduced mode with separate labeled passes; independent review recorded as `not run`.

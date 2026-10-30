@@ -2,8 +2,6 @@
 
 ## Writing the body
 
-Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separate files.
-
 ### Recommended structure
 
 1. One-line summary of what the skill does
@@ -25,7 +23,36 @@ Cut paragraphs whose omission would not cause errors.
 | Flexible / multiple valid approaches | Explain *why*, give freedom |
 | Fragile / must follow sequence | Be prescriptive, exact commands, "do not modify" |
 
+Calibrate each part independently; most skills mix both approaches.
+
+**Flexible example:**
+
+```markdown
+## Code review process
+
+1. Check all database queries for SQL injection (use parameterized queries)
+2. Verify authentication checks on every endpoint
+3. Look for race conditions in concurrent code paths
+4. Confirm error messages don't leak internal details
+```
+
+**Fragile example:**
+
+````markdown
+## Database migration
+
+Run exactly this sequence:
+
+```bash
+python scripts/migrate.py --verify --backup
+```
+
+Do not modify the command or add additional flags.
+````
+
 ### Provide defaults, not menus
+
+Pick a default; mention alternatives briefly rather than presenting equal options.
 
 ```markdown
 # Too many options
@@ -36,6 +63,8 @@ Use pdfplumber for text extraction. For scanned PDFs requiring OCR, use pdf2imag
 ```
 
 ### Favor procedures over declarations
+
+Teach how to approach a class of problems, not just one answer.
 
 ```markdown
 # Specific answer — only useful once
@@ -50,7 +79,7 @@ Join `orders` to `customers` on `customer_id`, filter `region = 'EMEA'`, sum `am
 
 ### Aim for moderate detail
 
-Prefer steps + one working example to exhaustive rules that trigger irrelevant paths.
+Prefer steps + one working example to exhaustive rules that trigger irrelevant paths. Leave judgment-tolerant edge cases to the agent.
 
 ---
 
@@ -63,14 +92,12 @@ Correct false assumptions with environment-specific facts:
 ```markdown
 ## Gotchas
 
-- The `users` table uses soft deletes. Queries must include
-  `WHERE deleted_at IS NULL` or results include deactivated accounts.
+- The `users` table uses soft deletes. Queries must include `WHERE deleted_at IS NULL` or results include deactivated accounts.
 - User ID is `user_id` in the database, `uid` in auth, `accountId` in billing.
-- The `/health` endpoint returns 200 as long as the web server runs,
-  even if DB is down. Use `/ready` for full service health.
+- The `/health` endpoint returns 200 as long as the web server runs, even if DB is down. Use `/ready` for full service health.
 ```
 
-Add corrected agent mistakes to gotchas.
+Keep gotchas in `SKILL.md` so the agent reads them before the situation. Add corrected agent mistakes.
 
 ### Templates for output format
 
@@ -78,11 +105,17 @@ Use concrete code-block formats, not prose descriptions. Short templates inline;
 
 ### Checklists for multi-step workflows
 
+Use progress checklists for dependent or gated steps.
+
 ```markdown
+## Form processing workflow
+
+Progress:
 - [ ] Step 1: Analyze the form (`scripts/analyze_form.py`)
 - [ ] Step 2: Create field mapping (`fields.json`)
 - [ ] Step 3: Validate (`scripts/validate_fields.py`)
 - [ ] Step 4: Fill form (`scripts/fill_form.py`)
+- [ ] Step 5: Verify output (`scripts/verify_output.py`)
 ```
 
 ### Validation loops

@@ -13,27 +13,6 @@ Follow agentskills.io: a skill directory contains `SKILL.md` and optional resour
 
 > **Prose:** Single-line paragraphs, no hard-wrapping, preambles, or filler.
 
-## Quickstart — minimal skill
-
-Create `<name>/SKILL.md` (directory name MUST match `name`):
-
-````markdown
----
-name: roll-dice
-description: Roll dice using a random number generator. Use when asked to roll a die (d6, d20, etc.), roll dice, or generate a random dice roll.
----
-
-To roll a die, use:
-
-```bash
-echo $((RANDOM % <sides> + 1))
-```
-
-Replace `<sides>` with the number of sides (6 for standard, 20 for d20).
-````
-
-Expand only as needed.
-
 ## Directory structure
 
 ```
@@ -58,23 +37,7 @@ Keep file references one level deep from `SKILL.md`. Avoid deeply nested chains.
 | `metadata` | Optional key-value map; unique keys avoid conflicts. |
 | `allowed-tools` | Optional space-separated pre-approved tools; experimental, support varies. |
 
-### Examples
-
-With optional fields:
-```yaml
----
-name: data-pipeline
-description: >
-  Build and run data pipelines using our internal ETL framework.
-  Use when the user mentions data ingestion, batch jobs, or ETL.
-license: Proprietary. LICENSE.txt has complete terms
-compatibility: Requires Python 3.14+ and uv
-metadata:
-  author: data-team
-  version: "1.0"
-allowed-tools: Bash(git:*) Bash(jq:*) Read
----
-```
+Read `references/SPECIFICATION.md` when creating a skill, using optional frontmatter fields, or checking format details; it includes minimal-skill and optional-field examples.
 
 ## Writing descriptions
 
@@ -103,7 +66,7 @@ Agents may skip simple one-step tasks they can handle alone; descriptions matter
 
 Keep `SKILL.md` under 500 lines / 5,000 tokens. Move reference material to separate files.
 
-For body structure, patterns, and examples, read [references/WRITING_SKILLS.md](references/WRITING_SKILLS.md).
+Read `references/WRITING_SKILLS.md` when structuring the body or choosing instruction patterns.
 
 ## Progressive disclosure
 
@@ -139,4 +102,4 @@ Checks frontmatter and naming conventions.
 
 Ground skills in real tasks/project artifacts, not generic references. Keep one coherent scope, neither too narrow nor too broad. Iterate systematically with evals and execution traces, not only outputs; wasted steps signal vague instructions. No baseline improvement may mean no added value. Recheck description length and name/folder match after edits.
 
-For authoring guidance read [references/BEST_PRACTICES.md](references/BEST_PRACTICES.md); for format details read [references/SPECIFICATION.md](references/SPECIFICATION.md).
+Read `references/BEST_PRACTICES.md` when selecting source material, defining scope, or refining from execution evidence.

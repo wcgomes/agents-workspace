@@ -1,5 +1,26 @@
 # Specification
 
+## Quickstart — minimal skill
+
+Create `<name>/SKILL.md` (directory name MUST match `name`):
+
+````markdown
+---
+name: roll-dice
+description: Roll dice using a random number generator. Use when asked to roll a die (d6, d20, etc.), roll dice, or generate a random dice roll.
+---
+
+To roll a die, use:
+
+```bash
+echo $((RANDOM % <sides> + 1))
+```
+
+Replace `<sides>` with the number of sides (6 for standard, 20 for d20).
+````
+
+Expand only as needed.
+
 ## Directory structure
 
 A skill requires `SKILL.md`; other resources are optional:
@@ -28,25 +49,20 @@ The `SKILL.md` file must contain YAML frontmatter followed by Markdown content.
 | `metadata` | No | String-to-string map for extra client properties; use unique keys to avoid conflicts. |
 | `allowed-tools` | No | Space-separated pre-approved tools; experimental, implementation support varies. |
 
-**Minimal example:**
-
-```markdown
----
-name: skill-name
-description: A description of what this skill does and when to use it.
----
-```
-
 **Example with optional fields:**
 
-```markdown
+```yaml
 ---
-name: pdf-processing
-description: Extract PDF text, fill forms, merge files. Use when handling PDFs.
-license: Apache-2.0
+name: data-pipeline
+description: >
+  Build and run data pipelines using our internal ETL framework.
+  Use when the user mentions data ingestion, batch jobs, or ETL.
+license: Proprietary. LICENSE.txt has complete terms
+compatibility: Requires Python 3.14+ and uv
 metadata:
-  author: example-org
+  author: data-team
   version: "1.0"
+allowed-tools: Bash(git:*) Bash(jq:*) Read
 ---
 ```
 

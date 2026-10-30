@@ -62,34 +62,13 @@ Skip redundant ingestion if reviewed deliverables already capture the knowledge,
 
 ## Wiki Structure
 
-```
-wiki/
-├── index.md              # Required routing map — compact keywords + descriptions
-├── architecture.md       # System structure overview (single file)
-├── conventions/          # One file per convention
-│   ├── index.md          # Required for every new content folder
-│   └── <pattern-name>.md
-├── domain/               # One file per business rule — descriptive facts, not spec contracts
-│   ├── index.md
-│   └── <rule-name>.md
-├── decisions/            # One file per ADR
-│   ├── index.md
-│   └── <NNNN-decision-name>.md
-├── records/             # Date-bound artifacts
-│   ├── index.md
-│   └── incidents/
-│       ├── index.md
-│       └── YYYYMMDD-<incident-name>.md
-└── ...
-```
+Read `references/structure.md` when creating folders or choosing a layout.
 
 Adapt folders for projects/features/WIP/useful groupings. One topic per file, one concept per folder; stay shallow.
 
 Every new content folder (including intermediate/`records/` folders) needs parent-linked `index.md`, never a folder link. Each index lists only local pages (not itself) and immediate child indexes, never repeated descendant inventories. Every page must be reachable from `wiki/index.md`; root pages link directly there.
 
-Apply this structure to new content folders; do not automatically migrate or reorganize existing wiki layouts to comply.
-
-Creation, ingestion, and maintenance must preserve the Index Entry Contract; never expand an index entry to capture page content.
+Apply the Index Entry Contract to new indexes and new or changed entries. Editing an entry does not authorize migrating the rest of a legacy index or reorganizing unrelated layouts.
 
 Consider splitting when an index exceeds ~50 lines OR a topic group ~10 entries: move a coherent group to a subfolder; replace parent entries with its `index.md` link. Heuristics, not automatic reorganization; use judgment, stay shallow. New folders always need indexes regardless of size.
 
@@ -102,14 +81,14 @@ Consider splitting when an index exceeds ~50 lines OR a topic group ~10 entries:
 
 ### Lint
 
-When the wiki changes, check for:
+When the wiki changes, check affected content and navigation for:
 - stale references
 - index links point to `.md` files, not folders
 - every new content folder, including intermediate groups and `records/` folders, has `index.md` linked from its parent index
-- new-folder indexes and updated parent entries list local pages and immediate child indexes, never descendant page lists; do not migrate existing layouts automatically
-- root and folder indexes contain only a title, optional short group headings, and entries that satisfy the Index Entry Contract
-- pages not reachable (orphaned) from `wiki/index.md` directly or through folder indexes
+- new-folder indexes and updated parent entries list local pages and immediate child indexes, never descendant page lists
+- new indexes and new or changed entries satisfy the Index Entry Contract
+- pages affected by the change are reachable from `wiki/index.md` directly or through folder indexes
 - indexes past the split heuristic (~50 lines, or a group over ~10 entries) that merit splitting or reorganization, not automatic changes
 - contradictory guidance across pages
 
-Never leave the wiki internally inconsistent after edits.
+Fix introduced inconsistencies. Report inherited violations; repair or migrate unrelated content only when authorized.

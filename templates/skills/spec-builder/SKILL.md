@@ -157,6 +157,8 @@ Review execution against the **PERSISTED spec**, not just done criteria.
 
 ### `archive`
 Prerequisite: user confirmed archive (HARD-GATE). If verification passed but there is no confirmation, ASK and wait.
+- Before merging, reconcile replacements and removals with current realized requirements and overlapping active deltas. Preserve guarantees and scenarios not removed by authorized scope; never silently overwrite another change's additions.
+- If reconciliation materially changes the contract, resolve ambiguities with the user and confirm the changes; update routed artifacts, rerun `analyze` and affected `verify` checks, and reconfirm archive for the reconciled state.
 - Merge delta sections into `specs/<domain>.md`: `ADDED` appended, `MODIFIED` replaced, `REMOVED` deleted.
 - Move `changes/<id>/` → `changes/archive/<YYYYMMDD>-<id>/`.
 - Report all added, modified, and removed requirements and significant decisions to the requester.

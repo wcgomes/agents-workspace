@@ -49,24 +49,15 @@ Record internally: discovered agents (or sources checked) and each role's agent,
 
 Map dependencies, self-checks, and review points.
 
+Choose the smallest complete solution within scope. Reuse existing resources that are sufficient and fit workspace conventions before creating new ones. Compare total cost across context, coordination, execution, validation, and rework—not just response length or a single step's cost.
+
 **Readiness:** if the `Contract ref:` artifact, or the skill that governs it, defines a pre-execution readiness check, dispatch implementation only after a delegated run of that check passes. Rerun it after material contract changes.
 
 **Parallel writers:** when parallel scopes edit one workspace, use harness isolation if offered. Otherwise run shared build, test, or install steps sequentially after the parallel edits finish.
 
 ### Effort
 
-- **light:** locate known files or symbols; specified mechanical edits.
-- **standard:** typical implementation or review.
-- **deep:** ambiguous cross-module debugging, architecture trade-offs, security or concurrency reasoning.
-
-Small scope alone does not justify light. To apply a tier:
-
-- If the user declared a tier→model/effort mapping, in instructions or this session, apply it.
-- Otherwise keep current models. Use only native, authorized effort controls.
-- Without a user mapping: standard = the control's documented default; light/deep = the next documented lower/higher value.
-- Set effort explicitly to avoid inheriting coordinator effort.
-- If controls are unavailable or unauthorized, or values or meanings are unknown, keep current settings and note it. Never present prompt-only guidance as runtime effort.
-- On a retry after failure or `BLOCKED`, raise one tier.
+Keep current models and settings unless a user-declared mapping or known, native, authorized effort controls apply. Small scope alone does not justify light. If controls are unavailable, unauthorized, or unclear, keep settings and note it; prompt-only guidance is not runtime effort. Read `references/effort.md` before applying a mapping or control, or retrying a failed or `BLOCKED` scope.
 
 ## Phase 4.5: Confirmation (conditional)
 
@@ -96,6 +87,8 @@ Contract ref: <artifact that governs the task, if any - omit if none>
 ```
 
 Route purpose to `Task:`/`Context:`, artifacts to `Task:`/`Done criteria:`, and return shape to `Constraints:`. Never add `Objective:`, `Deliverable:`, or `Return format:` fields. Read `references/handoff-example.md` when writing a first handoff or unsure where content belongs.
+
+Let material risks determine checks and evidence in `Done criteria:` and controls in `Constraints:`. Scale depth to consequences and, where relevant, reversibility and exposure; no new fields, artifacts, or exhaustive risk inventory are required.
 
 Constraints include, as relevant:
 
@@ -140,18 +133,20 @@ Dispatch independent review only at strategic points:
 
 Reviewer rules:
 
-- Fresh context: only the deliverable, done criteria, `Contract ref:` if present, and paths it may read. Never executor reasoning or transcript.
+- Fresh context: only the deliverable, original scope, applicable constraints, approved exceptions, done criteria, `Contract ref:` if present, and paths it may read; on re-review, also the settled list. Never executor reasoning or transcript.
 - An executor never reviews its own work.
 - Check against `Contract ref:`, when present, as well as done criteria. When the contract, or the skill that governs it, defines its own verification, review includes it.
 - Run the cheapest high-level check first: scope fit, simplicity, reuse. If it fails, skip detailed passes.
 
 If the user opts out of independent review, record it as `not run`.
 
-Each finding resolves as fix, contest, escalate, or decline (`nit` only). One clean round converges; cap three rounds per scope. Read `references/review-loop.md` whenever a review returns findings.
+Each finding resolves as fix, contest, escalate, accept (non-blocking `minor` only, with reason), or decline (`nit` only). Acceptance never waives done criteria, requirements, or required verification. One clean round converges; cap three rounds per scope. Read `references/review-loop.md` whenever a review returns findings.
 
 ### Evidence
 
 If exercising the deliverable can check a criterion safely and proportionately, obtain delegated empirical evidence, in its use context where feasible. Reuse evidence valid for the delivered state; rerun affected checks after changes.
+
+Verify the normal outcome, relevant exceptions where applicable, and controls for identified critical risks. State material limitations and omissions, plus limits and revisit triggers for accepted shortcuts where needed (e.g., changed scope, exposure, or assumptions). Proportionality never waives requirements or safety controls. Missing required verification blocks the affected conclusion or action; disclosure is not a substitute.
 
 Evidence states are not statuses:
 
