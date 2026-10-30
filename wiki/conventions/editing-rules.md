@@ -74,7 +74,6 @@ Do not treat `templates/AGENTS.md` as the live session policy while developing t
 
 - A skill never names another skill; only `templates/AGENTS.md` may. Add integration through generic handoff fields or artifact-declared checks.
 - Rules name no harness, model, or specific agent; agent names only in illustrative team tables; model/effort mapping only when the user declares one.
-- Harnesses differ in how they list spawnable agents (some show a display title while the spawn tool needs the definition `id`/`name`), so [orchestrate](../../templates/skills/orchestrate/SKILL.md)'s spawn-identifier and dispatch-recovery rules stay format-neutral: use the identifier the spawn tool accepts and derive the expected form only from the tool schema, listing, or error. A rule tuned to one harness's naming (exact-as-listed, or a kebab-case example) broke dispatch on another.
 - Rationale: [ADR 0005](../decisions/0005-skill-independence-and-lean-coordination.md).
 
 ### Wiki — gated, serialized writes

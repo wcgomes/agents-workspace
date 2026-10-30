@@ -908,7 +908,7 @@ agency_native_grok_tool() {
   return 1
 }
 
-# Slugify a display name to a Grok subagent_type.
+# Slug used only to remove a previous kebab-case install of the same agent.
 # "Frontend Developer" -> frontend-developer
 grok_agency_slugify() {
   printf '%s' "$1" | tr '[:upper:]' '[:lower:]' \
@@ -954,17 +954,17 @@ grok_agency_get_body() {
   awk 'BEGIN{fm=0} fm<2 && /^---$/{fm++; next} fm>=2{print}' "$1"
 }
 
-# Write Grok agent md: slug name, quoted description, body after frontmatter.
+# Write Grok agent md: name matches the filename stem, quoted description, body after frontmatter.
 # Drops Claude-only fields (color, emoji, vibe). Does not invent tools/mcpInheritance.
 grok_agency_write_agent() {
   local src="$1"
   local dest="$2"
-  local slug="$3"
+  local agent_name="$3"
   local description
   description="$(grok_agency_get_field description "$src")"
   {
     printf '%s\n' '---'
-    printf 'name: %s\n' "$slug"
+    printf 'name: %s\n' "$(grok_agency_yaml_quote "$agent_name")"
     printf 'description: %s\n' "$(grok_agency_yaml_quote "$description")"
     printf '%s\n' '---'
     grok_agency_get_body "$src"
@@ -1022,7 +1022,8 @@ grok_agency_unique_slug() {
 }
 
 # Convert Agency division *.md agents to Grok Build when Agency has no grok target.
-# Filename and name: are slugify(frontmatter name) so they match spawn_subagent types.
+# Filename stem and name: stay the source frontmatter name. Grok's spawn type is that
+# string, and lookup is "{name}.md". Path separators are replaced so the stem matches.
 install_grok_agency_agents() {
   local agency_dir="$1"
   local divisions="$2"
@@ -1031,7 +1032,7 @@ install_grok_agency_agents() {
   local count=0
   local -a divs=()
   local -a claimed_dests=()
-  local d f name src_base slug dest old_dest claimed skip_rm
+  local d f name src_base agent_name slug_twin dest old_dest claimed skip_rm
 
   mkdir -p "$dest_base"
 
@@ -1057,22 +1058,23 @@ install_grok_agency_agents() {
       head -1 "$f" | grep -q '^---$' || continue
 
       src_base="$(basename "$f" .md)"
-      slug="$(grok_agency_get_field name "$f")"
-      slug="$(grok_agency_slugify "$slug")"
-      [[ -n "$slug" ]] || slug="$(grok_agency_slugify "$src_base")"
-      [[ -n "$slug" ]] || continue
+      agent_name="$(grok_agency_get_field name "$f")"
+      [[ -n "$agent_name" ]] || agent_name="$src_base"
+      agent_name="${agent_name//\//-}"
+      agent_name="${agent_name//:/-}"
+      [[ -n "$agent_name" ]] || continue
 
       if (( ${#claimed_dests[@]} > 0 )); then
-        slug="$(grok_agency_unique_slug "$dest_base" "$slug" "$name" "${claimed_dests[@]}")"
+        agent_name="$(grok_agency_unique_slug "$dest_base" "$agent_name" "$name" "${claimed_dests[@]}")"
       else
-        slug="$(grok_agency_unique_slug "$dest_base" "$slug" "$name")"
+        agent_name="$(grok_agency_unique_slug "$dest_base" "$agent_name" "$name")"
       fi
-      dest="$dest_base/${slug}.md"
-      grok_agency_write_agent "$f" "$dest" "$slug"
+      dest="$dest_base/${agent_name}.md"
+      grok_agency_write_agent "$f" "$dest" "$agent_name"
       claimed_dests+=("$dest")
 
       old_dest="$dest_base/${src_base}.md"
-      if [[ "$src_base" != "$slug" && -f "$old_dest" && "$old_dest" != "$dest" ]]; then
+      if [[ "$src_base" != "$agent_name" && -f "$old_dest" && "$old_dest" != "$dest" ]]; then
         skip_rm=false
         for claimed in "${claimed_dests[@]}"; do
           if [[ "$claimed" == "$old_dest" ]]; then
@@ -1081,6 +1083,17 @@ install_grok_agency_agents() {
           fi
         done
         $skip_rm || rm -f "$old_dest"
+      fi
+      slug_twin="$dest_base/$(grok_agency_slugify "$agent_name").md"
+      if [[ "$slug_twin" != "$dest" && -f "$slug_twin" ]]; then
+        skip_rm=false
+        for claimed in "${claimed_dests[@]}"; do
+          if [[ "$claimed" == "$slug_twin" ]]; then
+            skip_rm=true
+            break
+          fi
+        done
+        $skip_rm || rm -f "$slug_twin"
       fi
 
       (( count++ )) || true

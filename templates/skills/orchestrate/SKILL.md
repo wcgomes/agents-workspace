@@ -108,9 +108,9 @@ Constraints include, as relevant:
 - Severity: `blocker` prevents meeting done criteria or risks harm; `major` is a real defect to fix before delivery; `minor` is a low-impact defect; `nit` is style or preference only.
 - Write no report files to the user's workspace unless the file is the deliverable.
 
-**Spawn identifier:** pass the identifier the spawn tool accepts. If a listed agent shows a display title and a definition `id` or `name`, pass that, not the title. Never invent or normalize identifiers.
+**Dispatch:** pass the spawn identifier exactly as this session lists it. Do not rewrite its case, spaces, or separators.
 
-**Dispatch recovery:** if a failure is not identifier-related, retry unchanged once. If it is, take the expected form (id vs name field, case, separators) only from the spawn tool's description or schema, the listing, and the error, never agent files. Retry once with a listed identifier in that form. Then use the best remaining exact or adjacent agent, generic only if none remains. Never abandon the role.
+**Dispatch recovery:** if a valid specialist dispatch fails, retry that same identifier once before changing agents. If the retry fails, select the best remaining exact or adjacent agent, generic only if none remains. Never abandon the role.
 
 **Executor reuse:** for continuations, reuse an existing executor when the harness supports it. Never reuse an executor as its own reviewer.
 
