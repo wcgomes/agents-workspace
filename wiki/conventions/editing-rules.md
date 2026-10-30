@@ -19,7 +19,7 @@ When the user asks to modify, update, fix, or create a skill, they mean the sour
 | Repo root `AGENTS.md` | **Yes, when requested** | Meta for this distribution only; keep short |
 | Installed global boot-policy files | **Never** (managed block) | Edit template + re-install |
 | Optional project-root AGENTS.md | **Yes, when requested** | Project-local layer only |
-| `wiki/` (any workspace) | **Yes** | Agent-maintained knowledge |
+| `wiki/` (any workspace) | **Yes** | Gated ingestion by one serialized writer, or explicit wiki request |
 | `.agents/skills/` (consumer) | **Yes** | Workspace-local skills |
 
 ## Detailed rules
@@ -70,16 +70,15 @@ After `templates/AGENTS.md` edits:
 
 Do not treat `templates/AGENTS.md` as the live session policy while developing this distribution. Do not edit any `AGENTS.md` unless the user asked (or the task clearly targets that file).
 
-### Wiki — maintain automatically
+### Template authoring constraints
 
-```
-wiki/index.md
-wiki/architecture.md
-wiki/domain/*.md
-wiki/conventions/*.md
-```
+- A skill never names another skill; only `templates/AGENTS.md` may. Add integration through generic handoff fields or artifact-declared checks.
+- Rules name no harness, model, or specific agent; agent names only in illustrative team tables; model/effort mapping only when the user declares one.
+- Rationale: [ADR 0005](../decisions/0005-skill-independence-and-lean-coordination.md).
 
-Each workspace (including this distribution repo) owns its own `wiki/`.
+### Wiki — gated, serialized writes
+
+Each workspace (including this distribution repo) owns its own `wiki/`. Writes follow the [wiki skill](../../templates/skills/wiki/SKILL.md): after a positive Learn (pre-check), or on explicit request, through one serialized writer; executors edit it only when explicitly scoped.
 
 ### Workspace-local skills
 

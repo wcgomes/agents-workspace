@@ -29,9 +29,9 @@ Skills are loaded in three progressive stages:
 
 | Skill | Trigger | Function | Source |
 |---|---|---|---|
-| `orchestrate` | Planning or executing delegated work | Full cycle: analyze, assemble team, delegate, review, learn, synthesize | `templates/skills/` |
+| `orchestrate` | Planning or executing non-trivial delegated work | Analyze, define roles, match specialists, dispatch, strategic review, synthesize | `templates/skills/` |
 | `wiki-query` | Explicit read-only wiki requests; project consultation subject to the Wiki gate | Lightweight knowledge lookup without loading the full `wiki` skill | `templates/skills/` |
-| `wiki` | Explicit wiki setup and maintenance; gated post-review evaluation and conditional ingestion | Full workspace knowledge maintenance and self-learning workflow | `templates/skills/` |
+| `wiki` | Explicit wiki setup and maintenance; post-review ingestion after a positive Learn (pre-check) | Full workspace knowledge maintenance and self-learning workflow | `templates/skills/` |
 | `skill-builder` | Creating or improving skills | Authoring following agentskills.io spec | `templates/skills/` |
 | `spec-builder` | Work needs a durable outcome contract before execution | Specs, proposals, task plans for spec-driven development | `templates/skills/` |
 
@@ -39,9 +39,13 @@ Skills are loaded in three progressive stages:
 
 The [Wiki gate](../../templates/AGENTS.md#coordinator-flow) limits automatic wiki steps to tasks associated with an identified project containing root-level `wiki/`; explicit wiki requests bypass it.
 
+## Skill Independence
+
+Skills never reference other skills by name; only the boot policy composes them. Integration goes through generic handoff fields (`Contract ref:`) and checks the governing artifact declares itself (for specs, the `tasks.md` Readiness line). Rule text stays harness-, model-, and agent-name-agnostic; agent names appear only in illustrative team tables. See [ADR 0005](../decisions/0005-skill-independence-and-lean-coordination.md).
+
 ## Wiki versus Skill
 
-Wiki captures durable declarative knowledge: what is true or decided about the workspace. Skills carry recurring procedural workflows. Only when content is clearly procedural and clearly recurring does the agent flag it for you to choose: use `skill-builder`, or keep it in the wiki. You decide; the agent never automatically creates a skill. Check existing skills first to adapt rather than duplicate.
+Wiki captures durable declarative knowledge: what is true or decided about the workspace. Skills carry recurring procedural workflows. Only when content is clearly procedural and clearly recurring does the agent flag it for you to choose: turn it into a reusable skill, or keep it in the wiki. You decide; the agent never automatically creates a skill. Check existing skills first to adapt rather than duplicate.
 
 Keeping content in the wiki still requires material net durable value after context, maintenance, and duplication costs. See the [wiki skill](../../templates/skills/wiki/SKILL.md) for the evaluation and maintenance procedure.
 

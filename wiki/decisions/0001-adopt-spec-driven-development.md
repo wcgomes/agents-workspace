@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-06-18), amended (2026-08-13). Archive-time ingestion routing was superseded by [ADR 0004](0004-serialized-post-review-wiki-ingestion.md).
+Accepted (2026-06-18), amended (2026-08-13). Archive-time ingestion routing was superseded by [ADR 0004](0004-serialized-post-review-wiki-ingestion.md). The `Spec ref:` field and `orchestrate`-specific integration were superseded by [ADR 0005](0005-skill-independence-and-lean-coordination.md): handoffs carry `Contract ref:`, and readiness and verification are declared by the spec artifacts.
 
 ## Context
 
@@ -27,7 +27,7 @@ The initial Lite/Full split is superseded by one proportional workflow: `propose
 
 `design.md` is conditional, non-normative overflow. Create it only when a material design decision needs expanded rationale, alternatives and trade-offs, interacting flows, or substantial migration, rollback, security, or cross-component reasoning that would overload the proposal or tasks. Work category alone never requires it. Observable guarantees remain in `spec.md`; concise decisions stay indexed in `proposal.md`; executable actions and validation stay in `tasks.md`.
 
-`clarify` must resolve every ambiguity marker before planning. After planning, `analyze` is a mandatory readiness gate that checks cross-artifact routing, consistency, requirement and scenario coverage, and scope before implementation dispatch. `orchestrate` enforces this gate whenever an active named spec change is in scope, requires `Spec ref:` on its implementation handoffs, and requires readiness analysis again after material artifact changes.
+`clarify` must resolve every ambiguity marker before planning. After planning, `analyze` is a mandatory readiness gate that checks cross-artifact routing, consistency, requirement and scenario coverage, and scope before implementation dispatch, and reruns after material artifact changes. Originally `orchestrate` enforced it by name via `Spec ref:`; since [ADR 0005](0005-skill-independence-and-lean-coordination.md) the `tasks.md` Readiness line declares it and implementation handoffs carry `Contract ref: specs/changes/<id>/`.
 
 ## Original Rationale
 
@@ -46,7 +46,7 @@ The initial Lite/Full split is superseded by one proportional workflow: `propose
 ## Consequences
 
 - New `specs/` directory at workspace root when SDD is used.
-- The original integration made `Spec ref:` optional; the amendment makes it mandatory for every in-scope implementation handoff.
+- The original integration made `Spec ref:` optional; the amendment made it mandatory for every in-scope implementation handoff (now `Contract ref:`).
 - `wiki/decisions/` activated (was dormant).
 - Users run `./tools/install.sh` to install the new skill.
 - Spec-backed implementation cannot dispatch merely because `tasks.md` exists; readiness analysis must pass first.

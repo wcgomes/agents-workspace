@@ -1,22 +1,22 @@
 ---
 name: wiki-query
-description: Use for explicit read-only wiki requests or relevant consultation for an identified task project with root wiki/. Standalone chat must not infer its project from cwd alone. Setup, maintenance, ingest evaluation, and ingestion use wiki instead.
+description: Use to read an existing project wiki/ for context ("what does the wiki say about X", "check the wiki before planning"). Read-only; never edits. Automatic use requires an identified task project with root wiki/; standalone chat must not infer the project from cwd alone.
 ---
 
 # Wiki Query
 
-Read-only: never create, edit, reorganize, or ingest. Do not load `wiki` just for consultation; this does not replace applicable coordinator post-review evaluation via `wiki`.
+Read-only: never create, edit, reorganize, or ingest. Consultation does not replace post-task ingest evaluation.
 
 ## Boundaries
 
-- Apply the boot policy's Wiki gate before automatic consultation; explicit requests bypass it. Paths use the identified project/explicit target; clarify if needed.
-- When gated, coordinators load/query before planning, team composition, or exploration beyond the gate check; supply task-critical context in handoffs.
-- Executors may load/query when useful to assigned work without further authorization. Handoff stays primary; consultation neither expands scope nor authorizes edits.
-- Wiki is descriptive, never overrides handoff, applicable specs, or current source artifacts. Surface conflicts; never silently prefer wiki.
+- Explicit requests need no gate. Use the identified project or explicit target; clarify if needed.
+- Coordinators consult the wiki first, before other lean lookups: the index plus only planning-relevant pages. Pass task-critical context in handoffs.
+- Executors consult for execution detail. The handoff stays primary; consultation never expands scope or authorizes edits.
+- The wiki is descriptive. It never overrides the handoff, applicable specs, or current source artifacts. Surface conflicts; never silently prefer the wiki.
 
 ## Navigation
 
-1. Read `wiki/index.md` first; if absent, proceed without wiki context, never create it.
-2. Choose the most relevant page/folder `index.md` by keywords/descriptions.
-3. Follow folder indexes; load only task-relevant linked pages, not broad/unrelated areas.
-4. Stop at sufficient context. Missing relevant link/no matching entry: report material gaps; never invent knowledge or repair wiki. Further exploration obeys existing scope/delegation rules.
+1. Read `wiki/index.md` first. If absent, proceed without wiki context; never create it.
+2. Pick the most relevant page or folder `index.md` by keywords and descriptions.
+3. Follow folder indexes. Load only task-relevant pages, never broad or unrelated areas.
+4. Stop at sufficient context. On a missing link or no matching entry, report material gaps. Never invent knowledge or repair the wiki. Further exploration follows existing scope rules.

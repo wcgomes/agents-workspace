@@ -18,3 +18,4 @@
 - [ADR 0002: Installable Source Under Templates](decisions/0002-templates-layout.md) — templates, layout, installer — Records the separation between distribution sources and consumer artifacts.
 - [ADR 0003: Keep Empirical Validation in Orchestrate](decisions/0003-empirical-validation.md) — validation, evidence, behavior — Defines evidence requirements for observable outcomes.
 - [ADR 0004: Serialize Post-Review Wiki Ingestion](decisions/0004-serialized-post-review-wiki-ingestion.md) — wiki, ingestion, review — Defines conditional serialized knowledge ingestion after task review.
+- [ADR 0005: Skill Independence and Lean Coordination](decisions/0005-skill-independence-and-lean-coordination.md) — skills, contract-ref, review, fast-path — Records skill decoupling, harness-agnostic rules, and lean coordination paths.

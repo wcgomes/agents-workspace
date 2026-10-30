@@ -65,10 +65,12 @@ Include only applicable sections. Source specs use the same Requirement/Scenario
 
 ## 3. tasks.md
 
-Executable "how" for `orchestrate` handoffs: dependency order, `[P]` for parallelizable tasks, one path per task, checkpoint per phase. **Software:** write test → confirm failure → implement; checkpoint maps spec scenario to passing test.
+Executable "how" for implementation handoffs: dependency order, `[P]` for parallelizable tasks, one path per task, checkpoint per phase. **Software:** write test → confirm failure → implement; checkpoint maps spec scenario to passing test.
 
 ```markdown
 # Tasks: <change-id>
+
+Readiness: `analyze` must pass before implementation; review runs `verify` against the persisted spec.
 
 ## 1. <phase>
 - [ ] 1.1 <task> [P] (path: file.ext)

@@ -49,12 +49,14 @@
 
 ## Data flow (consumer session)
 
-1. **User** makes a request in a consumer workspace.
-2. **Main agent** follows the global boot policy's [Wiki gate](../templates/AGENTS.md#coordinator-flow) → loads `wiki-query` for read-only, index-first consultation when applicable → loads `orchestrate`.
-3. **Orchestrate** discovers specialists, assembles a team, and delegates via handoffs.
-4. **Specialists** execute scope directly under immutable `Session type: DELEGATED` classification, using handoffs as primary context and consulting relevant wiki content only within scope; wiki editing must be explicitly in scope.
-5. **Main agent** applies domain-appropriate review and verification, then loads the full `wiki` skill for evaluation when the Wiki gate applies or wiki work was explicitly requested: would adding, revising, or removing content yield material net durable value after compact organization, future context, maintenance, and duplication costs? Useful revision or removal does not require new knowledge. Otherwise automatic evaluation is skipped without creating a wiki.
-6. A clear positive evaluation opens one consolidated serialized ingestion stream owned by the Wiki Ingestion Specialist role; negative, uncertain, or marginal findings open none. Writing remains conditional on material net value, even within the stream. The main agent reviews the result before final synthesis; explicit wiki tasks skip redundant ingestion when reviewed deliverables already capture the knowledge correctly.
+1. **User** makes a request in a consumer workspace; the main agent is coordinator unless the initial task starts with `Session type: DELEGATED`.
+2. **Coordinator** applies the boot policy's [Coordinator Flow](../templates/AGENTS.md#coordinator-flow): when the Wiki gate applies, consults `wiki-query` first (index plus planning-relevant pages), gathers lean context, and defines done criteria.
+3. **Route:** trivial work takes the boot policy's Trivial fast path (one direct handoff, no `orchestrate`, separate review, or ingest evaluation); everything else loads `orchestrate`, which assembles roles, matches session-listed specialists, and dispatches handoffs (carrying `Contract ref:` when an artifact such as a spec governs the task).
+4. **Executors** run the handed scope directly, self-verify, self-consult the wiki read-only when useful, and return bounded inline results; wiki edits require explicit scope.
+5. **Coordinator** gate-checks returns; independent fresh-context review runs only at strategic points.
+6. **Learn (pre-check):** for gated non-trivial work, five boot-policy triggers decide whether to load `wiki`; a positive ingest evaluation opens one serialized writer stream, reviewed before final synthesis.
+
+Without subagent support, the same flow runs as labeled passes in the boot policy's No-subagent mode. Rationale: [ADR 0004](decisions/0004-serialized-post-review-wiki-ingestion.md), [ADR 0005](decisions/0005-skill-independence-and-lean-coordination.md).
 
 ## Component relationships
 
@@ -65,7 +67,7 @@
 | Installed boot policy | Per-tool global instruction file | Live boot policy | **No** managed block — re-run `install.sh` |
 | `templates/skills/` | Distribution | Versioned skill source | Yes — source of truth |
 | Installed skills | `~/.config/opencode/skills/` (etc.) | Runtime artifacts | **No** — re-run `install.sh` |
-| `wiki/` | Each workspace (incl. this repo) | Local knowledge | Yes — agent-maintained |
+| `wiki/` | Each workspace (incl. this repo) | Local knowledge | Yes — gated ingestion or explicit request |
 | `.agents/skills/` | Consumer workspace | Agent-created local skills | Yes |
 
 ## Skill discovery

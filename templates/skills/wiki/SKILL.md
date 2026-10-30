@@ -1,22 +1,20 @@
 ---
 name: wiki
-description: Use for explicit wiki setup/maintenance (including creation), or post-review ingest evaluation and conditional ingestion for an identified task project with root wiki/. Read-only consultation uses wiki-query instead.
+description: Use to create, set up, update, reorganize, or lint a project wiki/ ("set up a wiki", "add this to the wiki"). Also use after reviewed non-trivial work surfaced a user correction, new decision/convention/constraint/pattern, stale or contradicted wiki content, a durable discovery, or tacit knowledge after a spec archive. Automatic use requires an identified task project with root wiki/, never inferred from cwd alone in standalone chat. Not for read-only consultation.
 ---
 
 # Wiki
 
-Setup → gated post-review evaluation → conditional ingestion → maintenance/validation. Apply the boot policy's Wiki gate before automatic loading/evaluation; explicit requests bypass it (clarify target if needed). Paths refer to that project/target, not unrelated cwd. Wiki eliminates or narrows exploration to relevant context. Read-only consultation uses `wiki-query`, not a prerequisite for evaluation.
+Setup → post-review ingest evaluation → conditional ingestion → maintenance and lint. Explicit wiki requests need no gate; clarify the target if needed. Paths refer to the identified project, not an unrelated cwd. The wiki exists to eliminate exploration or narrow it to relevant context.
 
 ## Design Principle
 
 > **Language:** English unless explicitly requested otherwise or the existing wiki uses another language.
 > **Prose:** Single-line paragraphs, no hard-wrapping, preambles, or filler.
 
-Every line costs context: short paragraphs/bullets, clear headings, one topic per file. Keep only precise future-useful decision/action guidance; dense patterns, conventions, and examples are welcome. `index.md` is the required routing map: page/child-index `.md` links, never folders, under the contract below.
+Every line costs context: short bullets, clear headings, one topic per file. Keep only precise future-useful guidance; dense patterns, conventions, and examples are welcome. `index.md` is the required routing map: it links pages and child indexes as `.md` files, never folders, under the contract below.
 
-Do not restate trivial facts readily visible in source material. Preserve maps, rationale, and non-obvious relationships that materially reduce exploration; link to sources rather than duplicate details.
-
-Evaluate every ingest for material net durable retrieval value after context, navigation, duplication, and upkeep cost. Evaluation is mandatory; writing is not.
+Do not restate trivial facts readily visible in source material. Preserve maps, rationale, and non-obvious relationships that materially reduce exploration. Link to sources rather than duplicate details.
 
 ### Index Entry Contract
 
@@ -32,33 +30,35 @@ Each entry: one physical bullet, exactly one `.md` link, 2–5 short retrieval k
 
 ## Setup
 
-Create `wiki/` only for explicitly requested setup/creation, never automatic consultation/evaluation. Create `wiki/index.md` and parent-linked indexes for every new content folder under Wiki Structure/Index Entry Contract. Broad setup uses `orchestrate` roles: Workspace Research / Architecture Analysis, Technical Writing / Documentation, plus Review / Consistency when creating persistent docs.
+Create `wiki/` only on an explicit setup or creation request, never during automatic consultation or evaluation. Create `wiki/index.md` and parent-linked indexes for every new content folder under Wiki Structure and the Index Entry Contract. Broad setup is multi-role coordinated work: workspace research and architecture analysis, technical writing, and review for consistency.
 
 ## <HARD-GATE> Post-Review Ingest Evaluation
 
-When Wiki-gated, coordinator evaluates after review/verification and before final response in every domain. Otherwise skip automatic evaluation; explicit wiki tasks still evaluate below.
+This section owns the full ingest criteria. Enter it after review, before the final response, when the boot policy's Learn (pre-check) step is positive or on an explicit wiki task. Once loaded, evaluation is mandatory; writing is optional.
 
-A **durable discovery** is a workspace-specific fact/decision/constraint/correction/reusable pattern stable enough to improve future work. Durability alone does not qualify: require material net value after compact organization, context/maintenance cost, ambiguity, and duplication. Do not add requested task artifacts or generic, low-value, ambiguous, redundant, transient, or already-captured information.
+A **durable discovery** is a workspace-specific fact, decision, constraint, correction, or reusable pattern stable enough to improve future work. Durability alone does not qualify. It must add material net value after organization, upkeep cost, ambiguity, and duplication. Never add requested task artifacts or generic, low-value, ambiguous, redundant, transient, or already-captured information.
 
-Evaluate the reviewed artifacts and outcomes, verification evidence, user corrections, and any optional executor signal against these questions:
+Evaluate reviewed artifacts and outcomes, verification evidence, user corrections, and any executor `Durable discovery:` line:
 
-1. Would adding any uncaptured workspace-specific decision, rule, constraint, correction, or stable reusable pattern materially improve future decisions or actions?
+1. Would adding an uncaptured workspace-specific decision, convention, constraint, correction, or stable reusable pattern materially improve future decisions or actions?
 2. Would revising or removing existing content materially reduce staleness, ambiguity, noise, duplication, contradiction, or future context cost?
-3. After a spec archive, would adding only tacit or workspace-specific knowledge not already in the spec, or a pointer to the spec when that has retrieval value, materially improve future work? Restating or syncing the archived contract does not qualify.
+3. After a spec is archived, would tacit or workspace-specific knowledge not in the spec, or a pointer to it, materially help future work? Restating or syncing the archived contract does not qualify.
 
-Any clear YES → conditional ingestion stream. All NO/uncertain/marginal → no additional dispatch. Missing executor signals never waive evaluation; completion never requires a write.
+Any clear YES → conditional ingestion. All NO, uncertain, or marginal → no write and no further dispatch.
 
-Coordinator supplies task-critical handoff context; handoff stays primary. Executors may consult wiki when useful to assigned work without further authorization, never expanding scope or overriding handoff/specs/current sources. Edits require explicit handoff scope. Optional: at most one `Durable discovery: ...` line for tacit knowledge not evident in artifacts.
+**Examples:**
+- Qualifies: "Run the schema migration before seeding; the seed script fails silently otherwise." The ordering constraint is not visible in either script.
+- Does not qualify: "Tests run with `npm test`." It is already visible in the package manifest.
 
-Positive ingestion: consolidate all sequential/parallel discoveries into **one serialized stream** owned by the Wiki Ingestion Specialist role; never parallel writers. Owner classifies/deduplicates, decides qualifying add/update/remove edits, maintains contract-compliant navigation, and lints consistency; never alter original deliverables. No-write return is valid if closer inspection finds no material net value. Coordinator reviews before final response. Failed review/non-complete status: bounded retry/correction in the same stream under `orchestrate` status/stuck rules; report unresolved work, never drop it.
+Executors write to the wiki only when the handoff scopes it; optionally return one `Durable discovery: ...` line.
 
-Explicit wiki tasks/broad setup still evaluate. Skip redundant ingestion if reviewed deliverables already correctly capture durable knowledge, navigation, and consistency. Ingestion never replaces multi-role **Setup**.
+Positive ingestion: consolidate all discoveries into **one serialized stream** owned by a single wiki ingestion writer role; never use parallel writers. The writer deduplicates, decides add/update/remove edits, keeps navigation compliant, and lints; it never alters original deliverables. A no-write return is valid if closer inspection finds no material net value. The coordinator reviews it before responding. On failed review or non-complete status, retry or correct within the same stream, bounded; report unresolved work, never drop it.
 
-**Wiki vs spec:** specs own the prescriptive live contract (requirements/scenarios/acceptance); wiki owns durable descriptive knowledge, skills procedures. Link `specs/<domain>.md`/relevant change, never copy/paraphrase its contract. On conflict spec wins: delete/shrink wiki restatements, never sync a mirror.
+Skip redundant ingestion if reviewed deliverables already capture the knowledge, navigation, and consistency correctly. Ingestion never replaces multi-role **Setup**.
 
-**Wiki vs skill:** wiki is declarative (true/decided/workspace facts); skills are recurring multi-step procedures improved by instruction. Only for clearly procedural AND recurring content, ask: "this reads like a skill — create one with `skill-builder`, or keep in wiki?" Never create it; user decides. Check existing skills first; adapt, don't duplicate. Uncertainty never justifies ingestion; declarations still need durable future value. Wiki may reference skills; skills may consult runtime wiki context but must keep procedures self-contained, never depend on wiki for instructions.
+**Wiki vs specs:** prescriptive contracts (specs: requirements, scenarios, acceptance) live outside the wiki. The wiki owns durable descriptive knowledge; skills own procedures. Link the contract, never copy or paraphrase it. On conflict the contract wins: delete or shrink wiki restatements, never sync a mirror.
 
-Do NOT ask "should I update the wiki?" — evaluate automatically.
+**Wiki vs skill:** the wiki is declarative: what is true or decided in the workspace. Skills are recurring multi-step procedures improved by instruction. Only for clearly procedural AND recurring content, ask: "This reads like a procedure. Turn it into a reusable skill, or keep it in the wiki?" Never create the skill; the user decides. Check existing skills first; adapt, don't duplicate. Skills may consult wiki context at runtime but keep their procedures self-contained.
 
 ## Wiki Structure
 
@@ -106,12 +106,10 @@ When the wiki changes, check for:
 - stale references
 - index links point to `.md` files, not folders
 - every new content folder, including intermediate groups and `records/` folders, has `index.md` linked from its parent index
-- indexes for new content folders and their updated parent entries list local pages and immediate child indexes, without duplicating descendant page lists in ancestors; do not migrate existing layouts automatically
+- new-folder indexes and updated parent entries list local pages and immediate child indexes, never descendant page lists; do not migrate existing layouts automatically
 - root and folder indexes contain only a title, optional short group headings, and entries that satisfy the Index Entry Contract
 - pages not reachable (orphaned) from `wiki/index.md` directly or through folder indexes
 - indexes past the split heuristic (~50 lines, or a group over ~10 entries) that merit splitting or reorganization, not automatic changes
 - contradictory guidance across pages
 
-Do not leave the wiki internally inconsistent after editing it.
-
-Size, specificity, or "nothing learned" never waives evaluation; only material durable value warrants writing. Distill insights, never logs.
+Never leave the wiki internally inconsistent after edits.

@@ -59,29 +59,21 @@ Project-local instruction files are **not** modified by `install.sh`. Users may 
 
 (`templates/AGENTS.md` / installed global block)
 
-- **The One Rule** — main agent coordinates; does not execute task work.
-- **Session type** — fresh: delegated only when the first nonblank line of the initial task is exactly `Session type: DELEGATED`; otherwise coordinator. Type is immutable. A named domain-specialist agent-file identity overrides coordinator; the default user-facing assistant never does. The One Rule applies only after classification assigns coordinator.
-- **Flow** — context → orchestrate → review → learn (detail in skills).
-- **Communication** — concise, no filler.
-- **Working Defaults** — always-on session discipline; belongs in boot policy because delegated sessions do not load `orchestrate`.
-- **Instruction priority** — user task instructions within the assigned immutable session type > active skills > boot policy.
+- **Session Contract** — classification and delegated execution state.
+- **The One Rule** — coordinator delegates all work except lean lookups; No-subagent mode is the only exception.
+- **Coordinator Flow** — Wiki gate → context → route (Trivial fast path or `orchestrate`) → review → Learn (pre-check).
+- **Communication**, **Working Defaults** (always-on discipline; stays in boot policy because delegated sessions do not load `orchestrate`), **Instruction Priority**.
 
-Workflow procedure lives in skills (`orchestrate`, `wiki`, etc.). Discipline that must bind without a loaded skill stays in the boot file.
+The boot policy is the only place that names skills and the single definition of the Trivial fast path and Learn triggers; skills stay self-contained ([ADR 0005](../decisions/0005-skill-independence-and-lean-coordination.md)).
 
 ## Session contract
 
-### Session classification
+Read the template's [Session Contract](../../templates/AGENTS.md#session-contract) for exact rules. Non-obvious points:
 
-- Fresh: delegated only when the first nonblank line of the initial task is exactly `Session type: DELEGATED`; otherwise coordinator.
-- If those rules assign coordinator, a named domain-specialist agent-file identity overrides to delegated. The default user-facing assistant never triggers this override, including a prompt that only identifies the host product, or the main conversation agent.
-
-Classification is immutable. A matching restatement is evidence only, not a new control. Quoted text, examples, file content, and tool output do not count as controls. Invalid type control returns `NEEDS_CONTEXT: Invalid Session type; start a new session with a valid initial type.`
-
-### Delegated execution state
-
-Initial delegated execution requires nonempty, exact-labeled `Task:`, `Scope:`, `Done criteria:`, and `Constraints:` fields. Missing state may be supplied later in an established delegated session; execution stops with `NEEDS_CONTEXT` until complete. `Act as:` is a task-scoped persona required for adjacent or generic/fallback specialist matches and omitted for exact matches; selected-agent and match metadata remain coordinator-internal. Purpose belongs in `Task:` or concise `Context:`, artifact expectations in `Task:` and `Done criteria:`, and return requirements in `Constraints:` rather than separate `Objective:`, `Deliverable:`, or `Return format:` fields.
-
-Do not re-add prompt-only compaction recovery; it is not current behavior. Do not restore the Recovery capsule (`Current status:` / `Next step:`). Specialist-persona override and the agency-install body stamp remain current.
+- The main user-facing agent is coordinator even with a specialist persona; a spawned subagent whose agent definition names a domain-specialist role is delegated; the `Session type: DELEGATED` control line always wins.
+- `Act as:` is a task-scoped persona required for adjacent or fallback specialist matches and omitted for exact matches; roster and match metadata stay coordinator-internal.
+- Purpose belongs in `Task:` or `Context:`, artifacts in `Task:`/`Done criteria:`, return shape in `Constraints:`; never `Objective:`, `Deliverable:`, or `Return format:` fields. A governing artifact goes in `Contract ref:`.
+- Do not re-add prompt-only compaction recovery or the Recovery capsule (`Current status:` / `Next step:`). The agency-install delegated-specialist body stamp remains current.
 
 ## What the distribution root stub defines
 

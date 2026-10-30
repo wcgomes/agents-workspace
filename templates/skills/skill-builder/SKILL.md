@@ -3,7 +3,7 @@ name: skill-builder
 description: "Use to create, refine, or validate agentskills.io skills: write SKILL.md, create skill directories, improve content/triggering, run evals, or diagnose activation failures."
 ---
 
-# Agent Skills
+# Skill Builder
 
 Follow agentskills.io: a skill directory contains `SKILL.md` and optional resources.
 

@@ -22,7 +22,7 @@ Open a new session with your tool's main assistant and ask for an outcome as you
 
 > Review our onboarding flow, fix the main usability issues, and explain what you verified.
 
-Your main assistant acts as the **coordinator**: it selects specialists, scopes their work, and brings their results back for review. You do not need a wiki or a spec to start.
+Your main assistant acts as the **coordinator**, even with a specialist persona, unless its initial task starts with the `Session type: DELEGATED` control line, which always wins: it selects specialists, scopes their work, and brings their results back for review. You do not need a wiki or a spec to start.
 
 ## One workflow, different domains
 
@@ -34,20 +34,20 @@ These are **illustrative requests, possible teams, and verification targets**, n
 | “Prepare a launch campaign for this product.” | Marketing strategist, copywriter, designer | Campaign brief, copy, and creative assets checked against the audience, brand, channel requirements, and supplied product facts—not a promise of campaign performance. |
 | “Turn these sales figures into a decision-ready report.” | Data analyst, finance specialist, data visualization specialist | Reconciled totals, traceable assumptions, and a rendered report checked for readable charts and supported conclusions. |
 
-Roles follow the task, not a fixed team template. Review and verification can stay with an existing role when its expertise and scope fit; a separate reviewer is added when distinct expertise or independence is needed.
+Roles follow the task, not a fixed team template. Every specialist self-verifies its work; an independent reviewer with fresh context is added at strategic points such as final delivery, integration of parallel work, risky domains, or before irreversible actions. A specialist never reviews its own work.
 
 ## How it works
 
 **Request → context → team → scoped execution → review and verification → synthesis**
 
-1. **Understand the outcome.** The coordinator gathers lean context and defines what “done” means.
-2. **Choose the specialists.** It matches domains to available agents and delegates every unit of work. Independent scopes can run in parallel; dependent work stays ordered.
-3. **Check the result.** Review covers scope, quality, and evidence. When safe and proportionate, specialists exercise the deliverable where it will be used—not just inspect its source. Valid evidence is reused; affected checks repeat after changes.
-4. **Return a reviewed answer.** The coordinator sends findings back for correction when needed, then summarizes deliverables, checks, and remaining limitations. Blocked work is surfaced rather than silently treated as complete.
+1. **Understand the outcome.** The coordinator gathers lean context and defines what “done” means. Trivial work (single file, no behavior or contract change, reversible, no governing contract artifact) goes straight to one specialist unless you asked for approval first; the specialist self-verifies and the coordinator checks that evidence against the done criteria. The steps below apply to everything else.
+2. **Choose the specialists.** It matches domains to available agents and delegates every unit of work. Independent scopes can run in parallel; dependent work stays ordered. It asks you first when the work is destructive, ambiguous, irreversible or outward-facing, or unusually costly.
+3. **Check the result.** Specialists self-verify; independent fresh-context review runs at strategic points. When safe and proportionate, specialists exercise the deliverable where it will be used—not just inspect its source. Valid evidence is reused; affected checks repeat after changes.
+4. **Return a reviewed answer.** Each review finding is fixed, contested with evidence, escalated to you, or declined as a nit. One clean round converges; after three rounds, or if fixes start undoing each other, the coordinator stops and reports or asks you. It then summarizes deliverables, checks, and remaining limitations. Blocked work is surfaced rather than silently treated as complete.
 
 The skills guide this behavior; actual execution depends on your host tool, available agents, permissions, and resources. See [Workflow details](#workflow-details) for the operating rules.
 
-The coordinator adjusts subagent reasoning effort to the task, and you can override that choice.
+The coordinator assigns each handoff an effort tier—light, standard, or deep—based on the work, not its size. If you declare a tier-to-model/effort mapping, it applies it; otherwise it keeps current models and uses only native effort controls your tool provides. If your tool cannot spawn subagents, the coordinator says so once and runs plan, execute, and self-review as separate passes, recording independent review as not run.
 
 ## Project knowledge and durable plans
 
@@ -57,13 +57,13 @@ If you want durable project knowledge, ask:
 
 > Initialize a wiki for this project using the wiki skill.
 
-A root-level `wiki/` enables consultation before work and a post-review evaluation for tasks associated with that project. Updates happen only when they add material durable value after accounting for duplication and upkeep—not after every task. The installer never creates a project wiki, and standalone chats do not inherit this workflow just because a wiki exists in the current directory.
+A root-level `wiki/` enables consultation for tasks associated with that project: the coordinator reads the index and only pages that affect planning, and specialists consult the wiki themselves when useful. After review of non-trivial work, a quick check decides whether to run a full ingest evaluation. It triggers on a user correction; a new decision, convention, constraint, or reusable pattern; stale or contradicted wiki content; an executor `Durable discovery:` line; or tacit knowledge reported after a spec archive. Updates happen only when they add material durable value after accounting for duplication and upkeep—not after every task. The installer never creates a project wiki, and standalone chats do not inherit this workflow just because a wiki exists in the current directory.
 
 See the [Wiki gate](templates/AGENTS.md#coordinator-flow), [read-only consultation skill](templates/skills/wiki-query/SKILL.md), and [wiki maintenance skill](templates/skills/wiki/SKILL.md).
 
 ### Specs: when the outcome needs a contract
 
-For work that needs an agreed, durable behavior contract—such as a new API, migration, or security-sensitive change—`spec-builder` manages proposals, outcome specs, and task plans under `specs/`, with your confirmation before creating them. Orchestration uses those artifacts for scoped execution and conformance review. Small, well-defined work can proceed from explicit done criteria without adding a spec.
+For work that needs an agreed, durable behavior contract—such as a new API, migration, or security-sensitive change—`spec-builder` manages proposals, outcome specs, and task plans under `specs/`, with your confirmation before creating them. Handoffs reference a change with `Contract ref:`; implementation starts only after the change passes `analyze`, and review runs `verify` against it as well as checking the done criteria. Small, well-defined work can proceed from explicit done criteria without adding a spec.
 
 See [spec-builder](templates/skills/spec-builder/SKILL.md) for when and how to use it.
 
@@ -150,25 +150,27 @@ The no-clobber flag leaves an existing file unchanged; it does not update its po
 The **coordinator does not execute task work**. It talks with you, loads skills, gathers lean context, dispatches specialists, and reviews their results. Executors stay within their assigned scope and do not assemble another team.
 
 ```text
-Request → lean context (wiki-query when applicable)
-        → spec-builder when a durable contract is needed
-        → orchestrate: select roles, plan, and delegate
-        → scoped execution (single, sequential, or parallel)
-        → integrate → review / verification
-                         ├─ findings → revise → review again
-                         ├─ blocked → clarify, escalate, or recompose
-                         └─ criteria met → wiki evaluation when applicable
-                                         → conditional update → synthesis
+Request → lean context (wiki index + planning-relevant pages when applicable)
+        ├─ trivial → one executor handoff → self-verify → coordinator checks evidence (no separate reviewer) → synthesis
+        └─ otherwise → orchestrate: select roles, plan, confirm if triggered, delegate
+                     → scoped execution (single, sequential, or parallel; self-verified)
+                     → integrate → independent review at strategic points
+                                      ├─ findings → fix / contest / escalate / decline → review again (max 3 rounds)
+                                      ├─ blocked → clarify, escalate, or recompose
+                                      └─ converged → wiki pre-check when applicable
+                                                   → ingest evaluation if positive → conditional update → synthesis
 ```
 
-Handoffs define the task, scope, done criteria, and constraints, with context and a spec reference when needed. Review checks both the deliverable and its evidence; it does not automatically rerun valid checks. The final synthesis identifies any partial, blocked, or inapplicable verification and explains gaps.
+When durable upfront alignment is needed, the boot policy routes to `spec-builder`, whose actions are delegated like any work; skills do not reference each other. Handoffs define the task, scope, done criteria, and constraints, with context and a `Contract ref:` when needed. Work under a spec change starts only after `analyze` passes, and its review runs `verify`. Review checks both the deliverable and its evidence; it does not automatically rerun valid checks. The final synthesis identifies any partial, blocked, or inapplicable verification and explains gaps.
 
-Project wiki updates use one serialized ingestion stream only when the post-review evaluation justifies a change. No useful change means no write. Recurring procedures may warrant a skill instead, but the workflow does not automatically create one.
+Project wiki updates use one serialized ingestion stream only when the post-review pre-check is positive and the ingest evaluation justifies a change. No useful change means no write. Recurring procedures may warrant a skill instead, but the workflow does not automatically create one.
 
 Use the source documents for the full contract rather than treating this overview as a second policy:
 
 - [Boot policy](templates/AGENTS.md): session boundaries, delegation, and conditional wiki workflow.
-- [Orchestrate](templates/skills/orchestrate/SKILL.md): role discovery, handoffs, coordination patterns, evidence, statuses, and escalation.
+- [Orchestrate](templates/skills/orchestrate/SKILL.md): role discovery, effort, confirmation, handoffs, review, evidence, statuses, and escalation; details such as the review loop and team templates live in [`references/`](templates/skills/orchestrate/references/).
+- [Spec builder](templates/skills/spec-builder/SKILL.md): durable outcome contracts referenced by `Contract ref:`.
+- [Wiki](templates/skills/wiki/SKILL.md) and [wiki-query](templates/skills/wiki-query/SKILL.md): ingest evaluation and maintenance; read-only consultation.
 - [Skill builder](templates/skills/skill-builder/SKILL.md): authoring and validating reusable skills.
 
 </details>
@@ -183,6 +185,7 @@ templates/             # Source of truth; changes take effect after installation
   AGENTS.md            # Consumer boot-policy template
   skills/
     orchestrate/       # Team assembly, delegation, review, and synthesis
+      references/      # Review loop, confirmation, handoff example, team templates
     wiki-query/        # Read-only project knowledge lookup
     wiki/              # Wiki setup, evaluation, and maintenance
     spec-builder/      # Durable outcome contracts and task plans
